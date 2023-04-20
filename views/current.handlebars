@@ -1,0 +1,34 @@
+<div class="container-fluid text-center overflow-hidden">
+    <div class="row g-2 d-flex flex-column">
+
+        <section class="col-6 p-3 mx-auto">
+
+            <h1>Welcome {{user.firs_name}}!!!</h1>
+            <i class="bi bi-person-circle" style="font-size: 5em; color: cornflowerblue;"></i>
+        </section>
+
+        <section class="col-6 p-3 mx-auto">
+
+            <ul>
+                <li>Username: {{user.username}}</li>
+                {{#if user.email}}
+                    <li>Email: {{user.email}}</li>
+                {{/if}}
+                <li>role: {{user.role}}</li>
+            </ol>
+        </section>
+
+        <section class="col-6 p-3 mx-auto">
+
+            <form id="logoutForm" class="logout container-fluid">
+                <button type="submit" class="btn btn-danger row" id="btnLogout">
+                    <i class="bi bi-person-circle btnUserIcon"></i>
+                    <p>logout</p>
+                </button>
+            </form>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="/js/logout.js"></script>
