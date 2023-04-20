@@ -16,7 +16,7 @@ Programming exercise of backend with javascript
 * [Dependencias](#Dependencias)
 * [Tecnologías utilizadas](#Tecnologías-utilizadas)
 * [Vista previa del proyecto](#Vista-previa-del-proyecto)
-* [JSON para test](#Json-para-test)
+* [test](#test)
 
 ***
 
@@ -78,7 +78,7 @@ O también clonando el repositorio
 
 ***
 
-### Endpoints para test
+### test
 
 - http://localhost:8080/web/session/login/
 - http://localhost:8080/web/session/register/
