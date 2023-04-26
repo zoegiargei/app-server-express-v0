@@ -1,1 +1,2 @@
-export const PORT = 8080;
+import config from "../../config.js"
+export const PORT = config.PORT

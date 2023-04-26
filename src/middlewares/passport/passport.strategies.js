@@ -8,6 +8,8 @@ import { AuthenticationFailed } from "../../errors/Authentication.failed.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import encryptedPass from "../../utils/password/encrypted.pass.js";
 import { Strategy as GithubStrategy } from "passport-github2";
+import authenticationService from "../../services/auth.service.js";
+
 
 passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameField: 'email'}, async (req, _u, _p, done) => {
 
@@ -39,24 +41,10 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async ( user
 
         return done(null, userAdmin)
     }
+    
+    const user = authenticationService.login(username, password)
 
-    const user = await usersService.getUserByQuery({ email: username })
-
-    if(!user || user.length === 0){
-        console.log('User not existing')
-        return done( new AuthenticationFailed() )
-    }
-
-    user.forEach(field => {
-            
-        const isValidatePassword = encryptedPass.isValidPassword(field.password, password)
-        
-        if(!isValidatePassword){
-            return done(new AuthenticationFailed())
-        }
-    })
-
-    return done(null, user[0])
+    return done(null, user)
 }));
 
 
@@ -79,7 +67,7 @@ passport.use('github', new GithubStrategy({
     let user
 
     try {
-        user = await usersService.getUserByQuery({username: profile.username})
+        user = await usersService.getUserByQuery({ username: profile.username })
     } catch (error) {
         
         user = new GithubUser({
@@ -110,7 +98,7 @@ passport.use('jwt', new jwtStrategy({
 
 }, async (jwt_payload, done) => {
     try {
-        done(null, jwt_payload) // payload es el contenido del token, ya descifrado
+        done(null, jwt_payload)
     } catch (error) {
         done(error)
     }

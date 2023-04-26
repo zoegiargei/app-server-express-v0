@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const usersCollection = 'users';
 
@@ -10,23 +10,26 @@ const usersSchema = new mongoose.Schema({
     email: { type:String, required:true, index:true },
     age: { type:String, required:true },
     password: { type:String, required:true },
-    cart: { type:Object }
-    /*     
-    { type: {
-        cart: {
-            type: Schema.Types.ObjectId,
-            ref: 'carts'
-        },
-        default: {}
-    }} */
-    ,
+
+    cart: { 
+        type: [
+        {
+            cart: {
+                type: Schema.Types.ObjectId,
+                ref: 'carts'
+            }
+        }
+        ], default: {}
+    },
+
     role: { type:String, required:true }
+    
 }, { versionKey: false });
 
-/* userSchema.pre(/^find/, function(next) {
+usersSchema.pre(/^find/, function(next) {
     this.populate('cart.cart')
     next()
-}); */
+});
 
 const userModel = mongoose.model(usersCollection, usersSchema);
 export default userModel;

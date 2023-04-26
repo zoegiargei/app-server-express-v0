@@ -1,0 +1,25 @@
+<h1 class="p-2 m-2">Chat</h1>
+
+<h5 class="p-2 m-2">Nuevo Mensaje</h5>
+
+<div class="p-2 m-2">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="inputName" name="userName" disabled>
+</div>
+
+<div class="p-2 m-2">
+    <label for="message" class="form-label">Message</label>
+    <input type="text" class="form-control" id="inputMessage" name="message" placeholder="Message...">
+</div>
+
+<button type="button" id="NewMessButton" class="btn btn-primary p-2 m-2">Send Message</button>
+
+
+<h5 class="p-2 m-2">Mensajes en tiempo real</h5>
+<div id="messagesDiv"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+<script src="/js/chat.js"></script>

@@ -1,12 +1,10 @@
-import usersService from "../../services/users.service.js"
-import encryptedJWT from "../../utils/jwt/encrypted.jwt.js"
-
-export async function contrLogin (req, res, next){
-
+export async function contrLogin (req, res, next){    
+    
     res.cookie('jwt_authorization', encryptedJWT.encryptData(req.user), {
         signed: true,
         httpOnly: true
     })
+
     res.status(201).json(req.user)
 };
 

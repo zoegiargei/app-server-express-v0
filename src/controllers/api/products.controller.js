@@ -99,7 +99,7 @@ export const contrPostProd = async (req, res) => {
 
         const savedProduct = await productsService.loadProduct(data)
 
-        const allProducts = await ProductDbManager.findElements()
+        const allProducts = await productsService.getProducts()
         
         req['io'].sockets.emit('updateView', allProducts)
 
