@@ -13,17 +13,14 @@ class AuthenticationService{
             console.log('User not existing')
             return new AuthenticationFailed()
         }
-    
-        user.forEach(field => {
                 
-            const isValidatePassword = encryptedPass.isValidPassword(field.password, password)
-            
-            if(!isValidatePassword){
-                return new AuthenticationFailed()
-            }
-        })
+        const isValidatePassword = encryptedPass.isValidPassword(user[0].password, password)
+        if(!isValidatePassword){
+            return new AuthenticationFailed()
+        }
 
-        return user[0]
+        const userToSend = user[0]
+        return userToSend
     }
 };
 

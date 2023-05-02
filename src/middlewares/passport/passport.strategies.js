@@ -8,7 +8,7 @@ import { AuthenticationFailed } from "../../errors/Authentication.failed.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import encryptedPass from "../../utils/password/encrypted.pass.js";
 import { Strategy as GithubStrategy } from "passport-github2";
-import authenticationService from "../../services/auth.service.js";
+//import authenticationService from "../../services/auth.service.js";
 
 
 passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameField: 'email'}, async (req, _u, _p, done) => {
@@ -42,9 +42,24 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async ( user
         return done(null, userAdmin)
     }
     
-    const user = authenticationService.login(username, password)
+    //const user = authenticationService.login(username, password)
 
-    return done(null, user)
+    const user = await usersService.getUserByQuery({ email: username })
+
+    if(!user || user.length === 0){
+        console.log('User not existing')
+        return done(new AuthenticationFailed(), null)
+    }
+            
+    const isValidatePassword = encryptedPass.isValidPassword(user[0].password, password)
+    console.log(isValidatePassword)
+    if(isValidatePassword === false){
+        return done(new AuthenticationFailed(), null)
+    }
+
+    const userToSend = user[0]
+
+    done(null, userToSend)
 }));
 
 
@@ -78,6 +93,8 @@ passport.use('github', new GithubStrategy({
         await ghUserService.saveUser(user)
     }
 
+    console.log(user)
+    
     done(null, user)
 }));
 

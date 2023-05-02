@@ -26,6 +26,8 @@ loginForm.addEventListener('submit', e => {
         if(result.status === 201){
             loginForm.reset()
             window.location.replace('/web/session/')
+        } else{
+            window.location.replace('/web/error/')
         }
     })
 });

@@ -26,7 +26,7 @@ class ManagerDb{
 
     async findElementByProjection(p1, p2){
         const param1 = p1? p1 : {}
-        const param2 = p2? p2 : {} 
+        const param2 = p2? p2 : {}
         return await this.db.find(param1, param2)
     }
 

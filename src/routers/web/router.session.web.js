@@ -4,7 +4,9 @@ import { authenticationJwtView } from "../../middlewares/passport/passport.strat
 const routerSessionWeb = Router();
 
 routerSessionWeb.get('/', authenticationJwtView, (req, res) => {
-    res.render('current', { title: "Current", user: req.user } )
+    console.log(JSON.parse(req.user.payload))
+    console.log(req.user)
+    res.render('current', { title: "Current", user: JSON.parse(req.user.payload) } )
 });
 
 routerSessionWeb.get('/register', (req, res) => { 

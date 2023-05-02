@@ -30,6 +30,8 @@ registerForm.addEventListener('submit', e => {
         if(result.status === 201){
             registerForm.reset()
             window.location.replace('/web/session/')
+        }else{
+            window.location.replace('/web/error/')
         }
         
         result.json()
