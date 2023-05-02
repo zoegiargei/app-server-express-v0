@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { authenticationJwtView } from "../../middlewares/passport/passport.strategies.js";
+import { authenticationJwtWeb } from "../../middlewares/authentication/jwt/auth.byJwt.web.js";
 
 const routerSessionWeb = Router();
 
-routerSessionWeb.get('/', authenticationJwtView, (req, res) => {
+routerSessionWeb.get('/', authenticationJwtWeb, (req, res) => {
     console.log(JSON.parse(req.user.payload))
     console.log(req.user)
     res.render('current', { title: "Current", user: JSON.parse(req.user.payload) } )

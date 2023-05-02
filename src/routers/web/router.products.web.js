@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { contrShowProducts } from "../../controllers/web/prod.web.controller.js";
-import { authenticationJwtView } from "../../middlewares/passport/passport.strategies.js";
+import { authenticationJwtWeb } from "../../middlewares/authentication/jwt/auth.byJwt.web.js";
 
 const routerProductsWeb = Router();
 
-routerProductsWeb.get('/products', authenticationJwtView, contrShowProducts)
+routerProductsWeb.get('/products', authenticationJwtWeb, contrShowProducts)
 
 export default routerProductsWeb;

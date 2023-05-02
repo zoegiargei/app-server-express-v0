@@ -20,7 +20,7 @@ passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameF
     console.log(exist)
 
     if(exist.length > 0){
-        return new Error("User already exists")
+        return done(new Error("User already exists"), null)
     }
     
     const user = await usersService.saveUser({ first_name, last_name, email, age, password })
@@ -120,24 +120,6 @@ passport.use('jwt', new jwtStrategy({
         done(error)
     }
 }));
-
-export function authenticationJwtView(req, res, next) {
-    passport.authenticate('jwt', (error, user) => {
-
-        if (error || !user) return res.redirect('/web/login')
-        req.user = user
-        next()
-    })(req, res, next)
-};
-
-export function authenticationJwtApi(req, res, next) {
-    
-    passport.authenticate('jwt', (error, user) => {
-        if (error || !user) return next(new AuthenticationFailed())
-        req.user = user
-        next()
-    })(req, res, next)
-};
 //
 
 export const passportInitialize = passport.initialize();
