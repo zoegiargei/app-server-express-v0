@@ -1,0 +1,22 @@
+<h1 class="h1 p-2 d-flex justify-content-center"> Users </h1>
+
+{{#if thAreUsers}}
+
+    {{#each users}}
+
+        <div class="p-2 m-4" id="divUsers">
+
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action active" aria-current="true" ><h5>Username: {{ this.username }}</h5></li>
+                <li class="list-group-item list-group-item-action" >Email: {{this.email}}</li>
+                <li class="list-group-item list-group-item-action" >Age: {{this.age}}</li>
+                <li class="list-group-item list-group-item-action" >Cart: {{this.cart}}</li>
+                <li class="list-group-item list-group-item-action" >Role: {{this.role}}</li>
+            </ul>
+        </div>
+
+    {{/each}}
+
+{{else}}
+    <h3 class="h1 p-2 d-flex justify-content-center" >There aren't users</h3>
+{{/if}}

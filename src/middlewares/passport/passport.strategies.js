@@ -32,7 +32,7 @@ passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameF
 passport.use('login', new LocalStrategy({ usernameField: 'email' }, async ( username, password, done ) => {
 
     if(username === "adminCoder@coder.com" && password === "adminCod3r123"){
-        console.log('Es usuario admin')
+        console.log('>>>>>>Es usuario admin')
         const userAdmin = {
             username: 'User Admin',
             email: 'adminCoder@coder.com',
@@ -88,7 +88,7 @@ passport.use('github', new GithubStrategy({
             user_id: profile.id,
             username: profile.username
         })
-        
+
         console.log(">>>>>>>>>>new github user")
         console.log(user)
         await ghUserService.saveUser(user)

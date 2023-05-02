@@ -12,6 +12,8 @@ export async function contrRegister (req, res, next){
 };
 
 export async function contrGetUsers(req, res, next) {
+
     const users = await usersService.getUsers()
     res.json(users)
+    res.redirect('/web/users/')
 };
