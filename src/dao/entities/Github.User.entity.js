@@ -1,7 +1,7 @@
 class GithubUser{
     constructor({full_name, user_id, username, cart={}, role='User'}){
 
-        if(!full_name){ throw new Error('Sent an invalidate first name') }
+        if(!full_name){ throw new Error('Sent an invalidat full name') }
         if(!user_id){ throw new Error('Sent an invalidate last name') }
         if(!username){ throw new Error('Sent an invalidate email') }
 

@@ -2,7 +2,7 @@ import messageDbManager from "../dao/DBmanagers/Messages.manager.db.js";
 
 class MessageServices{
     async addMessage(newMess){
-        return await messageDbManager.saveElement(newMess)
+        return await messageDbManager.creaeteElement(newMess)
     }
 
     async getMessages(){

@@ -72,30 +72,31 @@ passport.use('github', new GithubStrategy({
 
 }, async (accessToken, refreshToken, profile, done) => {
     console.log(profile)
-
-    //const exist = await ghUserService.getUserByQuery({ username: profile.username })
-    /*     if(exist.length > 0){
-        const user = exist[0]
-        return done(null, user)
-    } */
     
-    let user
+
+    const exist = await ghUserService.getUserByQuery({ username: profile.username })
+    if(exist.length > 0){
+        console.log(">>>>>>>>>>github user already exist, it is this: ")
+        console.log(exist[0])
+        return done(null, exist[0])
+    }
 
     try {
-        user = await usersService.getUserByQuery({ username: profile.username })
-    } catch (error) {
-        
-        user = new GithubUser({
+
+        const user = new GithubUser({
             full_name: profile.displayName,
             user_id: profile.id,
             username: profile.username
         })
+        
+        console.log(">>>>>>>>>>new github user")
+        console.log(user)
         await ghUserService.saveUser(user)
-    }
+        return done(null, user)
 
-    console.log(user)
-    
-    done(null, user)
+    } catch (error) {
+        return done(error, null)
+    }
 }));
 
 

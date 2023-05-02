@@ -17,7 +17,7 @@ class ProductsService{
         })
 
         const newProd = new Product(prod)
-        return await ProductDbManager.saveElement(newProd)
+        return await ProductDbManager.creaeteElement(newProd)
     }
 
     async getProducts(){

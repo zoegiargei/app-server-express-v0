@@ -6,7 +6,7 @@ class GhUserService{
     async saveUser(data){
 
         const ghUser = new GithubUser(data)
-        await githubUserDbManager.saveElement(ghUser)
+        await githubUserDbManager.creaeteElement(ghUser)
         return ghUser
     }
 

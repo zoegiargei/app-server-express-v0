@@ -7,7 +7,7 @@ class CartsService{
     async createCart(){
 
         const newCart = new Cart()
-        return await CartDbManager.saveElement(newCart)
+        return await CartDbManager.creaeteElement(newCart)
     };
 
 
