@@ -1,4 +1,4 @@
-import ProductDbManager from "../dao/DBmanagers/Products.manager.db.js";
+import ProductsDbDAO from "../DAO/DAOS/Products.DAO.db.js";
 import productModel from "../dao/DBmodels/Product.model.js";
 import Product from "../models/Product.js";
 
@@ -7,7 +7,7 @@ class ProductsService{
     async loadProduct(prod){
 
 
-        const codeProd = await ProductDbManager.findElementByProjection({code: prod.code}, {code: 1})
+        const codeProd = await ProductsDbDAO.findElementByProjection({code: prod.code}, {code: 1})
         console.log(codeProd)
 
         codeProd.forEach(elem => {
@@ -17,20 +17,20 @@ class ProductsService{
         })
 
         const newProd = new Product(prod)
-        return await ProductDbManager.creaeteElement(newProd)
+        return await ProductsDbDAO.creaeteElement(newProd)
     }
 
     async getProducts(){
-        return await ProductDbManager.findElements()
+        return await ProductsDbDAO.findElements()
     }
 
     async getProductsByQuery(queryCli){
-        return await ProductDbManager.findElementsByQuery(queryCli)
+        return await ProductsDbDAO.findElementsByQuery(queryCli)
     }
 
     async getProductById(pid){
         try {
-            return await ProductDbManager.findElementById(pid)
+            return await ProductsDbDAO.findElementById(pid)
         } catch (error) {
             throw new Error("Product not existing")
         }
@@ -38,7 +38,7 @@ class ProductsService{
 
     async updateProduct(pid, data){
 
-        return await ProductDbManager.updateElement({ _id: pid }, data)
+        return await ProductsDbDAO.updateElement({ _id: pid }, data)
     }
 
     async sortAndShowElements(value){
@@ -48,12 +48,12 @@ class ProductsService{
         if (!sort || sort != 1 && sort != -1) {
             throw new Error("The sort value only can be 1 or -1")
         } else {
-            return await ProductDbManager.sortElements({price: sort})
+            return await ProductsDbDAO.sortElements({price: sort})
         }
     }
 
     async deleteProduct(pid){
-        return await ProductDbManager.deleteElement(pid)
+        return await ProductsDbDAO.deleteElement(pid)
     }
 
     async productsByPaginate(limitValue, pageValue){

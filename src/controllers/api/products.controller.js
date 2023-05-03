@@ -1,12 +1,12 @@
-import { ProductDbManager } from "../../dao/DBmanagers/ProductDbManager.js";
+//import { ProductsDbDAO } from "../../DAO/DAOs/Products.DAO.db.js";
 import productsService from "../../services/products.service.js";
 
 export const contrGetProd = async (req, res) => {
     try {
 
         const pid = req.params.pid
-        const product = await ProductDbManager.findElementById(pid)
-    
+        //const product = await ProductsDbDAO.findElementById(pid)
+        const product = await productsService.getProductById(pid)
         res.json({ product })
         
     } catch (error) {
@@ -132,7 +132,8 @@ export const contrDelProd = async (req, res) => {
         
         const pid = req.params.pid
         
-        await ProductDbManager.deleteElement(pid)
+        await productsService.deleteProduct(pid)
+        //await ProductsDbDAO.deleteElement(pid)
         return res.send({ status: "success", message: "Product deleted" })
 
     } catch (error) {

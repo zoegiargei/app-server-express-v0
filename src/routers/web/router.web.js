@@ -1,4 +1,5 @@
 import { Router } from "express";
+import routerCartsWeb from "./router.carts.web.js";
 import routerChatWeb from "./router.chat.web.js";
 import routerErrorWeb from "./router.error.web.js";
 import routerProductsWeb from "./router.products.web.js";
@@ -11,6 +12,6 @@ routerWeb.use('/session', routerSessionWeb);
 routerWeb.use('/products', routerProductsWeb);
 routerWeb.use('/chat', routerChatWeb);
 routerWeb.use('/error', routerErrorWeb);
-routerWeb.use('/users', routerUsersWeb)
-
+routerWeb.use('/users', routerUsersWeb);
+routerWeb.use('/carts', routerCartsWeb);
 export default routerWeb;

@@ -1,4 +1,4 @@
-import githubUserDbManager from "../dao/DBmanagers/GH.User.mananger.db.js";
+import GhUsersDbDAO from "../DAO/DAOs/GH.User.DAO.db.js";
 import GithubUser from "../dao/entities/Github.User.entity.js";
 
 class GhUserService{
@@ -6,16 +6,16 @@ class GhUserService{
     async saveUser(data){
 
         const ghUser = new GithubUser(data)
-        await githubUserDbManager.creaeteElement(ghUser)
+        await GhUsersDbDAO.creaeteElement(ghUser)
         return ghUser
     }
 
     async getUserByQuery(query){
-        return await githubUserDbManager.findElementsByQuery(query)
+        return await GhUsersDbDAO.findElementsByQuery(query)
     }
 
     async getAField(param1, param2){
-        return await githubUserDbManager.findElementByProjection(param1, param2)
+        return await GhUsersDbDAO.findElementByProjection(param1, param2)
     }
 };
 

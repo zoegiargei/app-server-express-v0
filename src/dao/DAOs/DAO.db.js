@@ -1,4 +1,4 @@
-class ManagerDb{
+class DAODb{
     constructor(db){
         this.db = db
     }
@@ -51,4 +51,4 @@ class ManagerDb{
     }
 };
 
-export default ManagerDb;
+export default DAODb;

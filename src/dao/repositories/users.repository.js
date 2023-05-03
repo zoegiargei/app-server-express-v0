@@ -1,40 +1,40 @@
-import usersManagerDb from "../DBmanagers/Users.manager.db.js";
+import UsersDAODb from "../DAOs/Users.DAO.db.js";
 import User from "../entities/User.entity.js";
 
 class UserRepository{
-    constructor(usersManager){
-        this.usersManager = usersManager
+    constructor(usersDAO){
+        this.usersDAO = usersDAO
     }
 
     async saveOne(user){
 
         const newUser = new User(user)
         const dtoUser = newUser.toDto()
-        await this.usersManager.createElement(dtoUser)
+        await this.usersDAO.createElement(dtoUser)
         return newUser
     }
 
     async getAllUsers(){
-        return await this.usersManager.findElements()
+        return await this.usersDAO.findElements()
     }
 
     async getOneById(id){
-        const user = await this.usersManager.findElementById(id)
+        const user = await this.usersDAO.findElementById(id)
         return new User(user)
     }
 
     async getUserByQuery(query){
-        return await this.usersManager.findElementsByQuery(query)
+        return await this.usersDAO.findElementsByQuery(query)
     }
 
     async getUsers(){
-        return await this.usersManager.findElements()
+        return await this.usersDAO.findElements()
     }
 
     async getAField(param1, param2){
-        return await this.usersManager.findElementByProjection(param1, param2)
+        return await this.usersDAO.findElementByProjection(param1, param2)
     }
 };
 
-const userRepository = new UserRepository(usersManagerDb);
+const userRepository = new UserRepository(UsersDAODb);
 export default userRepository;

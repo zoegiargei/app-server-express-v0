@@ -1,12 +1,12 @@
-import messageDbManager from "../dao/DBmanagers/Messages.manager.db.js";
+import MessageDbDAO from "../DAO/DAOs/Messages.DAO.db.js";
 
 class MessageServices{
     async addMessage(newMess){
-        return await messageDbManager.creaeteElement(newMess)
+        return await MessageDbDAO.creaeteElement(newMess)
     }
 
     async getMessages(){
-        return await messageDbManager.findElements()
+        return await MessageDbDAO.findElements()
     }
 };
 

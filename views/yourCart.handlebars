@@ -1,0 +1,35 @@
+<h1 class="h1 p-2 d-flex justify-content-center" > Your Cart </h1>
+
+{{#if thAreProducts}}
+
+    {{#each products}}
+
+        <div class="p-2 m-4" id="divProducts">
+
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action active" aria-current="true" ><h5>Product: {{ this.title }}</h5></li>
+                <li class="list-group-item list-group-item-action" >Description: {{this.description}}</li>
+                <li class="list-group-item list-group-item-action" >Code: {{this.code}}</li>
+                <li class="list-group-item list-group-item-action" >Price: {{this.price}}</li>
+                <li class="list-group-item list-group-item-action" >Status: {{this.status}}</li>
+                <li class="list-group-item list-group-item-action" >Stock: {{this.stock}}</li>
+                <li class="list-group-item list-group-item-action" >Category: {{this.category}}</li>
+                <li class="list-group-item list-group-item-action" >Thumbnail: {{this.thumbnail}}</li>
+            </ul>
+
+            <button>
+                <a href="http://localhost:8080/api/products/product/:{{this._id}}">See product</a>
+            </button>
+
+            <form action="" id="formSeeProduct">
+                <button type="submit" value={{this._id}}>See Product</button>
+            </form>
+        </div>
+
+    {{/each}}
+
+{{else}}
+    <h3 class="h1 p-2 d-flex justify-content-center" >There aren't products</h3>
+{{/if}}
+
+<script src="/js/cartById.js"></script>
