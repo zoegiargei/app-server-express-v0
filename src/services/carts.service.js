@@ -1,42 +1,52 @@
-import CartDbDAO from "../DAO/DAOs/Carts.DAO.db.js";
+import CartDbDAO from "../DAO/DB_DAOs/Carts.DAO.db.js"
 import Cart from "../models/Cart.js";
 
 class CartsService{
-
+    constructor(cartDbDAO){
+        this.cartDbDAO = cartDbDAO
+    }
     
     async createCart(){
 
         const newCart = new Cart()
-        return await CartDbDAO.creaeteElement(newCart)
+        const cart = await this.cartDbDAO.creaeteElement(newCart)
+        return cart
+    };
+
+
+    async getLastOne(){
+
+        const lastOne = await this.cartDbDAO.findTheLastOne()
+        return lastOne
     };
 
 
     async loadProductInCart(cid, data){
 
-        const cartInDb = await CartDbDAO.findElementById(cid)
+        const cartInDb = await this.cartDbDAO.findElementById(cid)
         if(!cartInDb){ throw new Error("Cart not existing") }
         
         if(!data || data === []){ throw new Error("Sent an invalidate value") }
 
         cartInDb.productsCart = data
         
-        return await CartDbDAO.replaceElement(cid, cartInDb)
+        return await this.cartDbDAO.replaceElement(cid, cartInDb)
     };
 
 
     async getCartById(cid){
-        return await CartDbDAO.findElementById(cid)
+        return await this.cartDbDAO.findElementById(cid)
     };
 
 
     async getCartByIdPopulated(cid){
-        return await CartDbDAO.findElementById(cid)
+        return await this.cartDbDAO.findElementById(cid)
     };
 
 
     async addToCart(cid, pid){
 
-        const cartInDb = await CartDbDAO.findElementById(cid)
+        const cartInDb = await this.cartDbDAO.findElementById(cid)
         if(!cartInDb){ throw new Error("Cart not existing") }
         
         if(cartInDb.productsCart.find(prod => String(prod.product._id) === pid)){
@@ -53,13 +63,13 @@ class CartsService{
             cartInDb.productsCart.push({ product: pid, quantity: 1 })
         }
 
-        await CartDbDAO.replaceElement(cid, cartInDb)
+        await this.cartDbDAO.replaceElement(cid, cartInDb)
     };
 
 
     async updateProdInCart(cid, pid, newQuantity){
 
-        const cartInDb = await CartDbDAO.findElementById(cid)
+        const cartInDb = await this.cartDbDAO.findElementById(cid)
         if(!cartInDb){ throw new Error("Cart not existing") }
 
         if(cartInDb.productsCart.find(prod => String(prod.product._id) === pid)){
@@ -71,7 +81,7 @@ class CartsService{
                 }
             })
 
-            await CartDbDAO.replaceElement(cid, cartInDb)
+            await this.cartDbDAO.replaceElement(cid, cartInDb)
 
         } else{
             throw new Error("Product not existing in the cart")
@@ -81,13 +91,13 @@ class CartsService{
 
     async delProdInCart(cid, pid){
 
-        const cartInDb = await CartDbDAO.findElementById(cid)
+        const cartInDb = await this.cartDbDAO.findElementById(cid)
         if(!cartInDb){ throw new Error("Cart not existing") }
 
         if(cartInDb.productsCart.find(prod => String(prod.product._id) === pid)){
 
             const newCartInDb = cartInDb.productsCart.filter(prod => String(prod.product._id) != pid)
-            await CartDbDAO.replaceElement(cid, newCartInDb)
+            await this.cartDbDAO.replaceElement(cid, newCartInDb)
 
         } else{
             throw new Error("Product in cart not found")
@@ -98,15 +108,19 @@ class CartsService{
 
     async deleteAllProducts(cid){
         
-        const cartInDb = await CartDbDAO.findElementById(cid)
+        const cartInDb = await this.cartDbDAO.findElementById(cid)
         if(!cartInDb){ throw new Error("Cart not existing") }
 
         cartInDb.productsCart = []
-        return await CartDbDAO.replaceElement(cid, cartInDb)
+        return await this.cartDbDAO.replaceElement(cid, cartInDb)
     };
+
+    async deleteCart(cid){
+        return await this.cartDbDAO.deleteElement(cid)
+    }
 
 };
 
-const cartsService = new CartsService();
+const cartsService = new CartsService(CartDbDAO);
 
 export default cartsService;

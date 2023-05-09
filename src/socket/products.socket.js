@@ -1,8 +1,8 @@
-import productsService from "../services/products.service.js";
+import factory from "../DAO/factory.js";
 
 export async function configProductsSocket(io, socketSideServer){
     
-    const allProducts = productsService.getProducts()
+    const allProducts = factory.productsService.getProducts()
     socketSideServer.emit('allProducts', allProducts)
 
 };

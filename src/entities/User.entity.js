@@ -80,7 +80,7 @@
 
 export default User; */
 
-import encryptedPass from "../../utils/password/encrypted.pass.js";
+import encryptedPass from "../utils/password/encrypted.pass.js"
 
 class User{
     constructor({username=null, first_name, last_name, email, age, password, cart={}, role='User'}){
@@ -99,6 +99,20 @@ class User{
         this.password = encryptedPass.createHash(password),
         this.cart = cart,
         this.role = role
+    }
+
+    toDto(){
+        return{
+            _id: this._id,
+            username: this.username,
+            first_name: this.first_name,
+            last_name: this.last_name,
+            email: this.email,
+            age: this.age,
+            password: this.password,
+            cart: this.cart,
+            role: this.role
+        }
     }
 };
 

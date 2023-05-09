@@ -1,5 +1,5 @@
 import cartsService from "../../services/carts.service.js";
-import productsService from "../../services/products.service.js";
+import factory from "../../DAO/factory.js";
 
 export const contrPostCart = async (req, res) => {
     try {
@@ -33,7 +33,7 @@ export const contrProdInCart = async (req, res) => {
         const cid = req.params.cid
         const pid = req.params.pid
     
-        const productById = await productsService.getProductById(pid)
+        const productById = await factory.productsService.getProductById(pid)
 
         if(!productById){
             res.status(400).send({ status:"error", error:"Product not existing" })
@@ -114,3 +114,13 @@ export const contrDelAllProds = async (req, res) => {
         res.status(400).send({ message: error.message })
     }
 };
+
+export const handlerShowCart = async (req, res) => {
+    try {
+        console.log('>>>>>>handlerShowCart - Cart ID')
+        console.log(req.user.cart[0]._id)
+        res.sendStatus(201)
+    } catch (error) {
+        res.send(error)
+    }
+}

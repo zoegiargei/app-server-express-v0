@@ -1,12 +1,10 @@
-//import { ProductsDbDAO } from "../../DAO/DAOs/Products.DAO.db.js";
-import productsService from "../../services/products.service.js";
+import factory from "../../DAO/factory.js";
 
 export const contrGetProd = async (req, res) => {
     try {
 
         const pid = req.params.pid
-        //const product = await ProductsDbDAO.findElementById(pid)
-        const product = await productsService.getProductById(pid)
+        const product = await factory.productsService.getProductById(pid)
         res.json({ product })
         
     } catch (error) {
@@ -25,14 +23,14 @@ export const contrGetProducts = async (req, res) => {
         const queryCli = req.query.queryCli
         const cat = req.query.category
 
-        const allProducts = (await productsService.getProducts()).slice(0, limit)
+        const allProducts = (await factory.productsService.getProducts()).slice(0, limit)
 
 
         if (cat) {
             try {
 
                 const categoryCli = String(cat)
-                const productsByCat = await productsService.getProductsByQuery({ category: categoryCli })
+                const productsByCat = await factory.productsService.getProductsByQuery({ category: categoryCli })
                 return res.json({ productsByCat })
 
             } catch (error) {
@@ -41,7 +39,7 @@ export const contrGetProducts = async (req, res) => {
         } else if (valueStock) {
             try {
 
-                const prodsByStock = await productsService.getProductsByQuery({stock: {$eq: 200}})
+                const prodsByStock = await factory.productsService.getProductsByQuery({stock: {$eq: 200}})
                 return res.json({ prodsByStock })
                 
             } catch (error) {
@@ -50,7 +48,7 @@ export const contrGetProducts = async (req, res) => {
         } else if (page) {
             try {
 
-                const productsByPage = await productsService.productsByPaginate(limit, page)
+                const productsByPage = await factory.productsService.productsByPaginate(limit, page)
 
                 const prevLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page)-1}` : null
                 const nextLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page)+1}` : null
@@ -62,7 +60,7 @@ export const contrGetProducts = async (req, res) => {
             }
         } else if (sort) {
 
-            const sortedProducts = await productsService.sortAndShowElements(sort)
+            const sortedProducts = await factory.productsService.sortAndShowElements(sort)
             return res.json({ sortedProducts })
 
         } else if (queryCli) {
@@ -71,7 +69,7 @@ export const contrGetProducts = async (req, res) => {
 
             try {
 
-                const prodByQuery = await productsService.getProductsByQuery(queryCli)
+                const prodByQuery = await factory.productsService.getProductsByQuery(queryCli)
                 return res.json({ prodByQuery })
 
             } catch (error) {
@@ -90,12 +88,12 @@ export const contrGetProducts = async (req, res) => {
 export const contrPostProd = async (req, res) => {
     try {
 
-        if(!req.file_thumbnail){
+        if(!req.file){
             res.status(400).send({ message: "ERROR. Failed loading file" })
         }
         
         const data = req.body
-        data.file_thumbnail = req.file_thumbnail
+        data.file_thumbnail = req.file.originalname
 
         const savedProduct = await productsService.loadProduct(data)
 
@@ -103,7 +101,8 @@ export const contrPostProd = async (req, res) => {
         
         req['io'].sockets.emit('updateView', allProducts)
 
-        res.status(201).json({ savedProduct });
+        res.sendStatus(201)
+        res.json({ savedProduct });
 
     } catch (error) {
 
@@ -133,7 +132,6 @@ export const contrDelProd = async (req, res) => {
         const pid = req.params.pid
         
         await productsService.deleteProduct(pid)
-        //await ProductsDbDAO.deleteElement(pid)
         return res.send({ status: "success", message: "Product deleted" })
 
     } catch (error) {

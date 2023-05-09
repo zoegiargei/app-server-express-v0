@@ -1,7 +1,6 @@
 import express from "express";
 import { PORT } from "./configs/server.config.js";
 import { engine } from "express-handlebars";
-import __dirname from "./utils/path/dirname.js"
 import mongoose from "mongoose";
 import { MONGO_CNX_STR } from "./configs/db.config.js";
 import cookieParser from "cookie-parser";
@@ -15,8 +14,9 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { configProductsSocket } from "./socket/products.socket.js";
 import { configMessagesSocket } from "./socket/chat.socket.js";
+//import __dirname from "./utils/path/dirname.js";
 
-const app = express(); // Servidor con express
+const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended:true }));
@@ -38,8 +38,8 @@ app.use('/api', routerApi);
 app.use('/web', routerWeb);
 
 app.get('*', (req, res) => {
+    
     res.redirect('/web/session/unknownRoute')
-	res.send(`unknown route ${req.url}`)
 });
 
 mongoose.connect(MONGO_CNX_STR, {
@@ -55,5 +55,4 @@ io.on('connection', async socketSideServer => {
 
     configProductsSocket(io, socketSideServer)
     configMessagesSocket(io, socketSideServer)
-
 });

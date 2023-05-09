@@ -80,3 +80,23 @@ a{
     font-size: 20px;
     margin: auto;
 }
+
+.containerLogin{
+    width: 100vw;
+    height: 100%;
+}
+
+.slogan{
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.slogan .h1_slogan{
+    color: white;
+}

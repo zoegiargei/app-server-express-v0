@@ -1,10 +1,10 @@
-import productsService from "../../services/products.service.js";
+import factory from "../../DAO/factory.js"
 import { PORT } from "../../configs/server.config.js";
 
 export const contrShowProducts = async (req, res) => {
     try {
         const page = req.query.page || 1
-        const allProducts = await productsService.productsByPaginate(1, page)
+        const allProducts = await factory.productsService.productsByPaginate(1, page)
     
         const thIsProducts = allProducts['docs'].length > 0
     

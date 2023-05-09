@@ -1,41 +1,54 @@
-<section class="container-fluid p-3">
+<div class="container-fluid">
 
-  <div class="col-6 mx-auto">
+  <div class="row containerLogin">
 
-    <h1 class="mt-5"> <i class="bi bi-box-arrow-in-right"></i> LOG IN </h1>
+    <section class="col-5">
+      <div class="mx-auto">
 
-    <form id="loginForm" class="p-3 mt-5">
+        <h1 class="mt-5"> <i class="bi bi-box-arrow-in-right"></i> LOG IN </h1>
 
-      <div class="mb-3">
+        <form id="loginForm" class="p-3 mt-5">
 
-        <label class="col-form-label col-form-label-md mt-2" for="email">Email address</label>
-        <input type="email" class="form-control form-control-lg h-50" placeholder="email@xxx.com" id="loginEmail"
-          name="loginEmail" aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          <div class="mb-3">
+
+            <label class="col-form-label col-form-label-md mt-2" for="email">Email address</label>
+            <input type="email" class="form-control form-control-lg h-50" placeholder="email@xxx.com" id="loginEmail"
+              name="loginEmail" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="col-form-label col-form-label-md mt-2">Password</label>
+            <input type="password" class="form-control form-control-lg h-50" id="loginPassword" name="loginPassword">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+
+        <div class="p-3 btnGithub">
+          <a href="/api/session/github">
+            <button type="button" class="btn btn-dark">
+              <i class="bi bi-github" style="font-size: 1.5em;" ></i> Login by Github
+            </button>
+          </a>
+        </div>
+
+        <h5> You don't have an account yet? <a href="/web/session/register/" style="color: blue;"> >>>Register </a></h1>
+
       </div>
+    </section>
 
-      <div class="mb-3">
-        <label for="exampleInputPassword1" class="col-form-label col-form-label-md mt-2">Password</label>
-        <input type="password" class="form-control form-control-lg h-50" id="loginPassword" name="loginPassword">
-      </div>
-
-      <button type="submit" class="btn btn-primary">Submit</button>
-
-    </form>
-
-    <div class="p-3 btnGithub">
-      <a href="/api/session/github">
-        <button type="button" class="btn btn-dark">
-          <i class="bi bi-github" style="font-size: 1.5em;" ></i> Login by Github
-        </button>
-      </a>
-    </div>
-
-    <h5> You don't have an account yet? <a href="/web/session/register/" style="color: blue;"> >>>Register </a></h1>
+    <section class="col-7 slogan">
+      <section class="mx-auto">
+        <h1 class="h1_slogan" style="font-size: 50px;">IN DATA WE BELIEVE</h1>
+      </section>
+    </section>
 
   </div>
-
-</section>
+  
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 <script src="/js/login.js"></script>
+<link rel="stylesheet" href="/css/styles.css">

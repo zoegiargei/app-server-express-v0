@@ -15,6 +15,10 @@ class DAODb{
         return await this.db.findOne({ _id: id }).lean()
     }
 
+    async findTheLastOne(){
+        return await this.db.find().limit(1).sort({$natural:-1}).lean()
+    }
+
     async findElementsByQuery(_query){
 
         if(!_query){
@@ -46,7 +50,7 @@ class DAODb{
         return await this.db.deleteOne({ _id: id })
     }
 
-    async resetCollection(){
+    async reset(){
         return await this.db.deleteMany({})
     }
 };

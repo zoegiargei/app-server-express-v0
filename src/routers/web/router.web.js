@@ -14,4 +14,10 @@ routerWeb.use('/chat', routerChatWeb);
 routerWeb.use('/error', routerErrorWeb);
 routerWeb.use('/users', routerUsersWeb);
 routerWeb.use('/carts', routerCartsWeb);
+
+//proof
+routerWeb.get('/upload', (req, res) => {
+    res.render('upload', { title: 'Upload proof' })
+});
+
 export default routerWeb;

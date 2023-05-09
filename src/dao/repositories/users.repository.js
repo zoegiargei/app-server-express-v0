@@ -1,16 +1,15 @@
-import UsersDAODb from "../DAOs/Users.DAO.db.js";
-import User from "../entities/User.entity.js";
+import User from "../../entities/User.entity.js";
 
 class UserRepository{
     constructor(usersDAO){
         this.usersDAO = usersDAO
     }
 
-    async saveOne(user){
+    async createUser(user){
 
         const newUser = new User(user)
         const dtoUser = newUser.toDto()
-        await this.usersDAO.createElement(dtoUser)
+        await this.usersDAO.creaeteElement(dtoUser)
         return newUser
     }
 
@@ -27,14 +26,13 @@ class UserRepository{
         return await this.usersDAO.findElementsByQuery(query)
     }
 
-    async getUsers(){
-        return await this.usersDAO.findElements()
-    }
-
     async getAField(param1, param2){
         return await this.usersDAO.findElementByProjection(param1, param2)
     }
+
+    async deleteUser(id){
+        return await this.usersDAO.deleteElement(id)
+    }
 };
 
-const userRepository = new UserRepository(UsersDAODb);
-export default userRepository;
+export default UserRepository;

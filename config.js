@@ -10,6 +10,7 @@ const program = new Command(); // inicializamos un nuevo comando de commander
 // prod
 
 program
+    .option('PERSISTENCE <persistence>', 'metodo de persistencia de datos', 'MONGO')
     .option('NODE_ENV <environment>', 'entorno en el que queremos correr el programa', 'dev')
     .option('PORT <port>', 'puerto del servidor', 8080)
     .option('MONGO_CNX_STR <url>', 'URL de conexion a la base de datos', '')
@@ -25,6 +26,7 @@ dotenv.config({
 })
 
 export default {
+    PERSISTENCE: process.env.PERSISTENCE,
     PORT: process.env.PORT,
     MONGO_CNX_STR: process.env.MONGO_CNX_STR,
     JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,

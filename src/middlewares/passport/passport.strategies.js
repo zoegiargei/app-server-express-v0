@@ -1,15 +1,13 @@
 import passport from "passport";
 import usersService from "../../services/users.service.js";
 import ghUserService from "../../services/gh.users.service.js";
-import GithubUser from "../../dao/entities/Github.User.entity.js";
+import GithubUser from "../../entities/Github.User.entity.js";
 import { ExtractJwt, Strategy as jwtStrategy } from "passport-jwt";
 import { githubCallbackUrl, githubClienteId, githubClientSecret, JWT_PRIVATE_KEY } from "../../configs/auth.config.js";
 import { AuthenticationFailed } from "../../errors/Authentication.failed.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import encryptedPass from "../../utils/password/encrypted.pass.js";
 import { Strategy as GithubStrategy } from "passport-github2";
-//import authenticationService from "../../services/auth.service.js";
-
 
 passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameField: 'email'}, async (req, _u, _p, done) => {
 

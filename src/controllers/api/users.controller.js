@@ -15,5 +15,5 @@ export async function contrGetUsers(req, res, next) {
 
     const users = await usersService.getUsers()
     res.json(users)
-    res.redirect('/web/users/')
+    //.redirect('/web/users/')
 };

@@ -1,15 +1,19 @@
-import MessageDbDAO from "../DAO/DAOs/Messages.DAO.db.js";
+import MessageDbDAO from "../DAO/DB_DAOs/Messages.DAO.db.js";
 
 class MessageServices{
+    constructor(messageDbDAO){
+        this.messageDbDAO = messageDbDAO
+    }
+
     async addMessage(newMess){
-        return await MessageDbDAO.creaeteElement(newMess)
+        return await this.messageDbDAO.creaeteElement(newMess)
     }
 
     async getMessages(){
-        return await MessageDbDAO.findElements()
+        return await this.messageDbDAO.findElements()
     }
 };
 
-const messageServices = new MessageServices();
+const messageServices = new MessageServices(MessageDbDAO);
 
 export default messageServices;
