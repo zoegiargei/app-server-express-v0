@@ -6,6 +6,6 @@ export async function contrShowUsers(req, res){
     console.log(users)
 
     const thAreUsers = users ? true : false
-
-    res.render('showUsers', { title: 'Users', thAreUsers: thAreUsers , users: users })
+    const loggedin = req.user
+    res.render('showUsers', { title: 'Users', loggedin: loggedin, thAreUsers: thAreUsers , users: users })
 };

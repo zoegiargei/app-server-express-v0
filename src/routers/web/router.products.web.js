@@ -7,7 +7,9 @@ const routerProductsWeb = Router();
 
 routerProductsWeb.get('/products', authenticationJwtWeb, contrShowProducts)
 routerProductsWeb.get('/addProduct', authenticationJwtWeb, authenticationByRole(['Auth']), (req, res) => {
-    res.render('addProduct', { title: 'AddProduct' })
+    
+    const loggedin = req.user
+    res.render('addProduct', { title: 'AddProduct', loggedin:loggedin })
 });
 
 export default routerProductsWeb;

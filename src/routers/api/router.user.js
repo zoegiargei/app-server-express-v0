@@ -8,6 +8,6 @@ const routerUser = Router();
 routerUser.post('/register', registerAuthentication, contrRegister);
 
 //authentication by role proof
-routerUser.get('/users', authenticationJwtApi,/*  authenticationByRole(['Admin']), */ contrGetUsers);
+routerUser.get('/users', authenticationJwtApi, authenticationByRole(['Admin']), contrGetUsers);
 
 export default routerUser;

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticationJwtWeb } from "../../middlewares/authentication/jwt/auth.byJwt.web.js";
 import routerCartsWeb from "./router.carts.web.js";
 import routerChatWeb from "./router.chat.web.js";
 import routerErrorWeb from "./router.error.web.js";
@@ -9,7 +10,13 @@ import routerUsersWeb from "./router.users.web.js";
 const routerWeb = Router();
 
 routerWeb.get('/', (req, res) => {
-    res.redirect('/web/session/login')
+    res.redirect('/web/home')
+});
+
+routerWeb.get('/home', authenticationJwtWeb, (req, res) => {
+    
+    const loggedin = req.user
+    res.render('home', { title: 'Home', loggedin: loggedin })
 });
 
 routerWeb.use('/session', routerSessionWeb);

@@ -14,8 +14,9 @@ routerCartsWeb.get('/cartById', authenticationJwtWeb, async (req, res) => {
 
     const products = cart.productsCart
     const thAreProducts = products.length > 0 ? true : false
+    const loggedin = req.user
 
-    res.render('yourCart', { title: 'Your Cart', thAreProducts: thAreProducts, products: products, cartId: req.user.cart[0]._id })
+    res.render('yourCart', { title: 'Your Cart', loggedin:loggedin, thAreProducts: thAreProducts, products: products, cartId: req.user.cart[0]._id })
 });
 
 export default routerCartsWeb;

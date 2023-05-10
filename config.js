@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { Command } from "commander";
 
-const program = new Command(); // inicializamos un nuevo comando de commander
+const program = new Command();
 
 //NODE_ENV es convencion para definir en que entorno estamos
 //NODE_ENV CAN BE:

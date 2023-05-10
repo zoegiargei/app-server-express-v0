@@ -32,12 +32,6 @@ export const contrProdInCart = async (req, res) => {
 
         const cid = req.params.cid
         const pid = req.params.pid
-    
-        const productById = await factory.productsService.getProductById(pid)
-
-        if(!productById){
-            res.status(400).send({ status:"error", error:"Product not existing" })
-        }
         
         await cartsService.addToCart(cid, pid)
         

@@ -5,7 +5,9 @@ import { authenticationByRole } from "../../middlewares/authentication/authentic
 const routerChatWeb = Router();
 
 routerChatWeb.get('/', authenticationJwtWeb, authenticationByRole(['User']), async (req, res) => {
-    res.render('chat', { title: 'Chat Websocket' })
+    
+    const loggedin = req.user
+    res.render('chat', { title: 'Chat Websocket', loggedin:loggedin })
 });
 
 export default routerChatWeb;

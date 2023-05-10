@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { contrDelProd, contrGetProd, contrGetProducts, contrPostProd, contrPutProd } from "../../controllers/api/products.controller.js";
+//import * as prodHandlers from "../../controllers/api/products.controller.js";
 import { authenticationByRole } from "../../middlewares/authentication/authentication.byRole.js";
 import { authenticationJwtApi } from "../../middlewares/authentication/jwt/auth.byJwt.api.js";
 import ConfigMulter from "../../utils/multer/config.files.multer.js";

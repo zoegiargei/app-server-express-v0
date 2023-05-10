@@ -34,7 +34,8 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async ( user
         const userAdmin = {
             username: 'User Admin',
             email: 'adminCoder@coder.com',
-            role: 'Admin'
+            role: 'Admin',
+            admin: true
         }
 
         return done(null, userAdmin)

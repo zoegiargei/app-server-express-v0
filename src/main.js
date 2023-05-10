@@ -14,6 +14,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { configProductsSocket } from "./socket/products.socket.js";
 import { configMessagesSocket } from "./socket/chat.socket.js";
+import { errorHandler } from "./middlewares/errors/error.handler.js";
 //import __dirname from "./utils/path/dirname.js";
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(cookieParser(SECRET_WORD));
 app.use(showCookies);
 app.use(timeNow);
 app.use(passportInitialize);
+app.use(errorHandler); //proof
 app.use(cors({
     origin:`http://localhost:${PORT}`
 }));

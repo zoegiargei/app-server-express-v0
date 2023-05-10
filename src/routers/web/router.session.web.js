@@ -6,10 +6,8 @@ const routerSessionWeb = Router();
 
 routerSessionWeb.get('/', authenticationJwtWeb, (req, res) => {
 
-    console.log("authentication jwt web")
-    console.log(req.user)
-
-    res.render('current', { title: "Current", user: req.user } )
+    const loggedin = req.user
+    res.render('current', { title: "Current", loggedin: loggedin, user: req.user } )
 });
 
 routerSessionWeb.get('/register', authenticationJwtLoggedIn, (req, res) => { 
