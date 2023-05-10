@@ -3,7 +3,7 @@
 
         <section class="col-6 row p-3 mx-auto">
 
-            <h1>Welcome {{user.firs_name}}!!!</h1>
+            <h1>Welcome {{user.username}}!!!</h1>
             <i class="bi bi-person-circle" style="font-size: 5em; color: cornflowerblue;"></i>
         </section>
 
@@ -18,15 +18,17 @@
             </ol>
         </section>
 
-        <section class="col-6 row p-3 mx-auto">
+        {{#if user.cart}}
+            <section class="col-6 row p-3 mx-auto">
 
-            <form action="/api/carts/cartById" id="cartForm" class="col-12">
-                <button type="submit" class="btn btn-success row">
-                    <i class="bi bi-cart3"></i>
-                    <p>Cart</p>
-                </button>
-            </form>
-        </section>
+                <form action="/api/carts/cartById" id="cartForm" class="col-12">
+                    <button type="submit" class="btn btn-success row">
+                        <i class="bi bi-cart3"></i>
+                        <p>Cart</p>
+                    </button>
+                </form>
+            </section>
+        {{/if}}
 
         <section class="col-6 row p-3 mx-auto">
 

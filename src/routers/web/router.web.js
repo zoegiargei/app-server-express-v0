@@ -8,6 +8,10 @@ import routerUsersWeb from "./router.users.web.js";
 
 const routerWeb = Router();
 
+routerWeb.get('/', (req, res) => {
+    res.redirect('/web/session/login')
+});
+
 routerWeb.use('/session', routerSessionWeb);
 routerWeb.use('/products', routerProductsWeb);
 routerWeb.use('/chat', routerChatWeb);
