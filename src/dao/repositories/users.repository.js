@@ -9,8 +9,8 @@ class UserRepository{
 
         const newUser = new User(user)
         const dtoUser = newUser.toDto()
-        await this.usersDAO.creaeteElement(dtoUser)
-        return newUser
+        const userSaved = await this.usersDAO.creaeteElement(dtoUser)
+        return userSaved
     }
 
     async getAllUsers(){
@@ -28,6 +28,10 @@ class UserRepository{
 
     async getAField(param1, param2){
         return await this.usersDAO.findElementByProjection(param1, param2)
+    }
+
+    async updateUser(id, value){
+        return await this.usersDAO.updateElement(id, value)
     }
 
     async deleteUser(id){

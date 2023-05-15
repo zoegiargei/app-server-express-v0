@@ -7,6 +7,7 @@ const ghUserSchema = new mongoose.Schema({
     full_name : { type:String, required:true },
     user_id: { type:String, required:true },
     username: { type:String, required:true },
+    
     cart: { 
         type: [
         {
@@ -17,7 +18,13 @@ const ghUserSchema = new mongoose.Schema({
         }
         ], default: {}
     },
-    role: { type:String, required:true }
+    
+    role: { type:String, required:true },
+    orders: { 
+        type: [ 
+            { type: Object }
+        ]
+    }
     
 }, { versionKey: false } );
 

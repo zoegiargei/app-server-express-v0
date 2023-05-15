@@ -26,7 +26,7 @@ class DAO_FS{
 
         if(this.elements.some(prod => prod.code === newElement.code)){
                     
-            throw new Error("There cannot be two identical CODE")
+            return new Error("There cannot be two identical CODE")
             
         } else{
             
@@ -76,7 +76,7 @@ class DAO_FS{
         this.elements = await this.read()
         const index = this.elements.findIndex(elem => elem.id === id)
         
-        if(index === -1){ throw Error("Element not found") }
+        if(index === -1){ return Error("Element not found") }
 
         this.elements[index] = newElement
         await this.write()
@@ -89,7 +89,7 @@ class DAO_FS{
         const newArray = allProducts.filter(prod => prod.id != pid)
 
         if (newArray.length === currentLength) {
-            throw new Error("Product not found")
+            return new Error("Product not found")
         }
 
         this.elements = newArray

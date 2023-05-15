@@ -8,18 +8,15 @@ class ProductsService{
 
     async loadProduct(prod){
 
+        const codeProd = await this.productsDbDAO.findElementByProjection({code: Number(prod.code)}, {code: 1})
 
-        const codeProd = await this.productsDbDAO.findElementByProjection({code: prod.code}, {code: 1})
-        console.log(codeProd)
-
-        codeProd.forEach(elem => {
-            if(elem.code === prod.code){
-                throw new Error("This CODE already exists")
-            }
-        })
+        if(codeProd.length > 0){
+            throw new Error("This CODE already exists")
+        }
 
         const newProd = new Product(prod)
-        return await this.productsDbDAO.creaeteElement(newProd)
+        await this.productsDbDAO.creaeteElement(newProd)
+        return newProd
     }
 
     async getProducts(){
@@ -34,7 +31,7 @@ class ProductsService{
         try {
             return await this.productsDbDAO.findElementById(pid)
         } catch (error) {
-            throw new Error("Product not existing")
+            return new Error("Product not existing")
         }
     }
 
@@ -48,7 +45,7 @@ class ProductsService{
         const sort = value
 
         if (!sort || sort != 1 && sort != -1) {
-            throw new Error("The sort value only can be 1 or -1")
+            return new Error("The sort value only can be 1 or -1")
         } else {
             return await this.productsDbDAO.sortElements({price: sort})
         }

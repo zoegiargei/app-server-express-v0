@@ -32,31 +32,31 @@
 
     get first_name(){return this.#first_name}
     set first_name(value){
-        if(!value){ throw new Error('Sent an invalidate first name') }
+        if(!value){ return new Error('Sent an invalidate first name') }
         this.#first_name = value
     }
 
     get last_name(){return this.#last_name}
     set last_name(value){
-        if(!value){ throw new Error('Sent an invalidate last name') }
+        if(!value){ return new Error('Sent an invalidate last name') }
         this.#last_name = value
     }
 
     get email(){return this.#email}
     set email(value){
-        if(!value){ throw new Error('Sent an invalidate email') }
+        if(!value){ return new Error('Sent an invalidate email') }
         this.#email = value
     }
 
     get age(){return this.#age}
     set age(value) {
-        if(!value || value <= 0){ throw new Error('Sent an invalidate age') }
+        if(!value || value <= 0){ return new Error('Sent an invalidate age') }
         this.#age = value
     }
 
     get password(){return this.#password}
     set password(value){
-        if(!value || value === ''){ throw new Error('Sent an invalidate password') }
+        if(!value || value === ''){ return new Error('Sent an invalidate password') }
         const password = encryptedPass.createHash(value)
         this.#password = password
     }
@@ -83,13 +83,13 @@ export default User; */
 import encryptedPass from "../utils/password/encrypted.pass.js"
 
 class User{
-    constructor({username=null, first_name, last_name, email, age, password, cart={}, role='User'}){
+    constructor({ username=null, first_name, last_name, email, age, password, cart={}, role='User' }){
 
-        if(!first_name){ throw new Error('Sent an invalidate first name') }
-        if(!last_name){ throw new Error('Sent an invalidate last name') }
-        if(!email){ throw new Error('Sent an invalidate email') }
-        if(!age || age <= 0){ throw new Error('Sent an invalidate age') }
-        if(!password || password === ''){ throw new Error('Sent an invalidate password') }
+        if(!first_name){ return new Error('Sent an invalidate first name') }
+        if(!last_name){ return new Error('Sent an invalidate last name') }
+        if(!email){ return new Error('Sent an invalidate email') }
+        if(!age || age <= 0){ return new Error('Sent an invalidate age') }
+        if(!password || password === ''){ return new Error('Sent an invalidate password') }
 
         this.username = username || (`${first_name}${last_name}`).toLowerCase()
         this.first_name = first_name,
@@ -98,12 +98,12 @@ class User{
         this.age = age,
         this.password = encryptedPass.createHash(password),
         this.cart = cart,
-        this.role = role
+        this.role = role,
+        this.orders = []
     }
 
     toDto(){
         return{
-            _id: this._id,
             username: this.username,
             first_name: this.first_name,
             last_name: this.last_name,
@@ -111,7 +111,8 @@ class User{
             age: this.age,
             password: this.password,
             cart: this.cart,
-            role: this.role
+            role: this.role,
+            orders: this.orders
         }
     }
 };

@@ -1,5 +1,6 @@
 import cartsService from "../../services/carts.service.js";
-import factory from "../../DAO/factory.js";
+import ticketsService from "../../services/tickets.service.js";
+import usersService from "../../services/users.service.js";
 
 export const contrPostCart = async (req, res) => {
     try {
@@ -30,10 +31,13 @@ export const contrGetCart = async (req, res) => {
 export const contrProdInCart = async (req, res) => {
     try {
 
-        const cid = req.params.cid
-        const pid = req.params.pid
+        const cid = String(req.params.cid)
+        const newCid = cid.slice(1)
+        const pid = String(req.params.pid)
+        const newPid = pid.slice(1)
+        const quantity = req.body
         
-        await cartsService.addToCart(cid, pid)
+        await cartsService.addToCart(newCid, newPid, quantity.quantity)
         
         res.send({ status:"success", message:"Product added to cart" })
 
@@ -112,9 +116,45 @@ export const contrDelAllProds = async (req, res) => {
 export const handlerShowCart = async (req, res) => {
     try {
         console.log('>>>>>>handlerShowCart - Cart ID')
-        console.log(req.user.cart[0]._id)
-        res.sendStatus(201)
+        const cart = req.user.cart
+        res.status(201).json({ cart })
     } catch (error) {
-        res.send(error)
+        res.send({ message: error.message })
     }
 }
+
+export const handlerPurchase = async (req, res) => {
+
+    const user = req.user
+    const cid = req.user.cart[0]._id
+    const cart = await cartsService.getCartById(cid)
+
+    let total = 0
+
+    console.log('>>>>>cart ')
+    console.log(cart)
+
+    cart.productsCart.forEach(prod => {
+        total = total + (prod.quantity * prod.product.price)
+    })
+
+    console.log('>>>>>>>Total de la compra')
+    console.log(total)
+
+    const ticket = await ticketsService.generateTicket(total, user.email)
+
+    if(user.orders){
+        user.orders.push(ticket)
+    } else{
+        user.orders = []
+        user.orders.push(ticket)
+    }
+
+    console.log(user)
+    console.log(user.orders)
+
+    await cartsService.deleteAllProducts(cid)
+    await usersService.updateUser(user._id, user)
+
+    res.status(201).redirect('/api/carts/email')
+};

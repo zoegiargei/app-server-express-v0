@@ -1,0 +1,28 @@
+<section class="container-fluid mt-5 animate__animated animate__fadeIn animate__delay-0.5s">
+
+    <div class="p-2 m-4" id="divProducts">
+
+        <form id="formAddToCart">
+
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action active" aria-current="true"><h5>Product: {{ product.title }}</h5></li>
+                <li class="list-group-item list-group-item-action" >Description: {{product.description}}</li>
+                <li class="list-group-item list-group-item-action" >Code: {{product.code}}</li>
+                <li class="list-group-item list-group-item-action" >Price: {{product.price}}</li>
+                <li class="list-group-item list-group-item-action" >Status: {{product.status}}</li>
+                <li class="list-group-item list-group-item-action" >Stock: {{product.stock}}</li>
+                <li class="list-group-item list-group-item-action" >Category: {{product.category}}</li>
+                <li class="list-group-item list-group-item-action" >Thumbnail: {{product.thumbnail}}</li>
+            </ul>
+
+            <input id="productId" value={{product._id}} style="display: none;">
+
+            <input type="number" id="quantity" name="quantity" min="1" max={{stock}} required>
+            <button type="button" class="btn btn-primary p-2 m-2" id="btnAddToCart" onclick="addToCart(event)" value={{cartId}} >Add to cart</button>
+        </form>
+
+    </div>
+    
+</section>
+
+<script src="/js/productDetails.js" ></script>

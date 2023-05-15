@@ -8,6 +8,8 @@ import { AuthenticationFailed } from "../../errors/Authentication.failed.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import encryptedPass from "../../utils/password/encrypted.pass.js";
 import { Strategy as GithubStrategy } from "passport-github2";
+import config from "../../../config.js";
+import cartsService from "../../services/carts.service.js";
 
 passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameField: 'email'}, async (req, _u, _p, done) => {
 
@@ -29,19 +31,26 @@ passport.use('register', new LocalStrategy({ passReqToCallback: true , usernameF
 
 passport.use('login', new LocalStrategy({ usernameField: 'email' }, async ( username, password, done ) => {
 
-    if(username === "adminCoder@coder.com" && password === "adminCod3r123"){
+    const adminEmail = config.ADMIN_EMAIL
+    const adminPassword = config.ADMIN_PASSWORD
+    
+    if(username === adminEmail && password === adminPassword){
         console.log('>>>>>>Es usuario admin')
+
+        await cartsService.createCart(username)
+        const cid = await cartsService.getLastOne()
+
         const userAdmin = {
             username: 'User Admin',
             email: 'adminCoder@coder.com',
+            cart: cid,
             role: 'Admin',
-            admin: true
+            admin: true,
+            orders: []
         }
 
         return done(null, userAdmin)
     }
-    
-    //const user = authenticationService.login(username, password)
 
     const user = await usersService.getUserByQuery({ email: username })
 
@@ -75,8 +84,6 @@ passport.use('github', new GithubStrategy({
 
     const exist = await ghUserService.getUserByQuery({ username: profile.username })
     if(exist.length > 0){
-        console.log(">>>>>>>>>>github user already exist, it is this: ")
-        console.log(exist[0])
         return done(null, exist[0])
     }
 
@@ -88,8 +95,6 @@ passport.use('github', new GithubStrategy({
             username: profile.username
         })
 
-        console.log(">>>>>>>>>>new github user")
-        console.log(user)
         await ghUserService.saveUser(user)
         return done(null, user)
 

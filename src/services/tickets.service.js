@@ -6,10 +6,9 @@ class TicketService{
         this.ticketDAO = ticketDAO
     }
 
-    async generateTicket(data){
-        
-        data = {...data, purcharser: 'user@email.com'}
-        const ticket = new Ticket(data)
+    async generateTicket(amount, purchaser){
+
+        const ticket = new Ticket(amount, purchaser)
         await this.ticketDAO.creaeteElement(ticket)
         return ticket
     }
@@ -19,5 +18,5 @@ class TicketService{
     }
 };
 
-export const ticketSerice = new TicketService(ticketDbDAO);
-//export default TicketService;
+const ticketsService = new TicketService(ticketDbDAO);
+export default ticketsService;

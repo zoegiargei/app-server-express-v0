@@ -22,7 +22,12 @@ const usersSchema = new mongoose.Schema({
         ], default: {}
     },
 
-    role: { type:String, required:true }
+    role: { type:String, required:true },
+    orders: { 
+        type: [ 
+            { type: Object }
+        ]
+    }
     
 }, { versionKey: false });
 

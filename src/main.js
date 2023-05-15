@@ -15,6 +15,8 @@ import { Server } from "socket.io";
 import { configProductsSocket } from "./socket/products.socket.js";
 import { configMessagesSocket } from "./socket/chat.socket.js";
 import { errorHandler } from "./middlewares/errors/error.handler.js";
+import addIoToReq from "./middlewares/req/add.io.req.js";
+import nodemailer from "nodemailer";
 //import __dirname from "./utils/path/dirname.js";
 
 const app = express();
@@ -27,7 +29,8 @@ app.use(cookieParser(SECRET_WORD));
 app.use(showCookies);
 app.use(timeNow);
 app.use(passportInitialize);
-app.use(errorHandler); //proof
+app.use(errorHandler);
+app.use(addIoToReq);
 app.use(cors({
     origin:`http://localhost:${PORT}`
 }));
@@ -39,6 +42,15 @@ app.set('view engine', 'handlebars');
 app.use('/api', routerApi);
 app.use('/web', routerWeb);
 
+export const transport = nodemailer.createTransport({
+    service: 'gmail',
+    port: 587,
+    auth:{
+        user:'zoegiargei00@gmail.com',
+        pass:'cbbqbmvrwwfcsnzg'
+    }
+})
+
 app.get('*', (req, res) => {
     
     res.redirect('/web/session/unknownRoute')
@@ -48,6 +60,8 @@ mongoose.connect(MONGO_CNX_STR, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
+
 
 export const HTTPserver = app.listen(PORT, () => {console.log(`Server running on port: ${PORT}`)});
 

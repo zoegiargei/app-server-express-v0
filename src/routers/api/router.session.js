@@ -8,7 +8,6 @@ import { contrLoggedIn } from "../../controllers/web/sess.web.controller.js";
 const routerSession = Router();
 
 routerSession.post('/login', loginAuthentication, contrLogin);
-;
 routerSession.get('/github', authenticationByGithub);
 routerSession.get('/githubcallback', authenticationByGithub_CB, contrLoggedIn);
 

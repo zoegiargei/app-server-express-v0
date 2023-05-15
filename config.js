@@ -31,5 +31,7 @@ export default {
     MONGO_CNX_STR: process.env.MONGO_CNX_STR,
     JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     SECRET_WORD: process.env.SECRET_WORD,
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
 }
 

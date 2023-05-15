@@ -19,7 +19,8 @@ formAddProduct.addEventListener('submit', (e) => {
 
     const dataForm = new FormData(e.target)
 
-    const newProduct = new Product(dataForm.get('title'), dataForm.get('description'), dataForm.get('code'), dataForm.get('price'), dataForm.get('status'), dataForm.get('stock'), dataForm.get('category'), dataForm.get('file_thumbnail'))
+    const status = document.getElementById('status').value
+    const newProduct = new Product(dataForm.get('title'), dataForm.get('description'), dataForm.get('code'), dataForm.get('price'), status, dataForm.get('stock'), dataForm.get('category'))
 
     fetch('/api/products/addProduct', {
         method: 'POST',
@@ -33,10 +34,5 @@ formAddProduct.addEventListener('submit', (e) => {
         if(result.status === 201){
             formAddProduct.reset()
         }
-        
-        result.json()
-    
-    }).then(json => {
-        console.log(json)
     })
 });

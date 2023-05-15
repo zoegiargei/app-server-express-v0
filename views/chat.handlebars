@@ -1,22 +1,35 @@
-<h1 class="p-2 m-2">Chat</h1>
+<section class="container-fluid">
 
-<h5 class="p-2 m-2">Nuevo Mensaje</h5>
+    <div class="row">
 
-<div class="p-2 m-2">
-    <label for="name" class="form-label">Name</label>
-    <input type="text" class="form-control" id="inputName" name="userName" disabled>
-</div>
+        <div class="row col-5 p-2 m-2" style="height: min-content;">
 
-<div class="p-2 m-2">
-    <label for="message" class="form-label">Message</label>
-    <input type="text" class="form-control" id="inputMessage" name="message" placeholder="Message...">
-</div>
+            <h1 class="p-2 m-2">Chat</h1>
 
-<button type="button" id="NewMessButton" class="btn btn-primary p-2 m-2">Send Message</button>
+            <h5 class="p-2 m-2">Nuevo Mensaje</h5>
+
+            <div class="p-2 m-2">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="inputName" name="userName" disabled>
+            </div>
+
+            <div class="p-2 m-2">
+                <label for="message" class="form-label">Message</label>
+                <input type="text" class="form-control" id="inputMessage" name="message" placeholder="Message...">
+            </div>
+
+            <button type="button" id="NewMessButton" class="btn btn-primary p-2 m-2">Send Message</button>
+        </div>
 
 
-<h5 class="p-2 m-2">Mensajes en tiempo real</h5>
-<div id="messagesDiv"></div>
+        <div class="row col-6 p-2">
+            <h5 class="p-2 m-2">Mensajes en tiempo real</h5>
+            <div id="messagesDiv" style="display: flex; flex-wrap: wrap-reverse;"></div>
+        </div>
+
+    </div>
+
+</section>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>

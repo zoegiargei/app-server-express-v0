@@ -4,9 +4,9 @@
 
     <section class="p-5 mx-auto" style="width: 80%;">
 
-        <h1>Add to New Product - byFetch</h1>
+        <h1>Add to New Product</h1>
 
-        <form id="formAddProduct" enctype="multipart/form-data" method="POST">
+        <form id="formAddProduct" action="/api/products/addProduct" enctype="multipart/form-data" method="POST">
 
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
@@ -29,8 +29,8 @@
             </div>
 
             <div class="mt-3 mb-3">
-                <select class="form-select form-select-sm" aria-label=".form-select-sm">
-                    <option selected>Status</option>
+                <select class="form-select form-select-sm" aria-label=".form-select-sm" id="status">
+                    <option selected value="true">Status</option>
                     <option value="true">Available</option>
                     <option value="false">Unavailable</option>
                 </select>
@@ -47,8 +47,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="thumbnail" class="form-label">Thumbnail</label>
-                <input type="file" class="form-control" id="file_thumbnail" name="file_thumbnail" required>
+                <label for="file_thumbnail" class="form-label">Thumbnail</label>
+                <input type="file" class="form-control" name="attach" id="attach">
             </div>
 
             <button type="submit" class="btn btn-primary">Add Product</button>

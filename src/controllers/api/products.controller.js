@@ -3,9 +3,16 @@ import factory from "../../DAO/factory.js";
 export const contrGetProd = async (req, res) => {
     try {
 
-        const pid = req.params.pid
-        const product = await factory.productsService.getProductById(pid)
-        res.json({ product })
+        const pid = String(req.params.pid)
+        const newPid = pid.slice(1)
+
+        if(req.params.pid){
+            const product = await factory.productsService.getProductById(newPid)
+            res.json({product})
+        } else if(req.query){
+            const products = await factory.productsService.getProductsByQuery(req.query)
+            res.json({products})
+        }
         
     } catch (error) {
         res.status(400).send({ message: error.message })
@@ -65,7 +72,7 @@ export const contrGetProducts = async (req, res) => {
 
         } else if (queryCli) {
             
-            if(typeof(queryCli) != 'object'){ throw new Error("Sent an invalidate query value") }
+            if(typeof(queryCli) != 'object'){ return new Error("Sent an invalidate query value") }
 
             try {
 
@@ -87,22 +94,19 @@ export const contrGetProducts = async (req, res) => {
 
 export const contrPostProd = async (req, res) => {
     try {
-
-        if(!req.file){
-            res.status(400).send({ message: "ERROR. Failed loading file" })
-        }
         
+        console.log(">>>>>req.file")
+        console.log(req.file) //undefined //I have to fix it method middleware
+
         const data = req.body
-        data.file_thumbnail = req.file.originalname
 
-        const savedProduct = await productsService.loadProduct(data)
+        const savedProduct = await factory.productsService.loadProduct(data)
 
-        const allProducts = await productsService.getProducts()
+        const allProducts = await factory.productsService.getProducts()
         
         req['io'].sockets.emit('updateView', allProducts)
-
-        res.sendStatus(201)
-        res.json({ savedProduct });
+        
+        res.status(201).json({ savedProduct });
 
     } catch (error) {
 

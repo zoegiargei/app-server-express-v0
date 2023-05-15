@@ -6,8 +6,6 @@ import { registerAuthentication } from "../../middlewares/passport/passport.stra
 const routerUser = Router();
 
 routerUser.post('/register', registerAuthentication, contrRegister);
-
-//authentication by role proof
 routerUser.get('/users', authenticationJwtApi, authenticationByRole(['Admin']), contrGetUsers);
 
 export default routerUser;

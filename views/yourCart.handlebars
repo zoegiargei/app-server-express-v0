@@ -1,46 +1,52 @@
-<div class="container-fluid">
-    <h1 class="h1 p-2 d-flex justify-content-center"> Your Cart </h1>
-    <h5 class="h5 p-2 d-flex justify-content-center"> {{cartId}} </h1>
-</div>
+<section class="container-fluid mt-5 d-flex flex-column justify-content-center animate__animated animate__fadeIn animate__delay-0.5s">
 
-<section class="container-fluid">
-    {{#if thAreProducts}}
-
-        {{#each products}}
-
-            <div class="p-2 m-4" id="divProducts">
-
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-action active" aria-current="true" ><h5>Product: {{ this.title }}</h5></li>
-                    <li class="list-group-item list-group-item-action" >Description: {{this.description}}</li>
-                    <li class="list-group-item list-group-item-action" >Code: {{this.code}}</li>
-                    <li class="list-group-item list-group-item-action" >Price: {{this.price}}</li>
-                    <li class="list-group-item list-group-item-action" >Status: {{this.status}}</li>
-                    <li class="list-group-item list-group-item-action" >Stock: {{this.stock}}</li>
-                    <li class="list-group-item list-group-item-action" >Category: {{this.category}}</li>
-                    <li class="list-group-item list-group-item-action" >Thumbnail: {{this.thumbnail}}</li>
-                </ul>
-
-                <button>
-                    <a href="http://localhost:8080/api/products/product/:{{this._id}}">See product</a>
-                </button>
-
-                <form action="" id="formSeeProduct">
-                    <button type="submit">See Product</button>
-                </form>
-            </div>
-
-        {{/each}}
-
-    {{else}}
-        <h3 class="h1 p-2 d-flex justify-content-center"> There aren't products </h3>
-    {{/if}}
-
-    <div class="p-2 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary">
-            <a href="http://localhost:8080/web/session/" style="color:rgb(254, 254, 254);"> >>>Home </a>
-        </button>
+    <div class="container-fluid">
+        <h1 class="h1 p-2 d-flex justify-content-center"> Your Cart </h1>
+        <h5 class="h5 p-2 d-flex justify-content-center"> {{cartId}} </h1>
+        <input type="text" id="cartId" value={{cartId}} style="display: none;">
     </div>
 
+    <section class="container-fluid">
+        {{#if thAreProducts}}
+
+            {{#each products}}
+
+                <div class="p-2 m-4" id="divProducts">
+
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-action active" aria-current="true" ><h5>Product: {{ this.product.title }}</h5></li>
+                        <li class="list-group-item list-group-item-action" >Description: {{this.product.description}}</li>
+                        <li class="list-group-item list-group-item-action" >Code: {{this.product.code}}</li>
+                        <li class="list-group-item list-group-item-action" >Price: {{this.product.price}}</li>
+                        <li class="list-group-item list-group-item-action" >Status: {{this.product.status}}</li>
+                        <li class="list-group-item list-group-item-action" >Category: {{this.product.category}}</li>
+                        <li class="list-group-item list-group-item-action" >Thumbnail: {{this.product.thumbnail}}</li>
+
+                        <li class="list-group-item list-group-item-action active" >Quantity: {{this.quantity}}</li>
+                    </ul>
+                </div>
+
+            {{/each}}
+
+            <div class="p-2 d-flex justify-content-center">
+                <button type="click" class="btn btn-success" id="btnPurchase">
+                    <a style="color:rgb(254, 254, 254);"> Realizar compra </a>
+                </button>
+            </div>
+        {{else}}
+            <h3 class="h1 p-2 d-flex justify-content-center"> There aren't products </h3>
+        {{/if}}
+
+
+        <div class="p-2 d-flex justify-content-center">
+            <button type="button" class="btn btn-primary">
+                <a href="http://localhost:8080/web/home" style="color:rgb(254, 254, 254);"> >>>Home </a>
+            </button>
+        </div>
+
+
+    </section>
 
 </section>
+
+<script src="/js/yourCart.js"></script>

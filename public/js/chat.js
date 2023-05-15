@@ -49,7 +49,7 @@ socketSideClient.on('messages', allMessages => {
     messagesDiv.innerHTML = ``
     allMessages.forEach((elem, index)  => {
         messagesDiv.innerHTML +=`
-            <div class="p-1 mb-2">
+            <div class="p-1 mb-2 messList" style="width: 100%;">
 
                 <ul class="list-group" id="${index}">
 

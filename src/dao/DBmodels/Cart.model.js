@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, SchemaType } from "mongoose";
 
 const cartCollection = 'carts';
 
@@ -15,7 +15,8 @@ const cartSchema = new mongoose.Schema({
             }
         ],
         default: []
-    }
+    },
+    userEmail: { type: String, required:true }
 
 }, { versionKey: false } );
 

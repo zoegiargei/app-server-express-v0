@@ -7,5 +7,6 @@ export async function contrShowUsers(req, res){
 
     const thAreUsers = users ? true : false
     const loggedin = req.user
+
     res.render('showUsers', { title: 'Users', loggedin: loggedin, thAreUsers: thAreUsers , users: users })
 };

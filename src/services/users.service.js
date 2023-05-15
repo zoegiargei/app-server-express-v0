@@ -9,8 +9,9 @@ class UsersService{
 
     async saveUser(dataUser){
 
-        await cartsService.createCart()
+        await cartsService.createCart(dataUser.email)
         const cid = await cartsService.getLastOne()
+
         dataUser = {...dataUser, cart: cid}
         const user = this.userRepository.createUser(dataUser)
         return user
@@ -26,6 +27,10 @@ class UsersService{
 
     async getAField(param1, param2){
         return await this.userRepository.findElementByProjection(param1, param2)
+    }
+
+    async updateUser(id, newUser){
+        return await this.userRepository.updateUser(id, newUser)
     }
 
     async deleteUser(id){

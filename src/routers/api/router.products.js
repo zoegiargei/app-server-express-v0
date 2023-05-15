@@ -5,8 +5,8 @@ import { authenticationByRole } from "../../middlewares/authentication/authentic
 import { authenticationJwtApi } from "../../middlewares/authentication/jwt/auth.byJwt.api.js";
 import ConfigMulter from "../../utils/multer/config.files.multer.js";
 
-const configMulter = new ConfigMulter('./public/uploads/thumbnails');
-const upload = configMulter.configUpload();
+const configMulterProof = new ConfigMulter('./public/uploads/thumbnails');
+const uploadAttach = configMulterProof.configUpload();
 
 const routerProducts = Router();
 
@@ -14,7 +14,7 @@ routerProducts.get('/:pid', contrGetProd)
 
 routerProducts.get('/', contrGetProducts)
 
-routerProducts.post('/addProduct', authenticationJwtApi, authenticationByRole(['Auth']), upload.single('file_thumbnail'), contrPostProd)
+routerProducts.post('/addProduct', authenticationJwtApi, authenticationByRole(['Admin']), uploadAttach.single('attach'), contrPostProd)
 
 routerProducts.put('/:pid', contrPutProd)
 
