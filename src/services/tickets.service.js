@@ -6,10 +6,8 @@ class TicketService{
         this.ticketDAO = ticketDAO
     }
 
-    async generateTicket(amount, purchaser){
-
-        const ticket = new Ticket(amount, purchaser)
-        await this.ticketDAO.creaeteElement(ticket)
+    async generateTicket(total, email){
+        const ticket = new Ticket(total, email)
         return ticket
     }
 

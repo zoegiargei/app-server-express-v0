@@ -1,11 +1,17 @@
+import e from "express";
+import factory from "../../DAO/factory.js";
+import Ticket from "../../models/Ticket.js";
 import cartsService from "../../services/carts.service.js";
+import emailService from "../../services/emails.service.js";
+import smsService from "../../services/sms.service.js";
 import ticketsService from "../../services/tickets.service.js";
 import usersService from "../../services/users.service.js";
 
-export const contrPostCart = async (req, res) => {
+export const handlerNewCart = async (req, res) => {
     try {
 
-        const cartInDb = await cartsService.createCart()
+        const email = req.user.email
+        const cartInDb = await cartsService.createCart(email)
         res.json({ cartInDb })
 
     } catch (error) {
@@ -14,13 +20,13 @@ export const contrPostCart = async (req, res) => {
 };
 
 
-export const contrGetCart = async (req, res) => {
+export const handlerGetCart = async (req, res) => {
     try {
         
         const cid = req.params.cid
         const cart = await cartsService.getCartById(cid)
         
-        res.json({ cart })
+        res.status(201).json({ cart })
 
     } catch (error) {
         res.status(400).send({ msg: error.message })
@@ -28,7 +34,7 @@ export const contrGetCart = async (req, res) => {
 };
 
 
-export const contrProdInCart = async (req, res) => {
+export const handlerProductInCart = async (req, res) => {
     try {
 
         const cid = String(req.params.cid)
@@ -39,7 +45,7 @@ export const contrProdInCart = async (req, res) => {
         
         await cartsService.addToCart(newCid, newPid, quantity.quantity)
         
-        res.send({ status:"success", message:"Product added to cart" })
+        res.status(201).send({ status:"success", message:"Product added to cart" })
 
     } catch (error) {
 
@@ -48,7 +54,7 @@ export const contrProdInCart = async (req, res) => {
 };
 
 
-export const contrPutProdInCart = async (req, res) => {
+export const handlerUpdateQuantity = async (req, res) => {
     try {
 
         const cid = req.params.cid
@@ -61,7 +67,7 @@ export const contrPutProdInCart = async (req, res) => {
         
         await cartsService.updateProdInCart(cid, pid, newQuantity)
         
-        res.send({ status:"success", message:"Product in Cart updated" })
+        res.status(201).send({ status:"success", message:"Product in Cart updated" })
         
     } catch (error) {
         res.status(400).send({ message: error.message })
@@ -69,7 +75,7 @@ export const contrPutProdInCart = async (req, res) => {
 };
 
 
-export const contrDelProdInCart = async (req, res) => {
+export const handlerDeleteProduct = async (req, res) => {
     try {
 
         const cid = req.params.cid
@@ -85,15 +91,15 @@ export const contrDelProdInCart = async (req, res) => {
 };
 
 
-export const contrPutCart = async (req, res) => {
+export const handlerUpdateCart = async (req, res) => {
     try {
 
         const cid = req.params.cid
         const data = req.body
 
-        await cartsService.loadProductInCart(cid, data)
+        await cartsService.updateProductsCart(cid, data)
 
-        res.send({ status:"success", message:"Updated cart" })
+        res.status(201).send({ status:"success", message:"Updated cart" })
 
     } catch (error) {
         res.status(400).send({ message: error.message })
@@ -101,17 +107,18 @@ export const contrPutCart = async (req, res) => {
 };
 
 
-export const contrDelAllProds = async (req, res) => {
+export const handlerDeleteProducts = async (req, res) => {
     try {
         
         const cid = req.params.cid
         await cartsService.deleteAllProducts(cid)
-        res.send({ status:"success", message:"Deleted cart" })
+        res.status(201).send({ status:"success", message:"Deleted cart" })
 
     } catch (error) {
         res.status(400).send({ message: error.message })
     }
 };
+
 
 export const handlerShowCart = async (req, res) => {
     try {
@@ -123,38 +130,123 @@ export const handlerShowCart = async (req, res) => {
     }
 }
 
+
 export const handlerPurchase = async (req, res) => {
 
     const user = req.user
+    console.log('>>>>req.user')
+    console.log(user)
+
     const cid = req.user.cart[0]._id
+    console.log('>>>>req.user.cart[0]._id')
+    console.log(cid)
+
     const cart = await cartsService.getCartById(cid)
-
-    let total = 0
-
-    console.log('>>>>>cart ')
+    console.log('>>>>cart')
     console.log(cart)
 
-    cart.productsCart.forEach(prod => {
-        total = total + (prod.quantity * prod.product.price)
-    })
+    console.log('>>>>productsCart')
+    const productsCart = cart.productsCart //array
+    console.log(productsCart)
 
-    console.log('>>>>>>>Total de la compra')
-    console.log(total)
+    console.log('>>>>cada producto de productsCart') //objetos
+    let total = 0
+    productsCart.forEach(async element => {
+        console.log(element.product)
+        console.log(element.quantity)
+        const quantity = JSON.parse(element.quantity)
+        console.log(element.product.stock)
+        
+        let stock = JSON.parse(element.product.stock)
+        stock = stock - quantity
+        console.log('>>>>>stock actualizado')
+        console.log(stock)
+        
+        if(stock > 0){
 
-    const ticket = await ticketsService.generateTicket(total, user.email)
+            console.log('>>>solo si el stock es mayor de 0 pasa')
+            
+            element.product.stock = stock
+            console.log(">>>cada producto de productsCart con stock actualizado")
+            console.log(element.product)
+    
+            const pid = element.product._id
+            console.log(String(pid))
+            const result = await factory.productsService.updateProduct(String(pid), element.product)
+            console.log('resultado de actualizar datos del producto comprado')
+            console.log(result)
 
-    if(user.orders){
-        user.orders.push(ticket)
-    } else{
-        user.orders = []
-        user.orders.push(ticket)
+            element.product.status = true
+
+            console.log(element.product.price)
+            total = total + JSON.parse(element.product.price)
+        }else{
+            element.product.status = false
+            console.log(">>>status de los productos no disponibles")
+            console.log(element.product.status)
+        }
+    });
+
+    const newProductsCart = productsCart.filter(element => element.product.status == true)
+    console.log(newProductsCart)
+    await cartsService.updateProductsCart(cid, newProductsCart)
+
+    if(newProductsCart.length > 0){
+        //solo me falta eliminar los productos comprados del carrito
+    
+        console.log(total)
+    
+        const ticket = new Ticket(total, user.email)
+        console.log(">>> ticket de compra")
+        console.log(ticket)
+    
+        if(user.orders){
+            user.orders.push(ticket)
+        } else{
+            user.orders = []
+            user.orders.push(ticket)
+        }
+    
+        console.log('>>>>user, user.orders, user._id in handler purchase')
+        console.log(user)
+        console.log(user.orders)
+        console.log(user._id)
+    
+            const emailMessage = `
+            <h1>Hello ${user.username}!!</h1>
+            <h4>Your Ticket</h4>
+            <ul>
+                <li>CODE: ${ticket.code}</li>
+                <li>DATE: ${ticket.purchase_datetime}</li>
+                <li>Total purchase: ${ticket.amount}</li>
+            </ul>
+        `
+    
+        const smsMessage = `
+            Hello!!!!
+            Your ticket was sent to your email.
+    
+            Thank you for the purchase in our Store.
+            Best Wishes!
+        `
+    
+        const emailData = await emailService.send('zoegiargei00@gmail.com', emailMessage)
+        const smsData = await smsService.sendSms('+543515725379', smsMessage)
+    
+        res.status(201).json({emailData, smsData})
     }
 
-    console.log(user)
-    console.log(user.orders)
+    res.status(202).json({})
 
-    await cartsService.deleteAllProducts(cid)
-    await usersService.updateUser(user._id, user)
+};
 
-    res.status(201).redirect('/api/carts/email')
+
+export const handlerDeleteCart = async(req, res) => {
+    try {
+        const cid = req.params.cid
+        const deleted = await cartsService.deleteCart(cid)
+        res.json({deleted})
+    } catch (error) {
+        res.send({ message: error.message })
+    }
 };

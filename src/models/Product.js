@@ -3,7 +3,7 @@ import regex from "../utils/regex/Regex.js";
 class Product{
     constructor({ title, description, code, price, status=true, stock, category, thumbnail=[] }){
 
-        this.title = regex.validation(regex.textWithBlancks, description),
+        this.title = regex.validation(regex.textWithBlancks, title),
         this.description = regex.validation(regex.textWithBlancks, description),
         this.code = code,
         this.price = regex.validation(regex.onlyNumbers, price),

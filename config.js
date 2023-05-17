@@ -16,6 +16,11 @@ program
     .option('MONGO_CNX_STR <url>', 'URL de conexion a la base de datos', '')
     .option('JWT_PRIVATE_KEY <key>', 'private key para autenticacion con JWT')
     .option('SECRET_WORD <secret>', 'Palabra secreta para firmar cookies')
+    .option('USER_NODEMAILER <user>')
+    .option('PASS_NODEMAILER <password>')
+    .option('ACCOUNT_SID_TWILIO <sid>')
+    .option('AUTH_TOKEN_TWILIO <token>')
+    .option('PHONE_NUMBER_TWILIO <phone>')
 program.parse();
 
 dotenv.config({
@@ -32,6 +37,11 @@ export default {
     JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     SECRET_WORD: process.env.SECRET_WORD,
     ADMIN_EMAIL: process.env.ADMIN_EMAIL,
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    USER_NODEMAILER: process.env.USER_NODEMAILER,
+    PASS_NODEMAILER: process.env.PASS_NODEMAILER,
+    ACCOUNT_SID_TWILIO: process.env.ACCOUNT_SID_TWILIO,
+    AUTH_TOKEN_TWILIO: process.env.AUTH_TOKEN_TWILIO,
+    PHONE_NUMBER_TWILIO: process.env.PHONE_NUMBER_TWILIO
 }
 

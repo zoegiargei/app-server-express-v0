@@ -19,7 +19,8 @@ class UserRepository{
 
     async getOneById(id){
         const user = await this.usersDAO.findElementById(id)
-        return new User(user)
+        //return new User(user)
+        return user
     }
 
     async getUserByQuery(query){

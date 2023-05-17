@@ -17,6 +17,10 @@ class UsersService{
         return user
     }
 
+    async getUserById(){
+        return await this.userRepository.getOneById(id)
+    }
+
     async getUserByQuery(query){
         return await this.userRepository.getUserByQuery(query)
     }

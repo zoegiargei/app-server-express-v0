@@ -16,5 +16,7 @@ class Regex{
     }
 }
 
+//strong password, example: "wMH432595@"
+
 const regex = new Regex();
 export default regex;

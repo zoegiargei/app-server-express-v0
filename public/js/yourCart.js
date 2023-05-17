@@ -13,7 +13,19 @@ btnPurchase.addEventListener('click', () => {
         }
     }).then(result => {
         if(result.status == 201){
-            window.location.replace('/web/purchase/done')
+            Swal.fire({
+                icon: 'success',
+                title: 'Successful purchase',
+            }).then( result => {
+                window.location.replace('/web/')
+            })
+        } else if(result.status == 202){
+            Swal.fire({
+                icon: 'info',
+                title: 'Some product is not available',
+            }).then( result => {
+                window.location.reload()
+            })
         }
     })
 })

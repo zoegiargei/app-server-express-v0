@@ -16,7 +16,6 @@ import { configProductsSocket } from "./socket/products.socket.js";
 import { configMessagesSocket } from "./socket/chat.socket.js";
 import { errorHandler } from "./middlewares/errors/error.handler.js";
 import addIoToReq from "./middlewares/req/add.io.req.js";
-import nodemailer from "nodemailer";
 //import __dirname from "./utils/path/dirname.js";
 
 const app = express();
@@ -41,15 +40,6 @@ app.set('view engine', 'handlebars');
 
 app.use('/api', routerApi);
 app.use('/web', routerWeb);
-
-export const transport = nodemailer.createTransport({
-    service: 'gmail',
-    port: 587,
-    auth:{
-        user:'zoegiargei00@gmail.com',
-        pass:'cbbqbmvrwwfcsnzg'
-    }
-})
 
 app.get('*', (req, res) => {
     

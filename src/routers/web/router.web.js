@@ -31,10 +31,4 @@ routerWeb.get('/upload', (req, res) => {
     res.render('upload', { title: 'Upload proof' })
 });
 
-routerWeb.get('/purchase/done', authenticationJwtWeb, (req, res) => {
-
-    const loggedin = req.user
-    res.render('done', { title: "Done", loggedin:loggedin })
-});
-
 export default routerWeb;

@@ -4,8 +4,7 @@ export async function contrLogin (req, res, next){
 
     console.log(">>>>>session controller login")
     console.log(req.user)
-
-    const payload = { ...req.user, password: " " }
+    const payload = req.user
     
     res.cookie('jwt_authorization', encryptedJWT.encryptData(payload), {
         signed: true,

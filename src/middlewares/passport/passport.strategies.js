@@ -52,7 +52,9 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async ( user
         return done(null, userAdmin)
     }
 
-    const user = await usersService.getUserByQuery({ email: username })
+    const user = await usersService.getUserByQuery({email: username})
+
+    console.log(user)
 
     if(!user || user.length === 0){
         console.log('User not existing')

@@ -1,5 +1,3 @@
-const r_onlyNumbers = /^[0-9]+$/;
-
 class Regex{
     constructor(){
         this.onlyNumbers = /^[0-9]+$/,
@@ -73,12 +71,4 @@ const email = regex.validateEmail('zoee@algo.ar')
 const text = regex.textWithB('texto con espacios')
 const textSinEspacios = regex.textNotB('estoessinespacios')
 const password = regex.validateStrongPassword('abcd1234ABC_')
-
-const validationMethod = regex.validation(regex.textNotBlancks, '') //Funciona
-
-//
-const today = new Date()
-const todayModified = (today.getDate() + ' ' + today.toLocaleDateString(), today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds())
-
-console.log(String(today.toUTCString()))
-console.log(today.toTimeString())
+const validationMethod = regex.validation(regex.onlyNumbers, '55') //Funciona

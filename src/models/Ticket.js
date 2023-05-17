@@ -15,7 +15,7 @@ class Ticket{
 
     generateDatetime(){
         const today = new Date()
-        return String((today + '' +today.toLocaleDateString(), today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()))
+        return String(today.toUTCString())
     }
 };
 
