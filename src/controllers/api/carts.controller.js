@@ -1,11 +1,9 @@
-import e from "express";
 import factory from "../../DAO/factory.js";
 import Ticket from "../../models/Ticket.js";
 import cartsService from "../../services/carts.service.js";
 import emailService from "../../services/emails.service.js";
 import smsService from "../../services/sms.service.js";
-import ticketsService from "../../services/tickets.service.js";
-import usersService from "../../services/users.service.js";
+
 
 export const handlerNewCart = async (req, res) => {
     try {
