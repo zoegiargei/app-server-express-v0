@@ -76,9 +76,18 @@ const password = regex.validateStrongPassword('abcd1234ABC_')
 
 const validationMethod = regex.validation(regex.textNotBlancks, '') //Funciona
 
-//
+const validation = regex.validation(/[A-Za-z0-9]+/g, 'The Football Is Good For Training And Recreational Purposes')
+const validation2 = regex.validation(/^[0-9]+([,|.][0-9]+)?$/, 200.50)
+//console.log(validation)
+//console.log(validation2)
+const path = regex.validation(/^[/](web)[/][a-z]*$/i, '/web/')
+//console.log(path)
+
+console.log((/^[/](web)[/][a-z]*$/i).test('/web/'))
+
+// date
 const today = new Date()
 const todayModified = (today.getDate() + ' ' + today.toLocaleDateString(), today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds())
 
-console.log(String(today.toUTCString()))
-console.log(today.toTimeString())
+//console.log(String(today.toUTCString()))
+//console.log(today.toTimeString())

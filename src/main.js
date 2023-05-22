@@ -17,6 +17,7 @@ import { configMessagesSocket } from "./socket/chat.socket.js";
 import { errorHandler } from "./middlewares/errors/error.handler.js";
 import addIoToReq from "./middlewares/req/add.io.req.js";
 //import __dirname from "./utils/path/dirname.js";
+import compression from "express-compression";
 
 const app = express();
 
@@ -34,6 +35,8 @@ app.use(cors({
     origin:`http://localhost:${PORT}`
 }));
 
+app.use(compression({ brotli: { enabled: true, zlib: {} } }))
+
 app.engine('handlebars', engine());
 app.set('views', './views');
 app.set('view engine', 'handlebars');
@@ -43,6 +46,10 @@ app.use('/web', routerWeb);
 
 app.get('*', (req, res) => {
     
+    if((/^[/](web)[/][a-z]*$/i).test(req.url)){
+        res.redirect('/web/')
+    }
+
     res.redirect('/web/session/unknownRoute')
 });
 
@@ -62,3 +69,6 @@ io.on('connection', async socketSideServer => {
     configProductsSocket(io, socketSideServer)
     configMessagesSocket(io, socketSideServer)
 });
+
+//import { generateMocks } from "./mocks/generateMocks.js";
+//await generateMocks()

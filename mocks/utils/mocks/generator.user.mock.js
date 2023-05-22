@@ -3,7 +3,6 @@ import UserMock from '../../models/user.mock.js';
 import generatorProductsMock from './generator.products.mock.js';
 
 class GeneratorUserMock{
-    constructor(){}
 
     createUserMock(){
 

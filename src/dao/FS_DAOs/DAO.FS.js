@@ -1,4 +1,6 @@
 import { writeFile, readFile, unlink } from 'fs/promises';
+import { errors } from '../../errors/Errors.js';
+import { classErrors } from '../../errors/Errors.js';
 
 class DAO_FS{
     constructor(path){
@@ -26,7 +28,7 @@ class DAO_FS{
 
         if(this.elements.some(prod => prod.code === newElement.code)){
                     
-            return new Error("There cannot be two identical CODE")
+            return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(newElement.code)))
             
         } else{
             
@@ -76,7 +78,7 @@ class DAO_FS{
         this.elements = await this.read()
         const index = this.elements.findIndex(elem => elem.id === id)
         
-        if(index === -1){ return Error("Element not found") }
+        if(index === -1){ return Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND, `${id} not existing`)) }
 
         this.elements[index] = newElement
         await this.write()
@@ -89,7 +91,7 @@ class DAO_FS{
         const newArray = allProducts.filter(prod => prod.id != pid)
 
         if (newArray.length === currentLength) {
-            return new Error("Product not found")
+            return new Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND, pid))
         }
 
         this.elements = newArray

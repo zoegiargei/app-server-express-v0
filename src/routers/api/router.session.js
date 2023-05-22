@@ -13,6 +13,6 @@ routerSession.get('/githubcallback', authenticationByGithub_CB, contrLoggedIn);
 
 routerSession.get('/current', authenticationJwtApi, contrGetCurrent)
 
-routerSession.post('/logout', contrLogout);
+routerSession.post('/logout', authenticationJwtApi, contrLogout);
 
 export default routerSession;

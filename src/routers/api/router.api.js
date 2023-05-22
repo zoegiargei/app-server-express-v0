@@ -14,7 +14,7 @@ const routerApi = Router();
 
 routerApi.use('/session', routerSession);
 routerApi.use('/user', routerUser);
-routerApi.use('/products', routerProducts);
+routerApi.use('/products', authenticationJwtApi, routerProducts);
 routerApi.use('/carts', authenticationJwtApi, authenticationByRole(['Admin','User']), routerCarts);
 
 //proof

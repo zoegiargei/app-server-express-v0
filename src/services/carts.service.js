@@ -1,5 +1,6 @@
 import CartDbDAO from "../DAO/DB_DAOs/Carts.DAO.db.js"
 import factory from "../DAO/factory.js";
+import { classErrors } from "../errors/Errors.js";
 import Cart from "../models/Cart.js";
 
 class CartsService{
@@ -38,11 +39,11 @@ class CartsService{
         console.log(productById)
         
         if(!productById){
-            return new Error('Product not existing')
+            return new Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND, `${pid} is not in the Cart`))
         }
         
         const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if(!cartInDb){ return new Error("Cart not existing") }
+        if(!cartInDb){ return new Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND.message, `${cid} not existing`)) }
         
         if(cartInDb.productsCart.find(prod => String(prod.product._id) === pid)){
             

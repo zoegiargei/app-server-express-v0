@@ -11,6 +11,10 @@ class TicketService{
         return ticket
     }
 
+    async saveTicket(ticket){
+        return await this.ticketDAO.createElement(ticket)
+    }
+
     async cancelTicket(id){
         return await this.ticketDAO.deleteElement(id)
     }

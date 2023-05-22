@@ -4,7 +4,7 @@ import { PORT } from "../../configs/server.config.js";
 export const contrShowProducts = async (req, res) => {
     try {
         const page = req.query.page || 1
-        const allProducts = await factory.productsService.productsByPaginate(1, page)
+        const allProducts = await factory.productsService.productsByPaginate(3, page)
     
         const thIsProducts = allProducts['docs'].length > 0
     

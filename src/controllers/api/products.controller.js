@@ -1,4 +1,5 @@
 import factory from "../../DAO/factory.js";
+import { classErrors } from "../../errors/Errors.js";
 
 export const contrGetProd = async (req, res) => {
     try {
@@ -72,7 +73,7 @@ export const contrGetProducts = async (req, res) => {
 
         } else if (queryCli) {
             
-            if(typeof(queryCli) != 'object'){ return new Error("Sent an invalidate query value") }
+            if(typeof(queryCli) != 'object'){ return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(queryCli))) }
 
             try {
 

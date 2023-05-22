@@ -3,6 +3,7 @@ import Ticket from "../../models/Ticket.js";
 import cartsService from "../../services/carts.service.js";
 import emailService from "../../services/emails.service.js";
 import smsService from "../../services/sms.service.js";
+import ticketsService from "../../services/tickets.service.js";
 
 
 export const handlerNewCart = async (req, res) => {
@@ -153,18 +154,22 @@ export const handlerPurchase = async (req, res) => {
         console.log(element.product)
         console.log(element.quantity)
         const quantity = JSON.parse(element.quantity)
+        
         console.log(element.product.stock)
-        
         let stock = JSON.parse(element.product.stock)
-        stock = stock - quantity
-        console.log('>>>>>stock actualizado')
-        console.log(stock)
         
-        if(stock > 0){
+        console.log(">>>Es el stock mayor que 0 y que quantity???")
+        console.log((stock>0 && stock>quantity))
 
-            console.log('>>>solo si el stock es mayor de 0 pasa')
+        if((stock > 0 && stock > quantity) === true){
             
-            element.product.stock = stock
+            console.log('>>>solo si el stock es mayor de 0 y mayor que quantity pasa')
+            
+            console.log('>>>>>stock actualizado')
+            //stock = stock - quantity
+            //console.log(stock)
+
+            element.product.stock = element.product.stock - quantity
             console.log(">>>cada producto de productsCart con stock actualizado")
             console.log(element.product)
     
@@ -176,25 +181,28 @@ export const handlerPurchase = async (req, res) => {
 
             element.product.status = true
 
-            console.log(element.product.price)
             total = total + JSON.parse(element.product.price)
-        }else{
+        } else{
+
             element.product.status = false
             console.log(">>>status de los productos no disponibles")
             console.log(element.product.status)
         }
     });
 
+    console.log(">>>>cart con todos los productos disponibles")
     const newProductsCart = productsCart.filter(element => element.product.status == true)
-    console.log(newProductsCart)
-    await cartsService.updateProductsCart(cid, newProductsCart)
+    const productsCartNotAvailable = productsCart.filter(element => element.product.status == false)
+
+    await cartsService.updateProductsCart(cid, productsCartNotAvailable)
 
     if(newProductsCart.length > 0){
-        //solo me falta eliminar los productos comprados del carrito
     
         console.log(total)
     
         const ticket = new Ticket(total, user.email)
+        await ticketsService.saveTicket(ticket)
+        
         console.log(">>> ticket de compra")
         console.log(ticket)
     
@@ -231,7 +239,7 @@ export const handlerPurchase = async (req, res) => {
         const emailData = await emailService.send('zoegiargei00@gmail.com', emailMessage)
         const smsData = await smsService.sendSms('+543515725379', smsMessage)
     
-        res.status(201).json({emailData, smsData})
+        return res.status(201).json({emailData, smsData})
     }
 
     res.status(202).json({})

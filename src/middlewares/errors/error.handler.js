@@ -4,19 +4,23 @@ export function errorHandler(error, req, res, next) {
         case 'AUTH_FAILED':
             
             req.messageError = error.type
-            res.status(401)
+            error.status = 401
             break
         case 'PERMISSIONS_FAILED':
             
             req.messageError = error.type
-            res.status(403)
+            error.status = 403
             break
         default:
 
             req.messageError = error.type
-            res.status(500)
+            error.status = 500
     }
 
-    console.log(error)
-    res.json({ errorMsg: error.message })
+    console.log(">>> Error type: ")
+    console.log(error.message)
+    const status = error.status || 400
+
+    res.header("Content-Type", 'application/json')
+    res.status(status).json({ errorMsg: error.message })
 };

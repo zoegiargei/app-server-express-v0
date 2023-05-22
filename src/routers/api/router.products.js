@@ -14,10 +14,10 @@ routerProducts.get('/:pid', contrGetProd)
 
 routerProducts.get('/', contrGetProducts)
 
-routerProducts.post('/addProduct', authenticationJwtApi, authenticationByRole(['Admin']), uploadAttach.single('attach'), contrPostProd)
+routerProducts.post('/addProduct', authenticationByRole(['Admin']), uploadAttach.single('attach'), contrPostProd)
 
-routerProducts.put('/:pid', contrPutProd)
+routerProducts.put('/:pid', authenticationByRole(['Admin']), contrPutProd)
 
-routerProducts.delete('/:pid', contrDelProd)
+routerProducts.delete('/:pid', authenticationByRole(['Admin']), contrDelProd)
 
 export default routerProducts;
