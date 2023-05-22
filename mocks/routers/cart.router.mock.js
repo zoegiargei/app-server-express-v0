@@ -5,9 +5,15 @@ const routerCartsMock = Router();
 
 //proof cartsService
 routerCartsMock.post('/nuevoCarrito', async (req, res) => {
-    const newCart = await cartsService.createCart('zoegiargei@gmail.com')
-    console.log(newCart)
-    res.json({newCart})
+    try {
+        const newCart = await cartsService.createCart('zoegiargei@gmail.com')
+        console.log(newCart)
+        
+        res.sendSuccess()
+    } catch (error) {
+        
+        res.sendClientError()
+    }
 });
 
 routerCartsMock.post('/productoEnCarrito', async(req,res) => {

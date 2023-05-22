@@ -27,7 +27,7 @@ async function addToCart(e){
             'Content-Type': 'application/json'
         }
     }).then(result => {
-        if(result.status == 201){
+        if(result.status == 200){
             console.log('Producto agregado al carrito con exito')
             Swal.fire({
                 icon: 'success',

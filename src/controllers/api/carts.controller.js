@@ -11,10 +11,10 @@ export const handlerNewCart = async (req, res) => {
 
         const email = req.user.email
         const cartInDb = await cartsService.createCart(email)
-        res.json({ cartInDb })
+        res.sendCreated(cartInDb)
 
     } catch (error) {
-        res.status(400).send({ msg: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -24,11 +24,11 @@ export const handlerGetCart = async (req, res) => {
         
         const cid = req.params.cid
         const cart = await cartsService.getCartById(cid)
-        
-        res.status(201).json({ cart })
 
-    } catch (error) {
-        res.status(400).send({ msg: error.message })
+        res.sendOk({ message: "Cart found successfully" , object: cart })
+
+    } catch(error) {
+        res.sendClientError(error)
     }
 };
 
@@ -42,13 +42,13 @@ export const handlerProductInCart = async (req, res) => {
         const newPid = pid.slice(1)
         const quantity = req.body
         
-        await cartsService.addToCart(newCid, newPid, quantity.quantity)
-        
-        res.status(201).send({ status:"success", message:"Product added to cart" })
+        const productAdded = await cartsService.addToCart(newCid, newPid, quantity.quantity)
+
+        res.sendOk({ message: "Product added to cart successfully", object: productAdded })
+        //res.status(201).send({ status:"success", message:"Product added to cart" })
 
     } catch (error) {
-
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -64,12 +64,13 @@ export const handlerUpdateQuantity = async (req, res) => {
             res.status(400).send({status:"error", error:"Invalidate quantity value"})
         }
         
-        await cartsService.updateProdInCart(cid, pid, newQuantity)
+        const productUpdated = await cartsService.updateProdInCart(cid, pid, newQuantity)
         
-        res.status(201).send({ status:"success", message:"Product in Cart updated" })
+        res.sendCreated({ message: "Product in Cart updated successfully", object: productUpdated })
+        //res.status(201).send({ status:"success", message:"Product in Cart updated" })
         
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -80,12 +81,13 @@ export const handlerDeleteProduct = async (req, res) => {
         const cid = req.params.cid
         const pid = req.params.pid
         
-        await cartsService.delProdInCart(cid, pid)
-        
-        res.send({ status:"success", message:"Deleted product" })
+        const productDeleted = await cartsService.delProdInCart(cid, pid)
+
+        res.sendOk({ message:"The product was deleted successfully", object: productDeleted })
+        //res.send({ status:"success", message:"Deleted product" })
 
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -96,12 +98,11 @@ export const handlerUpdateCart = async (req, res) => {
         const cid = req.params.cid
         const data = req.body
 
-        await cartsService.updateProductsCart(cid, data)
-
-        res.status(201).send({ status:"success", message:"Updated cart" })
+        const updatedCart = await cartsService.updateProductsCart(cid, data)
+        res.sendCreated({ message: "Cart updated successfully", object: updatedCart })
 
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -111,21 +112,22 @@ export const handlerDeleteProducts = async (req, res) => {
         
         const cid = req.params.cid
         await cartsService.deleteAllProducts(cid)
-        res.status(201).send({ status:"success", message:"Deleted cart" })
+        res.sendCreated({ message: "Cart deleted successfully", object: updatedCart })
 
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
 
 export const handlerShowCart = async (req, res) => {
     try {
-        console.log('>>>>>>handlerShowCart - Cart ID')
+
         const cart = req.user.cart
-        res.status(201).json({ cart })
+        res.sendCreated({ message: "Handler show cart", object: cart})
+
     } catch (error) {
-        res.send({ message: error.message })
+        res.sendClientError(error)
     }
 }
 
@@ -194,7 +196,7 @@ export const handlerPurchase = async (req, res) => {
     const newProductsCart = productsCart.filter(element => element.product.status == true)
     const productsCartNotAvailable = productsCart.filter(element => element.product.status == false)
 
-    await cartsService.updateProductsCart(cid, productsCartNotAvailable)
+    const productsCartUpdated = await cartsService.updateProductsCart(cid, productsCartNotAvailable)
 
     if(newProductsCart.length > 0){
     
@@ -239,20 +241,22 @@ export const handlerPurchase = async (req, res) => {
         const emailData = await emailService.send('zoegiargei00@gmail.com', emailMessage)
         const smsData = await smsService.sendSms('+543515725379', smsMessage)
     
-        return res.status(201).json({emailData, smsData})
+        return res.sendCreated({ message: "A ticket was generated. The email and sms were sent successfully", object: [emailData, smsData] })
     }
 
-    res.status(202).json({})
+    res.sendAccepted({ message: "There are products that are not available, they remain in the cart", object: productsCartUpdated })
 
 };
 
 
 export const handlerDeleteCart = async(req, res) => {
     try {
+
         const cid = req.params.cid
         const deleted = await cartsService.deleteCart(cid)
-        res.json({deleted})
+        res.sendOk({ message: "Cart deleted successfully", object: deleted })
+
     } catch (error) {
-        res.send({ message: error.message })
+        res.sendClientError(error)
     }
 };

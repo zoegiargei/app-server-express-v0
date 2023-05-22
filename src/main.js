@@ -18,6 +18,7 @@ import { errorHandler } from "./middlewares/errors/error.handler.js";
 import addIoToReq from "./middlewares/req/add.io.req.js";
 //import __dirname from "./utils/path/dirname.js";
 import compression from "express-compression";
+import { customResponses } from "./middlewares/responses/custom.responses.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(timeNow);
 app.use(passportInitialize);
 app.use(errorHandler);
 app.use(addIoToReq);
+app.use(customResponses);
 app.use(cors({
     origin:`http://localhost:${PORT}`
 }));

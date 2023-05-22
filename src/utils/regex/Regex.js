@@ -1,6 +1,9 @@
+import { classErrors } from "../../errors/Errors.js"
+
 class Regex{
     constructor(){
-        this.numbersBlanksAndText = /[A-Za-z0-9]+/g,
+        this.num_letters_notCharacters = /^[a-zA-Z0-9]+$/,
+        this.numbersBlanksAndText = /^[a-zA-Z0-9\s]+$/,
         this.onlyNumbers = /^[0-9]+$/,
         this.validateEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/,
         this.textWithBlancks = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/,
@@ -13,9 +16,7 @@ class Regex{
         if((regex).test(value) ){
             return value
         } else{
-            console.log(String(regex))
-            console.log(value)
-            throw new Error(`Invalidate value: ${value}`)
+            throw new Error( classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, "The validation regex return failed") )
         }
     }
 }

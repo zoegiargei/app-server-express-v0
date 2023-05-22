@@ -14,13 +14,14 @@ program
     .option('NODE_ENV <environment>', 'entorno en el que queremos correr el programa', 'dev')
     .option('PORT <port>', 'puerto del servidor', 8080)
     .option('MONGO_CNX_STR <url>', 'URL de conexion a la base de datos', '')
-    .option('JWT_PRIVATE_KEY <key>', 'private key para autenticacion con JWT')
-    .option('SECRET_WORD <secret>', 'Palabra secreta para firmar cookies')
+    .option('JWT_PRIVATE_KEY <key>', 'Private key para autenticacion con JWT')
+    .option('SECRET_WORD <secret>', 'Secret word for signing cookie')
     .option('USER_NODEMAILER <user>')
     .option('PASS_NODEMAILER <password>')
     .option('ACCOUNT_SID_TWILIO <sid>')
     .option('AUTH_TOKEN_TWILIO <token>')
     .option('PHONE_NUMBER_TWILIO <phone>')
+    .option('LEVEL_LOG <number>', 'Level of errors we want to see', 0)
 program.parse();
 
 dotenv.config({
@@ -31,6 +32,7 @@ dotenv.config({
 })
 
 export default {
+    NODE_ENV: process.env.NODE_ENV,
     PERSISTENCE: process.env.PERSISTENCE,
     PORT: process.env.PORT,
     MONGO_CNX_STR: process.env.MONGO_CNX_STR,

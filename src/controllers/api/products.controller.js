@@ -1,22 +1,43 @@
 import factory from "../../DAO/factory.js";
 import { classErrors } from "../../errors/Errors.js";
+import regex from "../../utils/regex/Regex.js";
 
 export const contrGetProd = async (req, res) => {
+    const categorys = [
+        'title', 
+        'description',
+        'code',
+        'price',
+        'status',
+        'stock',
+        'category'
+    ]
+
     try {
 
         const pid = String(req.params.pid)
         const newPid = pid.slice(1)
 
         if(req.params.pid){
+
             const product = await factory.productsService.getProductById(newPid)
-            res.json({product})
+            if(!product){
+                return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(req.params.pid)))
+            }
+            res.sendOk({ message: "Product lookup by id was found successfully", object: product })
+
         } else if(req.query){
-            const products = await factory.productsService.getProductsByQuery(req.query)
-            res.json({products})
+
+            const query = req.query
+
+            if(categorys.includes(Object.keys(query))){
+                const products = await factory.productsService.getProductsByQuery(req.query)
+                res.sendOk({ message: "Products lookup by Query were found successfully", object: products })
+            }
         }
         
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -37,39 +58,42 @@ export const contrGetProducts = async (req, res) => {
         if (cat) {
             try {
 
-                const categoryCli = String(cat)
-                const productsByCat = await factory.productsService.getProductsByQuery({ category: categoryCli })
-                return res.json({ productsByCat })
+                regex.validation(regex.numbersBlanksAndText, String(cat))
+                const category = regex.validation(regex.numbersBlanksAndText, String(cat))
+                const productsByCat = await factory.productsService.getProductsByQuery({ category: category })
+                return res.sendOk({ message: "Products lookup by Category were found successfully", object: productsByCat })
 
             } catch (error) {
-                res.status(400).send({ msg: error.message })
+                res.sendClientError(error)
             }
         } else if (valueStock) {
             try {
 
-                const prodsByStock = await factory.productsService.getProductsByQuery({stock: {$eq: 200}})
-                return res.json({ prodsByStock })
+                const stock = regex.validation(regex.onlyNumbers(Number(valueStock)))
+                const prodsByStock = await factory.productsService.getProductsByQuery({stock: {$eq: stock}})
+                return res.sendOk({message: "Products lookup by stock were found successfully", object: prodsByStock})
                 
             } catch (error) {
-                res.status(400).send({ msg: error.message })
+                res.sendClientError(error)
             }
         } else if (page) {
             try {
 
-                const productsByPage = await factory.productsService.productsByPaginate(limit, page)
+                const numPage = regex.validation(regex.onlyNumbers(Number(page)))
+                const productsByPage = await factory.productsService.productsByPaginate(limit, numPage)
 
                 const prevLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page)-1}` : null
                 const nextLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page)+1}` : null
 
-                return res.status(200).json({ productsByPage, prevLink, nextLink })
+                return res.sendOk({ message: "Products lookup by page were found successfully", object: [productsByPage, prevLink, nextLink]})
 
             } catch (error) {
-                res.status(400).send({ msg: error.message })
+                res.sendClientError(error)
             }
         } else if (sort) {
 
             const sortedProducts = await factory.productsService.sortAndShowElements(sort)
-            return res.json({ sortedProducts })
+            return res.sendOk({ message: "Products were sorted successfully", object: sortedProducts })
 
         } else if (queryCli) {
             
@@ -78,17 +102,17 @@ export const contrGetProducts = async (req, res) => {
             try {
 
                 const prodByQuery = await factory.productsService.getProductsByQuery(queryCli)
-                return res.json({ prodByQuery })
+                return res.sendOk({ message: "Products lookup by query were found successfully", object: prodByQuery })
 
             } catch (error) {
-                res.status(400).send({ msg: error.message })
+                res.sendClientError(error)
             }
         }
 
-        return res.json({ allProducts })
+        return res.sendOk({ message:"All products", object: allProducts })
 
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -110,8 +134,7 @@ export const contrPostProd = async (req, res) => {
         res.status(201).json({ savedProduct });
 
     } catch (error) {
-
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -126,7 +149,7 @@ export const contrPutProd = async (req, res) => {
         res.send({ status: "success", message: "Product updated" });
 
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };
 
@@ -140,7 +163,6 @@ export const contrDelProd = async (req, res) => {
         return res.send({ status: "success", message: "Product deleted" })
 
     } catch (error) {
-
-        res.status(400).send({ message: error.message })
+        res.sendClientError(error)
     }
 };

@@ -1,8 +1,6 @@
 export const errors = {
     ERROR_NOT_FOUND: ">>> The requested resource was not found <<<",
     ERROR_INVALID_ARGUMENT: `>>> The argument sent does not comply with the expected format <<<`,
-    ERROR_INVALID_ARGUMENT_products: ">>> The argument sent does not comply with the expected format <<<",
-    ERROR_INVALID_ARGUMENT_users: ">>> The argument sent does not comply with the expected format <<<",
     ERR_HTTP_HEADERS_SENT: ">>> You are trying to send the response of a controller more than once <<<"
 }
 
@@ -23,7 +21,7 @@ export class Errors{
         }
     }
 
-    throwOneError(errorType, value){
+    throwOneError(errorType, value='GENERIC_ERROR '){
         return(`${errorType.message} ${value}`)
     }
 }

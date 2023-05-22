@@ -1,6 +1,6 @@
 import encryptedJWT from "../../utils/jwt/encrypted.jwt.js"
 
-export async function contrLogin (req, res, next){    
+export async function contrLogin (req, res){    
 
     console.log(">>>>>session controller login")
     console.log(req.user)
@@ -11,7 +11,7 @@ export async function contrLogin (req, res, next){
         httpOnly: true
     })
 
-    res.status(201).json(req.user)
+    res.status(202).json(req.user)
 };
 
 
@@ -28,7 +28,7 @@ export async function contrLogout (req, res, next) {
 export const contrPrivate = async (req, res) => {
     
     console.log(req.user)
-    res.send("Si ves esto es por que estas logeado.")
+    res.status(202).send("Si ves esto es por que estas logeado.")
 };
 
 

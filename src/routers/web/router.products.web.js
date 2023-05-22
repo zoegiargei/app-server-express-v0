@@ -6,6 +6,15 @@ import { authenticationJwtWeb } from "../../middlewares/authentication/jwt/auth.
 
 const routerProductsWeb = Router();
 
+routerProductsWeb.param('pid', async (req, res, next, pid) => {
+    if(regex.validation(regex.num_letters_notCharacters, pid)){
+        next()
+    } else{
+        req.params.pid = null
+    }
+    next()
+});
+
 routerProductsWeb.get('/products', authenticationJwtWeb, contrShowProducts)
 routerProductsWeb.get('/addProduct', authenticationJwtWeb, authenticationByRole(['Admin']), (req, res) => {
     
