@@ -1,10 +1,10 @@
-import dotenv from "dotenv";
-import { Command } from "commander";
+import dotenv from 'dotenv'
+import { Command } from 'commander'
 
-const program = new Command();
+const program = new Command()
 
-//NODE_ENV es convencion para definir en que entorno estamos
-//NODE_ENV CAN BE:
+// NODE_ENV es convencion para definir en que entorno estamos
+// NODE_ENV CAN BE:
 // dev
 // test
 // prod
@@ -22,7 +22,7 @@ program
     .option('AUTH_TOKEN_TWILIO <token>')
     .option('PHONE_NUMBER_TWILIO <phone>')
     .option('LEVEL_LOG <number>', 'Level of errors we want to see', 0)
-program.parse();
+program.parse()
 
 dotenv.config({
     path: 

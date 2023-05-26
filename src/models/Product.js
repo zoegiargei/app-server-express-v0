@@ -1,4 +1,4 @@
-import regex from "../utils/regex/Regex.js";
+import regex from '../utils/regex/Regex.js'
 
 class Product{
     constructor({ title, description, code, price, status=true, stock, category, thumbnail=[] }){
@@ -12,6 +12,6 @@ class Product{
         this.category = category,
         this.thumbnail = thumbnail
     }
-};
+}
 
-export default Product;
+export default Product

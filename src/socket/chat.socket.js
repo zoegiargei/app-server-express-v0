@@ -1,4 +1,4 @@
-import messageServices from "../services/messages.service.js"
+import messageServices from '../services/messages.service.js'
 
 export async function configMessagesSocket(io, socket){
     
@@ -19,4 +19,4 @@ export async function configMessagesSocket(io, socket){
         const allMessages = await messageServices.getMessages()
         io.sockets.emit('messages', allMessages)
     })
-};
+}

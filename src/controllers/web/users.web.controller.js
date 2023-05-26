@@ -1,12 +1,6 @@
-import usersService from "../../services/users.service.js";
+import usersService from '../../services/users.service.js'
 
-export async function contrShowUsers(req, res){
-    
+export async function contrShowUsers (req, res) {
     const users = await usersService.getUsers()
-    console.log(users)
-
-    const thAreUsers = users ? true : false
-    const loggedin = req.user
-
-    res.render('showUsers', { title: 'Users', loggedin: loggedin, thAreUsers: thAreUsers , users: users })
-};
+    res.render('showUsers', { title: 'Users', loggedin: req.user, thAreUsers: users, users })
+}

@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose'
 
-const ghUserCollection = 'githubUsers';
+const ghUserCollection = 'githubUsers'
 
 const ghUserSchema = new mongoose.Schema({
 
@@ -26,12 +26,12 @@ const ghUserSchema = new mongoose.Schema({
         ]
     }
     
-}, { versionKey: false } );
+}, { versionKey: false } )
 
 ghUserSchema.pre(/^find/, function(next) {
     this.populate('cart.cart')
     next()
-});
+})
 
-const ghUserModel = mongoose.model(ghUserCollection, ghUserSchema);
-export default ghUserModel;
+const ghUserModel = mongoose.model(ghUserCollection, ghUserSchema)
+export default ghUserModel

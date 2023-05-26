@@ -8,4 +8,4 @@ class CartMock{
 
     get userEmail(){ return this.#userEmail }
     
-};
+}

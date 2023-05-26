@@ -1,4 +1,4 @@
-import Order from "../models/Order.js";
+import Order from '../models/Order.js'
 
 class OrdersService{
     constructor(){
@@ -7,7 +7,7 @@ class OrdersService{
 
     generateOrder(user, cart){
     }
-};
+}
 
-const ordersService = new OrdersService();
-export default ordersService;
+const ordersService = new OrdersService()
+export default ordersService

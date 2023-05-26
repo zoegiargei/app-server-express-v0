@@ -1,4 +1,4 @@
-import User from "../../entities/User.entity.js";
+import User from '../../entities/User.entity.js'
 
 class UserRepository{
     constructor(usersDAO){
@@ -38,6 +38,6 @@ class UserRepository{
     async deleteUser(id){
         return await this.usersDAO.deleteElement(id)
     }
-};
+}
 
-export default UserRepository;
+export default UserRepository

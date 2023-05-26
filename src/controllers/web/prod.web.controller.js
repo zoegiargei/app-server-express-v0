@@ -1,5 +1,5 @@
-import factory from "../../DAO/factory.js"
-import { PORT } from "../../configs/server.config.js";
+import factory from '../../DAO/factory.js'
+import { PORT } from '../../configs/server.config.js'
 
 export const contrShowProducts = async (req, res) => {
     try {
@@ -18,4 +18,4 @@ export const contrShowProducts = async (req, res) => {
     } catch (error) {
         res.status(400).send({ message: error.message })
     }
-};
+}

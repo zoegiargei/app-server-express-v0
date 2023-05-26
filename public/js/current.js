@@ -1,5 +1,5 @@
 //logout
-const logoutForm = document.getElementById('logoutForm');
+const logoutForm = document.getElementById('logoutForm')
 
 if(logoutForm instanceof HTMLFormElement){
     
@@ -21,4 +21,4 @@ if(logoutForm instanceof HTMLFormElement){
             }
         )
     })
-};
+}

@@ -60,6 +60,6 @@ class DAOMemory{
     async reset(){
         return this.memory = []
     }
-};
+}
 
-export default DAOMemory;
+export default DAOMemory

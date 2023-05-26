@@ -1,5 +1,5 @@
-import encryptedPass from "../../src/utils/password/encrypted.pass.js";
-import regex from "../../src/utils/regex/Regex.js";
+import encryptedPass from '../../src/utils/password/encrypted.pass.js'
+import regex from '../../src/utils/regex/Regex.js'
 
 class User{
     #_id
@@ -78,6 +78,6 @@ class User{
             role: this.#role
         }
     }
-};
+}
 
-export default User;
+export default User

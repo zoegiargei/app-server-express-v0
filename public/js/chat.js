@@ -1,7 +1,7 @@
-const socketSideClient = io();
+const socketSideClient = io()
 
-const inputName = document.getElementById('inputName');
-const inputMess = document.getElementById('inputMessage');
+const inputName = document.getElementById('inputName')
+const inputMess = document.getElementById('inputMessage')
 
 inputName.addEventListener('keyup', (e) => {
     if(e.key === 'Enter'){
@@ -10,7 +10,7 @@ inputName.addEventListener('keyup', (e) => {
             inputName.value = ''
         }
     }
-});
+})
 
 
 Swal.fire({
@@ -23,9 +23,9 @@ Swal.fire({
     allowOutsideClick: false
 }).then(result => {
     
-    inputName.value = result.value;
+    inputName.value = result.value
     socketSideClient.emit('newUser', result.value)
-});
+})
 
 
 document.getElementById('NewMessButton').addEventListener('click', (e) => {
@@ -40,7 +40,7 @@ document.getElementById('NewMessButton').addEventListener('click', (e) => {
         socketSideClient.emit('newMessage', newMess)
     }
     
-});
+})
 
 
 socketSideClient.on('messages', allMessages => {
@@ -49,7 +49,7 @@ socketSideClient.on('messages', allMessages => {
     messagesDiv.innerHTML = ``
     allMessages.forEach((elem, index)  => {
         messagesDiv.innerHTML +=`
-            <div class="p-1 mb-2 messList" style="width: 100%;">
+            <div class="p-1 mb-2 messList" style="width: 100%">
 
                 <ul class="list-group" id="${index}">
 
@@ -59,7 +59,7 @@ socketSideClient.on('messages', allMessages => {
             </div>
         `
     })
-});
+})
 
 
 socketSideClient.on('newUser', (name) => {
@@ -71,7 +71,7 @@ socketSideClient.on('newUser', (name) => {
         title: `${name} se ha unido al chat`,
         icon: "success"
     })
-});
+})
 
 
-socketSideClient.emit('refreshMessages');
+socketSideClient.emit('refreshMessages')

@@ -1,6 +1,6 @@
-import mongoose, { Schema, SchemaType } from "mongoose";
+import mongoose, { Schema, SchemaType } from 'mongoose'
 
-const cartCollection = 'carts';
+const cartCollection = 'carts'
 
 const cartSchema = new mongoose.Schema({
 
@@ -18,13 +18,13 @@ const cartSchema = new mongoose.Schema({
     },
     userEmail: { type: String, required:true }
 
-}, { versionKey: false } );
+}, { versionKey: false } )
 
 
 cartSchema.pre(/^find/, function(next) {
     this.populate('productsCart.product')
     next()
-});
+})
 
-const cartModel = mongoose.model(cartCollection, cartSchema);
-export default cartModel;
+const cartModel = mongoose.model(cartCollection, cartSchema)
+export default cartModel

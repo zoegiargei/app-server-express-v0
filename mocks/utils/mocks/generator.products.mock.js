@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker';
-import ProductMock from "../../models/product.mock.js";
+import { faker } from '@faker-js/faker'
+import ProductMock from '../../models/product.mock.js'
 
 class GeneratorProductsMock{
     constructor(){}
@@ -15,7 +15,7 @@ class GeneratorProductsMock{
 
         return newProductMock.toDtoProduct()
     }
-};
+}
 
-const generatorProductsMock = new GeneratorProductsMock();
-export default generatorProductsMock;
+const generatorProductsMock = new GeneratorProductsMock()
+export default generatorProductsMock

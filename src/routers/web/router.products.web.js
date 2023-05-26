@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { contrShowProducts } from "../../controllers/web/prod.web.controller.js";
-import factory from "../../DAO/factory.js";
-import { authenticationByRole } from "../../middlewares/authentication/authentication.byRole.js";
-import { authenticationJwtWeb } from "../../middlewares/authentication/jwt/auth.byJwt.web.js";
+import { Router } from 'express'
+import { contrShowProducts } from '../../controllers/web/prod.web.controller.js'
+import factory from '../../DAO/factory.js'
+import { authenticationByRole } from '../../middlewares/authentication/authentication.byRole.js'
+import { authenticationJwtWeb } from '../../middlewares/authentication/jwt/auth.byJwt.web.js'
 
-const routerProductsWeb = Router();
+const routerProductsWeb = Router()
 
 routerProductsWeb.param('pid', async (req, res, next, pid) => {
     if(regex.validation(regex.num_letters_notCharacters, pid)){
@@ -13,14 +13,14 @@ routerProductsWeb.param('pid', async (req, res, next, pid) => {
         req.params.pid = null
     }
     next()
-});
+})
 
 routerProductsWeb.get('/products', authenticationJwtWeb, contrShowProducts)
 routerProductsWeb.get('/addProduct', authenticationJwtWeb, authenticationByRole(['Admin']), (req, res) => {
     
     const loggedin = req.user
     res.render('addProduct', { title: 'AddProduct', loggedin:loggedin })
-});
+})
 
 routerProductsWeb.get('/product/:pid', authenticationJwtWeb, authenticationByRole(['Admin', 'User']), async (req, res) => {
 
@@ -39,6 +39,6 @@ routerProductsWeb.get('/product/:pid', authenticationJwtWeb, authenticationByRol
     }
 
     res.render('product', { title: 'Details of product', loggedin: loggedin, product: product, cartId: cid, stock: product.stock })
-});
+})
 
-export default routerProductsWeb;
+export default routerProductsWeb

@@ -1,5 +1,5 @@
-/* import encryptedJWT from "../../utils/jwt/encrypted.jwt.js";
-import { AuthenticationFailed } from "../../errors/Authentication.failed.js"
+/* import encryptedJWT from '../../utils/jwt/encrypted.jwt.js'
+import { AuthenticationFailed } from '../../errors/Authentication.failed.js'
 
 export function userAuthenticate(req, res, next){    
     try {
@@ -15,4 +15,4 @@ export function userAuthenticate(req, res, next){
     } catch (error) {
         return next(new Error(error.message))
     }
-}; */
+} */

@@ -1,4 +1,4 @@
-import passport from "passport";
+import passport from 'passport'
 
 export function authenticationJwtWeb(req, res, next) {
     passport.authenticate('jwt', (error, user) => {
@@ -9,4 +9,4 @@ export function authenticationJwtWeb(req, res, next) {
         //req.user = JSON.parse(user.payload)
         next()
     })(req, res, next)
-};
+}

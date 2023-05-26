@@ -1,10 +1,11 @@
-import factory from "../../DAO/factory.js";
-import { classErrors } from "../../errors/Errors.js";
-import regex from "../../utils/regex/Regex.js";
+import factory from '../../DAO/factory.js'
+import { classErrors } from '../../errors/Errors.js'
+import { winstonLogger } from '../../utils/loggers/logger.js'
+import regex from '../../utils/regex/Regex.js'
 
 export const contrGetProd = async (req, res) => {
     const categorys = [
-        'title', 
+        'title',
         'description',
         'code',
         'price',
@@ -14,37 +15,30 @@ export const contrGetProd = async (req, res) => {
     ]
 
     try {
-
         const pid = String(req.params.pid)
         const newPid = pid.slice(1)
 
-        if(req.params.pid){
-
+        if (req.params.pid) {
             const product = await factory.productsService.getProductById(newPid)
-            if(!product){
+            if (!product) {
                 return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(req.params.pid)))
             }
-            res.sendOk({ message: "Product lookup by id was found successfully", object: product })
-
-        } else if(req.query){
-
+            res.sendOk({ message: 'Product lookup by id was found successfully', object: product })
+        } else if (req.query) {
             const query = req.query
 
-            if(categorys.includes(Object.keys(query))){
+            if (categorys.includes(Object.keys(query))) {
                 const products = await factory.productsService.getProductsByQuery(req.query)
-                res.sendOk({ message: "Products lookup by Query were found successfully", object: products })
+                res.sendOk({ message: 'Products lookup by Query were found successfully', object: products })
             }
         }
-        
     } catch (error) {
         res.sendClientError(error)
     }
-};
+}
 
-
-export const contrGetProducts = async (req, res) => {
+export const contrGetProducts = async (req, res) => {
     try {
-
         const limit = req.query.limit || 10
         const page = req.query.page || 1
         const valueStock = req.query.stock
@@ -54,115 +48,89 @@ export const contrGetProducts = async (req, res) => {
 
         const allProducts = (await factory.productsService.getProducts()).slice(0, limit)
 
-
         if (cat) {
             try {
-
                 regex.validation(regex.numbersBlanksAndText, String(cat))
-                const category = regex.validation(regex.numbersBlanksAndText, String(cat))
-                const productsByCat = await factory.productsService.getProductsByQuery({ category: category })
-                return res.sendOk({ message: "Products lookup by Category were found successfully", object: productsByCat })
-
+                const categorySent = regex.validation(regex.numbersBlanksAndText, String(cat))
+                const productsByCat = await factory.productsService.getProductsByQuery({ category: categorySent })
+                return res.sendOk({ message: 'Products lookup by Category were found successfully', object: productsByCat })
             } catch (error) {
                 res.sendClientError(error)
             }
         } else if (valueStock) {
             try {
-
                 const stock = regex.validation(regex.onlyNumbers(Number(valueStock)))
-                const prodsByStock = await factory.productsService.getProductsByQuery({stock: {$eq: stock}})
-                return res.sendOk({message: "Products lookup by stock were found successfully", object: prodsByStock})
-                
+                const prodsByStock = await factory.productsService.getProductsByQuery({ stock: { $eq: stock } })
+                return res.sendOk({ message: 'Products lookup by stock were found successfully', object: prodsByStock })
             } catch (error) {
                 res.sendClientError(error)
             }
         } else if (page) {
             try {
-
                 const numPage = regex.validation(regex.onlyNumbers(Number(page)))
                 const productsByPage = await factory.productsService.productsByPaginate(limit, numPage)
 
-                const prevLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page)-1}` : null
-                const nextLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page)+1}` : null
+                const prevLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page) - 1}` : null
+                const nextLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page) + 1}` : null
 
-                return res.sendOk({ message: "Products lookup by page were found successfully", object: [productsByPage, prevLink, nextLink]})
-
+                return res.sendOk({ message: 'Products lookup by page were found successfully', object: [productsByPage, prevLink, nextLink] })
             } catch (error) {
                 res.sendClientError(error)
             }
         } else if (sort) {
-
             const sortedProducts = await factory.productsService.sortAndShowElements(sort)
-            return res.sendOk({ message: "Products were sorted successfully", object: sortedProducts })
-
+            return res.sendOk({ message: 'Products were sorted successfully', object: sortedProducts })
         } else if (queryCli) {
-            
-            if(typeof(queryCli) != 'object'){ return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(queryCli))) }
+            if (typeof (queryCli) !== 'object') { return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(queryCli))) }
 
             try {
-
                 const prodByQuery = await factory.productsService.getProductsByQuery(queryCli)
-                return res.sendOk({ message: "Products lookup by query were found successfully", object: prodByQuery })
-
+                return res.sendOk({ message: 'Products lookup by query were found successfully', object: prodByQuery })
             } catch (error) {
                 res.sendClientError(error)
             }
         }
 
-        return res.sendOk({ message:"All products", object: allProducts })
-
+        return res.sendOk({ message: 'All products', object: allProducts })
     } catch (error) {
         res.sendClientError(error)
     }
-};
-
+}
 
 export const contrPostProd = async (req, res) => {
     try {
-        
-        console.log(">>>>>req.file")
-        console.log(req.file) //undefined //I have to fix it method middleware
+        winstonLogger.debug(`>>>req.file ${req.file}`)
 
         const data = req.body
 
         const savedProduct = await factory.productsService.loadProduct(data)
 
         const allProducts = await factory.productsService.getProducts()
-        
-        req['io'].sockets.emit('updateView', allProducts)
-        
-        res.status(201).json({ savedProduct });
-
+        req.io.sockets.emit('updateView', allProducts)
+        res.sendCreated({ message: 'Product updated successfully', object: savedProduct })
     } catch (error) {
         res.sendClientError(error)
     }
-};
-
+}
 
 export const contrPutProd = async (req, res) => {
     try {
-
-        const pid = req.params.pid;
-        const data = req.body;
-
-        await productsService.updateProduct(pid, data)
-        res.send({ status: "success", message: "Product updated" });
-
-    } catch (error) {
-        res.sendClientError(error)
-    }
-};
-
-
-export const contrDelProd = async (req, res) => {
-    try {
-        
         const pid = req.params.pid
-        
-        await productsService.deleteProduct(pid)
-        return res.send({ status: "success", message: "Product deleted" })
+        const data = req.body
 
+        const productUpdated = await factory.productsService.updateProduct(pid, data)
+        res.sendOk({ message: 'Product updated successfully', object: productUpdated })
     } catch (error) {
         res.sendClientError(error)
     }
-};
+}
+
+export const contrDelProd = async (req, res) => {
+    try {
+        const pid = req.params.pid
+        const productDeleted = await factory.productsService.deleteProduct(pid)
+        return res.sendOk({ message: 'Product deleted', object: productDeleted })
+    } catch (error) {
+        res.sendClientError(error)
+    }
+}

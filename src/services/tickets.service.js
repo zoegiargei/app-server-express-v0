@@ -1,5 +1,5 @@
-import ticketDbDAO from "../DAO/DB_DAOs/Tickets.DAO.db.js";
-import Ticket from "../models/Ticket.js";
+import ticketDbDAO from '../DAO/DB_DAOs/Tickets.DAO.db.js'
+import Ticket from '../models/Ticket.js'
 
 class TicketService{
     constructor(ticketDAO){
@@ -18,7 +18,7 @@ class TicketService{
     async cancelTicket(id){
         return await this.ticketDAO.deleteElement(id)
     }
-};
+}
 
-const ticketsService = new TicketService(ticketDbDAO);
-export default ticketsService;
+const ticketsService = new TicketService(ticketDbDAO)
+export default ticketsService

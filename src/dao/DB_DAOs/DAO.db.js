@@ -53,6 +53,6 @@ class DAODb{
     async reset(){
         return await this.db.deleteMany({})
     }
-};
+}
 
-export default DAODb;
+export default DAODb

@@ -1,4 +1,4 @@
-const cartForm = document.getElementById('cartForm');
+const cartForm = document.getElementById('cartForm')
 
 if(cartForm instanceof HTMLFormElement){
     cartForm.addEventListener('submit', (e) => {
@@ -19,10 +19,10 @@ if(cartForm instanceof HTMLFormElement){
             
             result.json()
         })
-    });
+    })
 }
 
 //loader
 window.addEventListener('load', () => {
     document.getElementById('loader').classList.toggle('loader2')
-});
+})

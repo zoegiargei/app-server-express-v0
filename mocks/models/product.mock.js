@@ -27,4 +27,4 @@ class ProductMock{
     }
 }
 
-export default ProductMock;
+export default ProductMock

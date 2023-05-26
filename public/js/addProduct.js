@@ -9,10 +9,10 @@ class Product{
         this.category = category,
         this.file_thumbnail = file_thumbnail
     }
-};
+}
 
 
-const formAddProduct = document.getElementById('formAddProduct');
+const formAddProduct = document.getElementById('formAddProduct')
 
 formAddProduct.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -35,4 +35,4 @@ formAddProduct.addEventListener('submit', (e) => {
             formAddProduct.reset()
         }
     })
-});
+})

@@ -1,5 +1,5 @@
-import productModel from "../dao/DBmodels/Product.model.js";
-import Product from "../models/Product.js";
+import productModel from '../DAO/DBmodels/Product.model.js'
+import Product from '../models/Product.js'
 
 class ProductsService{
     constructor(productsDbDAO){
@@ -11,7 +11,7 @@ class ProductsService{
         const codeProd = await this.productsDbDAO.findElementByProjection({code: Number(prod.code)}, {code: 1})
 
         if(codeProd.length > 0){
-            throw new Error("This CODE already exists")
+            throw new Error('This CODE already exists')
         }
 
         const newProd = new Product(prod)
@@ -31,7 +31,7 @@ class ProductsService{
         try {
             return await this.productsDbDAO.findElementById(pid)
         } catch (error) {
-            return new Error("Product not existing")
+            return new Error('Product not existing')
         }
     }
 
@@ -45,7 +45,7 @@ class ProductsService{
         const sort = value
 
         if (!sort || sort != 1 && sort != -1) {
-            return new Error("The sort value only can be 1 or -1")
+            return new Error('The sort value only can be 1 or -1')
         } else {
             return await this.productsDbDAO.sortElements({price: sort})
         }
@@ -59,6 +59,6 @@ class ProductsService{
         const products = await productModel.paginate({}, { limit: limitValue, page: pageValue, lean:true })
         return products
     }
-};
+}
 
-export default ProductsService;
+export default ProductsService

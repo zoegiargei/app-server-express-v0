@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose'
 
-const usersCollection = 'users';
+const usersCollection = 'users'
 
 const usersSchema = new mongoose.Schema({
 
@@ -29,13 +29,13 @@ const usersSchema = new mongoose.Schema({
         ]
     }
     
-}, { versionKey: false });
+}, { versionKey: false })
 
 usersSchema.pre(/^find/, function(next) {
     this.populate('cart.cart')
     next()
-});
+})
 
-const userModel = mongoose.model(usersCollection, usersSchema);
-export default userModel;
+const userModel = mongoose.model(usersCollection, usersSchema)
+export default userModel
 

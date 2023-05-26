@@ -1,5 +1,5 @@
-import passport from "passport";
-import { AuthenticationFailed } from "../../../errors/Authentication.failed.js";
+import passport from 'passport'
+import { AuthenticationFailed } from '../../../errors/Authentication.failed.js'
 
 export function authenticationJwtApi(req, res, next) {
     
@@ -10,4 +10,4 @@ export function authenticationJwtApi(req, res, next) {
         //req.user = JSON.parse(user.payload)
         next()
     })(req, res, next)
-};
+}

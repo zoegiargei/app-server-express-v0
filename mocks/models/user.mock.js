@@ -35,6 +35,6 @@ class UserMock{
             cart: this.#cart
         }
     }
-};
+}
 
-export default UserMock;
+export default UserMock

@@ -25,7 +25,7 @@ class SmsService{
             return new Error(error)
         }
     }
-};
+}
 
-const smsService = new SmsService(config.ACCOUNT_SID_TWILIO, config.AUTH_TOKEN_TWILIO);
-export default smsService;
+const smsService = new SmsService(config.ACCOUNT_SID_TWILIO, config.AUTH_TOKEN_TWILIO)
+export default smsService

@@ -4,4 +4,4 @@ async function seeProduct(e){
 
     const url = `http://localhost:8080/web/products/product/:${btnSeeProductValue}`
     window.location.replace(url)
-};
+}

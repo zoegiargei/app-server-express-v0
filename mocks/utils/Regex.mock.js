@@ -1,10 +1,10 @@
 class Regex{
     constructor(){
         this.onlyNumbers = /^[0-9]+$/,
-        this.email = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/,
+        this.email = /^(([^<>()[\]\.,;:\s@\']+(\.[^<>()[\]\.,;:\s@\']+)*)|(\'.+\'))@(([^<>()[\]\.,;:\s@\']+\.)+[^<>()[\]\.,;:\s@\']{2,})$/,
         this.textWithBlancks = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/,
         this.textNotBlancks = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/,
-        this.strongPassword = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/
+        this.strongPassword = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=|:;''<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/
 
     }
 
@@ -44,7 +44,7 @@ class Regex{
         }
     }
 
-    //strong password, ejemplo: "wMH432595@" ,implementar con match: if( userPassword.match(r_strongPass)!=null )
+    //strong password, ejemplo: 'wMH432595@' ,implementar con match: if( userPassword.match(r_strongPass)!=null )
     validateStrongPassword(value){
         let boolean
         if( (this.strongPassword).test(value) ){

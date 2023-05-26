@@ -1,5 +1,5 @@
-import { createTransport } from "nodemailer";
-import config from "../../config.js";
+import { createTransport } from 'nodemailer'
+import config from '../../config.js'
 
 class EmailsService{
 
@@ -34,7 +34,7 @@ class EmailsService{
             throw new Error(error)
         }
     }
-};
+}
 
-const emailService = new EmailsService(config.USER_NODEMAILER, config.PASS_NODEMAILER);
-export default emailService;
+const emailService = new EmailsService(config.USER_NODEMAILER, config.PASS_NODEMAILER)
+export default emailService

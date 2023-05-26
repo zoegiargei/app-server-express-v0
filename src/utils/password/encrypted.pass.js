@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt'
 
-const saltRounds = 10;
+const saltRounds = 10
 class EncryptedPass{
 
     createHash(password){
@@ -10,7 +10,7 @@ class EncryptedPass{
     isValidPassword(userPassword, password){
         return bcrypt.compareSync(password, userPassword)
     }
-};
+}
 
-const encryptedPass = new EncryptedPass();
-export default encryptedPass;
+const encryptedPass = new EncryptedPass()
+export default encryptedPass

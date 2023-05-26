@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
-import UserMock from '../../models/user.mock.js';
-import generatorProductsMock from './generator.products.mock.js';
+import { faker } from '@faker-js/faker'
+import UserMock from '../../models/user.mock.js'
+import generatorProductsMock from './generator.products.mock.js'
 
 class GeneratorUserMock{
 
@@ -8,8 +8,8 @@ class GeneratorUserMock{
 
         const products = []
         for (let index = 0; index < faker.number.int({ min: 3, max: 6 }); index++) {
-            const product = generatorProductsMock.createProductMock();
-            products.push(product);
+            const product = generatorProductsMock.createProductMock()
+            products.push(product)
             
         }
         
@@ -23,7 +23,7 @@ class GeneratorUserMock{
 
         return newUserMock.toDto()
     }
-};
+}
 
-const generatorUserMock = new GeneratorUserMock();
-export default generatorUserMock;
+const generatorUserMock = new GeneratorUserMock()
+export default generatorUserMock

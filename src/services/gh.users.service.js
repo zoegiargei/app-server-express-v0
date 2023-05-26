@@ -1,6 +1,6 @@
-import GhUsersDbDAO from "../DAO/DB_DAOs/GH.User.DAO.db.js";
-import GithubUser from "../entities/Github.User.entity.js";
-import cartsService from "./carts.service.js";
+import GhUsersDbDAO from '../DAO/DB_DAOs/GH.User.DAO.db.js'
+import GithubUser from '../entities/Github.User.entity.js'
+import cartsService from './carts.service.js'
 
 class GhUserService{
     constructor(ghUserDbDAO){
@@ -29,13 +29,13 @@ class GhUserService{
         const user = this.ghUserDbDAO.findElementById(id)
         const cid = user.cart._id
         
-        console.log(">>>>> ID de cart a eliminar")
+        console.log('>>>>> ID de cart a eliminar')
         console.log(cid)
 
         await cartsService.deleteCart(cid)
         return await this.ghUserDbDAO.deleteUser(id)
     }
-};
+}
 
-const ghUserService = new GhUserService(GhUsersDbDAO);
-export default ghUserService;
+const ghUserService = new GhUserService(GhUsersDbDAO)
+export default ghUserService

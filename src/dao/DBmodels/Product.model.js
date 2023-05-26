@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2";
+import mongoose from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
-const prodCollection = 'products';
+const prodCollection = 'products'
 
 const prodSchema = new mongoose.Schema({
 
@@ -20,12 +20,12 @@ const prodSchema = new mongoose.Schema({
         type: [{ type:Object, required:true, cast:false }]
         /*         validate: {
             validator: v => Array.isArray(v) && v.length > 0,
-            message: "Array can't be empty"
+            message: 'Array can't be empty'
         } */    
     }
-}, { versionKey: false } );
+}, { versionKey: false } )
 
-prodSchema.plugin(mongoosePaginate);
+prodSchema.plugin(mongoosePaginate)
 
-const productModel = mongoose.models.products ||  mongoose.model(prodCollection, prodSchema);
-export default productModel;
+const productModel = mongoose.models.products ||  mongoose.model(prodCollection, prodSchema)
+export default productModel

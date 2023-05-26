@@ -1,9 +1,7 @@
-import { io } from "../../main.js";
-
-function addIoToReq(req, res, next){
+import { io } from '../../main.js'
+function addIoToReq (req, res, next) {
     req.allProducts = []
-    req['io'] = io
+    req.io = io
     next()
-};
-
-export default addIoToReq;
+}
+export default addIoToReq

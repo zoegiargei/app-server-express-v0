@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 class Ticket{
     constructor(amount, purchaser){
@@ -17,6 +17,6 @@ class Ticket{
         const today = new Date()
         return String(today.toUTCString())
     }
-};
+}
 
-export default Ticket;
+export default Ticket

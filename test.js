@@ -1,7 +1,7 @@
-const r_onlyNumbers = /^[0-9]+$/;
+const rOnlyNumbers = /^[0-9]+$/
 
-class Regex{
-    constructor(){
+class Regex {
+    constructor() {
         this.onlyNumbers = /^[0-9]+$/,
         this.email = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/,
         this.textWithBlancks = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/,

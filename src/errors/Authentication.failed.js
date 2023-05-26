@@ -3,4 +3,4 @@ export class AuthenticationFailed extends Error {
         super(message)
         this.type = 'AUTH_FAILED'
     }
-};
+}

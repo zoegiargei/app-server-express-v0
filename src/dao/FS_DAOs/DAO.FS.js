@@ -1,24 +1,24 @@
-import { writeFile, readFile, unlink } from 'fs/promises';
-import { errors } from '../../errors/Errors.js';
-import { classErrors } from '../../errors/Errors.js';
+import { writeFile, readFile, unlink } from 'fs/promises'
+import { errors } from '../../errors/Errors.js'
+import { classErrors } from '../../errors/Errors.js'
 
 class DAO_FS{
     constructor(path){
         this.path = path
         this.elements = []
-    };
+    }
 
     async read(){
 
         const asJson = JSON.parse(await readFile(this.path, 'utf-8'))
         return asJson
-    };
+    }
 
     async write(){
 
         const asStringify = await writeFile(this.path, JSON.stringify(this.elements, null, '\t'))
         return asStringify
-    };
+    }
 
     async createElement(element){
 
@@ -38,7 +38,7 @@ class DAO_FS{
 
         return newElement
 
-    };
+    }
 
     async findElements( { field, value } = {} ){
 
@@ -51,18 +51,18 @@ class DAO_FS{
                 return elem[field] === value
             })
         }
-    };
+    }
 
     async findElementById(id){
 
         const asJson = await this.read()
         return asJson.find(prod => prod.id === id)
-    };
+    }
     
     async updateElement(pid, data){
         
         const allProducts = await this.read()
-        const index = allProducts.findIndex(prod => prod.id === pid);
+        const index = allProducts.findIndex(prod => prod.id === pid)
         allProducts[index] = {
             ...allProducts[index],
             ...data,
@@ -71,7 +71,7 @@ class DAO_FS{
         
         this.elements = allProducts
         await this.write()
-    };
+    }
 
     async replaceElement(id, newElement){
         
@@ -96,11 +96,11 @@ class DAO_FS{
 
         this.elements = newArray
         await this.write()
-    };
+    }
 
     async reset(){
         return await unlink(this.path)
     }
-};
+}
 
-export default DAO_FS;
+export default DAO_FS
