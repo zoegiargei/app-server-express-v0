@@ -85,3 +85,4 @@ O también clonando el repositorio
 
 - http://localhost:8080/web/session/login/
 - http://localhost:8080/web/session/register/
+- http://localhost:8080/api/loggerTest/
