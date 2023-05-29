@@ -23,7 +23,7 @@ const colors = {
 winston.addColors(colors)
 
 const myFormat = format.printf(({ level, message, label, timestamp }) => {
-    return `${timestamp} [${label}] ${level}: ${message}`
+    return `${timestamp} ${level}: ${message}`
 })
 
 if (config.NODE_ENV === 'dev') {
@@ -59,7 +59,6 @@ export const winstonLogger = winston.createLogger({
     levels,
     format: format.combine(
         format.colorize(),
-        format.label('Logg!'),
         format.timestamp(),
         myFormat
     ),
@@ -67,7 +66,7 @@ export const winstonLogger = winston.createLogger({
 })
 
 export const logger = (req, res, next) => {
-    winstonLogger.info(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`)
+    winstonLogger.debug(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`)
     req.logger = winstonLogger
     next()
 }

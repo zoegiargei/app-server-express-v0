@@ -7,6 +7,7 @@ import ConfigMulter from '../../utils/multer/config.files.multer.js'
 import { authenticationJwtApi } from '../../middlewares/authentication/jwt/auth.byJwt.api.js'
 import { authenticationByRole } from '../../middlewares/authentication/authentication.byRole.js'
 import cartsService from '../../services/carts.service.js'
+import { winstonLogger } from '../../utils/loggers/logger.js'
 
 const configMulter = new ConfigMulter('./public/uploads')
 const upload = configMulter.configUpload()
@@ -20,7 +21,7 @@ routerApi.use('/carts', authenticationJwtApi, authenticationByRole(['Admin', 'Us
 
 // proof
 routerApi.post('/upload', upload.single('image'), (req, res) => {
-    req.logger.debug(req.file)
+    winstonLogger.debug(req.file)
     res.send('Image Uploaded')
 })
 

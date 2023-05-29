@@ -4,7 +4,6 @@ import cartsService from '../../services/carts.service.js'
 import emailService from '../../services/emails.service.js'
 import smsService from '../../services/sms.service.js'
 import ticketsService from '../../services/tickets.service.js'
-import { winstonLogger } from '../../utils/loggers/logger.js'
 
 export const handlerNewCart = async (req, res) => {
     try {
@@ -101,75 +100,75 @@ export const handlerShowCart = async (req, res) => {
 
 export const handlerPurchase = async (req, res) => {
     const user = req.user
-    winstonLogger.debug('>>>>req.user')
-    winstonLogger.debug(user)
+    req.logger.debug('>>>>req.user')
+    req.logger.debug(user)
 
     const cid = req.user.cart[0]._id
-    winstonLogger.debug('>>>>req.user.cart[0]._id')
-    winstonLogger.debug(cid)
+    req.logger.debug('>>>>req.user.cart[0]._id')
+    req.logger.debug(cid)
 
     const cart = await cartsService.getCartById(cid)
-    winstonLogger.debug('>>>>cart')
-    winstonLogger.debug(cart)
+    req.logger.debug('>>>>cart')
+    req.logger.debug(cart)
 
-    winstonLogger.debug('>>>>productsCart')
+    req.logger.debug('>>>>productsCart')
     const productsCart = cart.productsCart // array
-    winstonLogger.debug(productsCart)
+    req.logger.debug(productsCart)
 
-    winstonLogger.debug('>>>>cada producto de productsCart') // objetos
+    req.logger.debug('>>>>cada producto de productsCart') // objetos
     let total = 0
     productsCart.forEach(async element => {
-        winstonLogger.debug(element.product)
-        winstonLogger.debug(element.quantity)
+        req.logger.debug(element.product)
+        req.logger.debug(element.quantity)
         const quantity = JSON.parse(element.quantity)
-        winstonLogger.debug(element.product.stock)
+        req.logger.debug(element.product.stock)
         const stock = JSON.parse(element.product.stock)
-        winstonLogger.debug('>>>Es el stock mayor que 0 y que quantity???')
-        winstonLogger.debug((stock > 0 && stock > quantity))
+        req.logger.debug('>>>Es el stock mayor que 0 y que quantity???')
+        req.logger.debug((stock > 0 && stock > quantity))
 
         if ((stock > 0 && stock > quantity) === true) {
-            winstonLogger.debug('>>>solo si el stock es mayor de 0 y mayor que quantity pasa')
-            winstonLogger.debug('>>>>>stock actualizado')
+            req.logger.debug('>>>solo si el stock es mayor de 0 y mayor que quantity pasa')
+            req.logger.debug('>>>>>stock actualizado')
 
             element.product.stock = element.product.stock - quantity
-            winstonLogger.debug('>>>cada producto de productsCart con stock actualizado')
-            winstonLogger.debug(element.product)
+            req.logger.debug('>>>cada producto de productsCart con stock actualizado')
+            req.logger.debug(element.product)
             const pid = element.product._id
-            winstonLogger.debug(String(pid))
+            req.logger.debug(String(pid))
             const result = await factory.productsService.updateProduct(String(pid), element.product)
-            winstonLogger.debug('resultado de actualizar datos del producto comprado')
-            winstonLogger.debug(result)
+            req.logger.debug('resultado de actualizar datos del producto comprado')
+            req.logger.debug(result)
             element.product.status = true
             total = total + JSON.parse(element.product.price)
         } else {
             element.product.status = false
-            winstonLogger.debug('>>>status de los productos no disponibles')
-            winstonLogger.debug(element.product.status)
+            req.logger.debug('>>>status de los productos no disponibles')
+            req.logger.debug(element.product.status)
         }
     })
 
-    winstonLogger.debug('>>>>cart con todos los productos disponibles')
+    req.logger.debug('>>>>cart con todos los productos disponibles')
     const newProductsCart = productsCart.filter(element => element.product.status === true)
     const productsCartNotAvailable = productsCart.filter(element => element.product.status === false)
 
     const productsCartUpdated = await cartsService.updateProductsCart(cid, productsCartNotAvailable)
 
     if (newProductsCart.length > 0) {
-        winstonLogger.debug(total)
+        req.logger.debug(total)
         const ticket = new Ticket(total, user.email)
         await ticketsService.saveTicket(ticket)
-        winstonLogger.debug('>>> ticket de compra')
-        winstonLogger.debug(ticket)
+        req.logger.debug('>>> ticket de compra')
+        req.logger.debug(ticket)
         if (user.orders) {
             user.orders.push(ticket)
         } else {
             user.orders = []
             user.orders.push(ticket)
         }
-        winstonLogger.debug('>>>>user, user.orders, user._id in handler purchase')
-        winstonLogger.debug(user)
-        winstonLogger.debug(user.orders)
-        winstonLogger.debug(user._id)
+        req.logger.debug('>>>>user, user.orders, user._id in handler purchase')
+        req.logger.debug(user)
+        req.logger.debug(user.orders)
+        req.logger.debug(user._id)
             const emailMessage = `
             <h1>Hello ${user.username}!!</h1>
             <h4>Your Ticket</h4>

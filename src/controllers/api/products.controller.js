@@ -1,6 +1,5 @@
 import factory from '../../DAO/factory.js'
 import { classErrors } from '../../errors/Errors.js'
-import { winstonLogger } from '../../utils/loggers/logger.js'
 import regex from '../../utils/regex/Regex.js'
 
 export const contrGetProd = async (req, res) => {
@@ -99,7 +98,7 @@ export const contrGetProducts = async (req, res) => {
 
 export const contrPostProd = async (req, res) => {
     try {
-        winstonLogger.debug(`>>>req.file ${req.file}`)
+        req.logger.debug(`>>>req.file ${req.file}`)
 
         const data = req.body
 

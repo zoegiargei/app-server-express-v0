@@ -1,5 +1,3 @@
-import { winstonLogger } from '../utils/loggers/logger.js'
-
 export const errors = {
     ERROR_NOT_FOUND: '>>> The requested resource was not found <<<',
     ERROR_INVALID_ARGUMENT: '>>> The argument sent does not comply with the expected format <<<',
@@ -33,7 +31,7 @@ export const classErrors = new Errors()
 export class HandlerErrors {
     static createError ({ name = 'Error', cause, message, code = 1 }) {
         const newError = new Error(message, { cause })
-        newError.name = name,
+        newError.name = name
         newError.code = code
         return newError
     }
@@ -42,7 +40,7 @@ export class HandlerErrors {
 const handlerErrors = new HandlerErrors()
 
 export const errorLoger = (error, req, res, next) => {
-    winstonLogger.info(error)
+    req.logger.debug(error)
     next(error)
 }
 

@@ -29,7 +29,7 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (usern
     const adminEmail = config.ADMIN_EMAIL
     const adminPassword = config.ADMIN_PASSWORD
     if (username === adminEmail && password === adminPassword) {
-        winstonLogger.info('Is amdmin user')
+        winstonLogger.debug('Is amdmin user')
         await cartsService.createCart(username)
         const cid = await cartsService.getLastOne()
 

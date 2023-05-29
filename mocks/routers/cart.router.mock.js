@@ -1,13 +1,12 @@
 import { Router } from 'express'
 import cartsService from '../../src/services/carts.service.js'
-
 const routerCartsMock = Router()
 
 // proof cartsService
 routerCartsMock.post('/nuevoCarrito', async (req, res) => {
     try {
         const newCart = await cartsService.createCart('zoegiargei@gmail.com')
-        req.logger.info(String(newCart))
+        req.logger.debug(String(newCart))
         res.sendSuccess()
     } catch (error) {
         res.sendClientError()

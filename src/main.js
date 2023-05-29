@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import { SECRET_WORD } from './configs/cookie.config.js'
 import showCookies from './middlewares/cookies/show.cookies.js'
 import timeNow from './middlewares/responses/time.now.js'
+import { logger, winstonLogger } from './utils/loggers/logger.js'
 import routerApi from './routers/api/router.api.js'
 import routerWeb from './routers/web/router.web.js'
 import { passportInitialize } from './middlewares/passport/passport.strategies.js'
@@ -19,7 +20,6 @@ import addIoToReq from './middlewares/req/add.io.req.js'
 import compression from 'express-compression'
 import { customResponses } from './middlewares/responses/custom.responses.js'
 import cluster from 'cluster'
-import { logger, winstonLogger } from './utils/loggers/logger.js'
 import { cpus } from 'node:os'
 cluster.schedulingPolicy = cluster.SCHED_RR
 
@@ -30,8 +30,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('./public'))
 app.use(cookieParser(SECRET_WORD))
 app.use(showCookies)
-app.use(timeNow)
 app.use(logger)
+app.use(timeNow)
 app.use(passportInitialize)
 app.use(errorHandler)
 app.use(addIoToReq)
