@@ -45,6 +45,5 @@ class UsersService {
         return await this.userRepository.deleteUser(id)
     }
 }
-
 const usersService = new UsersService(factory.userRepository)
 export default usersService

@@ -98,6 +98,7 @@ export const handlerShowCart = async (req, res) => {
     }
 }
 
+// I must fix this controller: I have to see the product quantity and delete comments
 export const handlerPurchase = async (req, res) => {
     const user = req.user
     req.logger.debug('>>>>req.user')

@@ -1,5 +1,3 @@
-import { winstonLogger } from '../../src/utils/loggers/logger.js'
-
 /* eslint-disable camelcase */
 class Register {
     constructor (first_name, last_name, email, age, password) {
@@ -20,7 +18,7 @@ registerForm.addEventListener('submit', e => {
     const dataForm = new FormData(e.target)
 
     const newRegister = new Register(dataForm.get('firstName'), dataForm.get('lastName'), dataForm.get('regEmail'), dataForm.get('age'), dataForm.get('regPassword'))
-    winstonLogger.debug(String(newRegister))
+    console.log(String(newRegister))
 
     fetch('/api/user/register', {
         method: 'POST',
@@ -30,7 +28,7 @@ registerForm.addEventListener('submit', e => {
         }
 
     }).then(result => {
-        if (result.status === 201) {
+        if (result.status === 200) {
             registerForm.reset()
             window.location.replace('/web/session/')
         } else {
@@ -38,6 +36,6 @@ registerForm.addEventListener('submit', e => {
         }
         result.json()
     }).then(json => {
-        winstonLogger.debug(String(json))
+        console.log(String(json))
     })
 })

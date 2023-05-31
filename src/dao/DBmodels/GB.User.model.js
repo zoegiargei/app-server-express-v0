@@ -4,11 +4,10 @@ const ghUserCollection = 'githubUsers'
 
 const ghUserSchema = new mongoose.Schema({
 
-    full_name : { type:String, required:true },
-    user_id: { type:String, required:true },
-    username: { type:String, required:true },
-    
-    cart: { 
+    full_name: { type: String, required: true },
+    user_id: { type: String, required: true },
+    username: { type: String, required: true },
+    cart: {
         type: [
         {
             cart: {
@@ -16,19 +15,18 @@ const ghUserSchema = new mongoose.Schema({
                 ref: 'carts'
             }
         }
-        ], default: {}
+        ],
+        default: {}
     },
-    
-    role: { type:String, required:true },
-    orders: { 
-        type: [ 
+    role: { type: String, required: true },
+    orders: {
+        type: [
             { type: Object }
         ]
     }
-    
-}, { versionKey: false } )
+}, { versionKey: false })
 
-ghUserSchema.pre(/^find/, function(next) {
+ghUserSchema.pre(/^find/, function (next) {
     this.populate('cart.cart')
     next()
 })

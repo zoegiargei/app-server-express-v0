@@ -6,23 +6,23 @@ export async function contrLogin (req, res) {
         signed: true,
         httpOnly: true
     })
-
-    res.status(202).json(req.user)
+    req.logger.debug(String(req.user))
+    res.sendAccepted({ message: 'User successfully logged in', object: req.user })
 }
 
-export async function contrLogout (req, res, next) {
+export async function contrLogout (req, res) {
     res.clearCookie('jwt_authorization', {
         signed: true,
         httpOnly: true
     })
-    res.sendStatus(200)
+    res.sendOk({ message: 'Successfully Logout', object: req.user })
 }
 
 export const contrPrivate = async (req, res) => {
-    res.status(202).send('Si ves esto es por que estas logeado.')
+    res.sendAccepted({ message: 'If you can see that, you are logged in' })
 }
 
 export const contrGetCurrent = async (req, res) => {
+    req.logger.debug(String(req.user))
     res.redirect('/web/current')
-    res.json(req.user)
 }

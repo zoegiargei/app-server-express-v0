@@ -1,4 +1,4 @@
-import mongoose, { Schema, SchemaType } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 const cartCollection = 'carts'
 
@@ -8,20 +8,19 @@ const cartSchema = new mongoose.Schema({
         type: [
             {
                 product: {
-                    type:Schema.Types.ObjectId,
-                    ref:'products'
+                    type: Schema.Types.ObjectId,
+                    ref: 'products'
                 },
-                quantity: { type:Number, required:true }
+                quantity: { type: Number, required: true }
             }
         ],
         default: []
     },
-    userEmail: { type: String, required:true }
+    userEmail: { type: String, required: true }
 
-}, { versionKey: false } )
+}, { versionKey: false })
 
-
-cartSchema.pre(/^find/, function(next) {
+cartSchema.pre(/^find/, function (next) {
     this.populate('productsCart.product')
     next()
 })

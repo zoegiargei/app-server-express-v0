@@ -6,15 +6,15 @@ import regex from '../../utils/regex/Regex.js'
 const routerCarts = Router()
 
 routerCarts.param('cid', async (req, res, next, cid) => {
-    if(regex.validation(regex.num_letters_notCharacters, cid)){
+    if (regex.validation(regex.num_letters_notCharacters, cid)) {
         next()
     }
 })
 
 routerCarts.param('pid', async (req, res, next, pid) => {
-    if(regex.validation(regex.num_letters_notCharacters, pid)){
+    if (regex.validation(regex.num_letters_notCharacters, pid)) {
         next()
-    } else{
+    } else {
         req.params.pid = null
     }
     next()

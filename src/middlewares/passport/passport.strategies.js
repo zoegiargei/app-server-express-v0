@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable camelcase */
 import passport from 'passport'
 import usersService from '../../services/users.service.js'
@@ -11,15 +12,15 @@ import encryptedPass from '../../utils/password/encrypted.pass.js'
 import { Strategy as GithubStrategy } from 'passport-github2'
 import config from '../../../config.js'
 import cartsService from '../../services/carts.service.js'
-import { winstonLogger } from '../../utils/loggers/logger.js'
+import { winstonLogger } from '../loggers/logger.js'
 
 passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, _u, _p, done) => {
     const { first_name, last_name, email, age, password } = req.body
 
-    const exist = await usersService.getUserByQuery({ email })
-    if (exist.length > 0) {
-        return done(new Error('User already exists'), null)
-    }
+    const exist = await usersService.getUserByQuery({ email: email })
+    console.log('>>>exist user?')
+    console.log(exist)
+    if (exist.length > 0) return done(new Error('User already exists'), null)
     const user = await usersService.saveUser({ first_name, last_name, email, age, password })
 
     done(null, user)

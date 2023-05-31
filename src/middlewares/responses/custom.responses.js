@@ -2,7 +2,6 @@ import { AuthenticationFailed } from '../../errors/Authentication.failed.js'
 import { PermissionsFailed } from '../../errors/Permissions.failed.js'
 
 export const customResponses = (req, res, next) => {
-    
     res.sendOk = result => {
         res.status(200).json({ status: 'success', message: result.message, object: result.object })
     }

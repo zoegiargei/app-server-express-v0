@@ -1,5 +1,5 @@
 import factory from '../../DAO/factory.js'
-import { classErrors } from '../../errors/Errors.js'
+import { classErrors } from '../../errors/errors.js'
 import regex from '../../utils/regex/Regex.js'
 
 export const contrGetProd = async (req, res) => {

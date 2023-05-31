@@ -14,9 +14,8 @@ routerWeb.get('/', (req, res) => {
 })
 
 routerWeb.get('/home', authenticationJwtWeb, (req, res) => {
-    
     const loggedin = req.user
-    res.render('home', { title: 'Home', loggedin: loggedin })
+    res.render('home', { title: 'Home', loggedin })
 })
 
 routerWeb.use('/session', routerSessionWeb)
@@ -26,9 +25,9 @@ routerWeb.use('/error', routerErrorWeb)
 routerWeb.use('/users', routerUsersWeb)
 routerWeb.use('/carts', routerCartsWeb)
 
-//proof
+// proof
 routerWeb.get('/upload', (req, res) => {
-    res.render('upload', { title: 'Upload proof' })
+    res.render('upload', { title: 'Upload by Multer proof' })
 })
 
 export default routerWeb

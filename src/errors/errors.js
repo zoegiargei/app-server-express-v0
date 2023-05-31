@@ -1,3 +1,5 @@
+import { winstonLogger } from '../middlewares/loggers/logger.js'
+
 export const errors = {
     ERROR_NOT_FOUND: '>>> The requested resource was not found <<<',
     ERROR_INVALID_ARGUMENT: '>>> The argument sent does not comply with the expected format <<<',
@@ -21,6 +23,7 @@ export class Errors {
     }
 
     throwOneError (errorType, value = 'GENERIC_ERROR ') {
+        winstonLogger.warn(`${errorType.message} ${value}`)
         return (`${errorType.message} ${value}`)
     }
 }
@@ -28,7 +31,7 @@ export class Errors {
 export const classErrors = new Errors()
 
 //
-export class HandlerErrors {
+/* export class HandlerErrors {
     static createError ({ name = 'Error', cause, message, code = 1 }) {
         const newError = new Error(message, { cause })
         newError.name = name
@@ -47,4 +50,4 @@ export const errorLoger = (error, req, res, next) => {
 export const errorHandlerMidleware = (err, req, res, next) => {
     const error = handlerErrors.createError({ cause: err.stack, message: err.message, code: 2 })
     res.send(error)
-}
+} */

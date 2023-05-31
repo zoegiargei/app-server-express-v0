@@ -25,7 +25,7 @@ program
 program.parse()
 
 dotenv.config({
-    path: 
+    path:
         process.env.NODE_ENV === 'prod'
         ? '.env'
         : '.env'
@@ -46,4 +46,3 @@ export default {
     AUTH_TOKEN_TWILIO: process.env.AUTH_TOKEN_TWILIO,
     PHONE_NUMBER_TWILIO: process.env.PHONE_NUMBER_TWILIO
 }
-

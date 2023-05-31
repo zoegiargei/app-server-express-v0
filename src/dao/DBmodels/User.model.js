@@ -4,14 +4,14 @@ const usersCollection = 'users'
 
 const usersSchema = new mongoose.Schema({
 
-    username: { type:String, required:true },
-    first_name: { type:String, required:true },
-    last_name: { type:String, required:true },
-    email: { type:String, required:true, index:true },
-    age: { type:String, required:true },
-    password: { type:String, required:true },
+    username: { type: String, required: true },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    email: { type: String, required: true, index: true },
+    age: { type: String, required: true },
+    password: { type: String, required: true },
 
-    cart: { 
+    cart: {
         type: [
         {
             cart: {
@@ -19,23 +19,21 @@ const usersSchema = new mongoose.Schema({
                 ref: 'carts'
             }
         }
-        ], default: {}
+        ],
+        default: {}
     },
-
-    role: { type:String, required:true },
-    orders: { 
-        type: [ 
+    role: { type: String, required: true },
+    orders: {
+        type: [
             { type: Object }
         ]
     }
-    
 }, { versionKey: false })
 
-usersSchema.pre(/^find/, function(next) {
+usersSchema.pre(/^find/, function (next) {
     this.populate('cart.cart')
     next()
 })
 
 const userModel = mongoose.model(usersCollection, usersSchema)
 export default userModel
-

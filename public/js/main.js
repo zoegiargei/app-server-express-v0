@@ -1,6 +1,6 @@
 const cartForm = document.getElementById('cartForm')
 
-if(cartForm instanceof HTMLFormElement){
+if (cartForm instanceof HTMLFormElement) {
     cartForm.addEventListener('submit', (e) => {
         e.preventDefault()
 
@@ -10,19 +10,17 @@ if(cartForm instanceof HTMLFormElement){
                 'Content-Type': 'application/json'
             }
         }).then(result => {
-            
-            if(result.status === 201){
+            if (result.status === 201) {
                 window.location.replace('/web/carts/cartById')
-            }else{
+            } else {
                 window.location.replace('/web/error/')
             }
-            
             result.json()
         })
     })
 }
 
-//loader
+// loader
 window.addEventListener('load', () => {
     document.getElementById('loader').classList.toggle('loader2')
 })

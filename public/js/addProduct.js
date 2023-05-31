@@ -1,16 +1,16 @@
-class Product{
-    constructor(title, description, code, price, status, stock, category, file_thumbnail){
-        this.title = title,
-        this.description = description,
-        this.code = code,
-        this.price = price,
-        this.status = status,
-        this.stock = stock,
-        this.category = category,
+/* eslint-disable camelcase */
+class Product {
+    constructor (title, description, code, price, status, stock, category, file_thumbnail) {
+        this.title = title
+        this.description = description
+        this.code = code
+        this.price = price
+        this.status = status
+        this.stock = stock
+        this.category = category
         this.file_thumbnail = file_thumbnail
     }
 }
-
 
 const formAddProduct = document.getElementById('formAddProduct')
 
@@ -30,8 +30,7 @@ formAddProduct.addEventListener('submit', (e) => {
         }
 
     }).then(result => {
-
-        if(result.status === 201){
+        if (result.status === 201) {
             formAddProduct.reset()
         }
     })
