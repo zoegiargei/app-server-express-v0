@@ -12,7 +12,7 @@ export const contrShowProducts = async (req, res) => {
         const nextLink = allProducts.hasNextPage ? `http://localhost:${PORT}/web/products//products?page=${allProducts.nextPage}` : null
         const numPage = allProducts.page
         const loggedin = req.user
-        res.render('products', { title: 'Products By Paginate', loggedin: loggedin, thIsProducts: thIsProducts, products: allProducts['docs'], prevLink: prevLink || false, nextLink: nextLink? nextLink : false , numberPage: numPage })
+        res.render('products', { title: 'Products By Paginate', loggedin: loggedin, thIsProducts: thIsProducts, products: allProducts['docs'], prevLink: prevLink || false, nextLink: nextLink || false, numberPage: numPage })
     } catch (error) {
         res.status(400).send({ message: error.message })
     }

@@ -6,7 +6,7 @@ import regex from '../../utils/regex/Regex.js'
 const routerCarts = Router()
 
 routerCarts.param('cid', async (req, res, next, cid) => {
-    if (regex.validation(regex.num_letters_notCharacters, cid)) {
+    if (regex.validation(regex.num_letters_notCharacters, String(cid))) {
         next()
     }
 })

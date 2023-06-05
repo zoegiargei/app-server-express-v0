@@ -10,10 +10,10 @@ const uploadAttach = configMulterProof.configUpload()
 const routerProducts = Router()
 
 routerProducts.param('pid', async (req, res, next, pid) => {
-    if (regex.validation(regex.num_letters_notCharacters, pid)) {
+    if (regex.validation(regex.num_letters_notCharacters, String(pid))) {
         next()
     } else {
-        req.params.pid = null
+        pid = null
     }
     next()
 })
@@ -22,10 +22,10 @@ routerProducts.get('/:pid', contrGetProd)
 
 routerProducts.get('/', contrGetProducts)
 
-routerProducts.post('/addProduct', authenticationByRole(['Admin']), uploadAttach.single('attach'), contrPostProd)
+routerProducts.post('/addProduct', authenticationByRole(['Admin', 'Premium']), uploadAttach.single('attach'), contrPostProd)
 
-routerProducts.put('/:pid', authenticationByRole(['Admin']), contrPutProd)
+routerProducts.put('/:pid', authenticationByRole(['Admin', 'Premium']), contrPutProd)
 
-routerProducts.delete('/:pid', authenticationByRole(['Admin']), contrDelProd)
+routerProducts.delete('/:pid', authenticationByRole(['Admin', 'Premium']), contrDelProd)
 
 export default routerProducts

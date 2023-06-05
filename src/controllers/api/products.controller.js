@@ -98,14 +98,16 @@ export const contrGetProducts = async (req, res) => {
 
 export const contrPostProd = async (req, res) => {
     try {
-        req.logger.debug(`>>>req.file ${req.file}`)
+        const attach = req.file
+        const data = JSON.parse(req.body.data)
+        req.logger.warn(data)
+        req.logger.warn(`>>>req.file ${attach}`)
 
-        const data = req.body
+        const savedProduct = await factory.productsService.loadProduct(data, attach)
 
-        const savedProduct = await factory.productsService.loadProduct(data)
+        // const allProducts = await factory.productsService.getProducts()
+        // req.io.sockets.emit('updateView', allProducts)
 
-        const allProducts = await factory.productsService.getProducts()
-        req.io.sockets.emit('updateView', allProducts)
         res.sendCreated({ message: 'Product updated successfully', object: savedProduct })
     } catch (error) {
         res.sendClientError(error)
@@ -117,7 +119,19 @@ export const contrPutProd = async (req, res) => {
         const pid = req.params.pid
         const data = req.body
 
-        const productUpdated = await factory.productsService.updateProduct(pid, data)
+        let productUpdated
+        if (req.user.role === 'Premium') {
+            const product = await factory.productsService.getProductById(pid)
+            const productOwner = product.owner
+            if (productOwner === req.user.email) {
+                productUpdated = await factory.productsService.updateProduct(pid, data)
+            } else {
+                return new Error('You cannot modify this product')
+            }
+        } else {
+            productUpdated = await factory.productsService.updateProduct(pid, data)
+        }
+
         res.sendOk({ message: 'Product updated successfully', object: productUpdated })
     } catch (error) {
         res.sendClientError(error)
@@ -127,7 +141,19 @@ export const contrPutProd = async (req, res) => {
 export const contrDelProd = async (req, res) => {
     try {
         const pid = req.params.pid
-        const productDeleted = await factory.productsService.deleteProduct(pid)
+
+        let productDeleted
+        if (req.user.role === 'Premium') {
+            const product = await factory.productsService.getProductById(pid)
+            const productOwner = product.owner
+            if (productOwner === req.user.email) {
+                productDeleted = await factory.productsService.deleteProduct(pid)
+            } else {
+                return new Error('You cannot delete this product')
+            }
+        }
+
+        productDeleted = await factory.productsService.deleteProduct(pid)
         return res.sendOk({ message: 'Product deleted', object: productDeleted })
     } catch (error) {
         res.sendClientError(error)

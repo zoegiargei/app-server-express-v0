@@ -1,6 +1,4 @@
-import Swal from 'sweetalert2'
-import { winstonLogger } from '../../src/utils/loggers/logger.js'
-
+/* eslint-disable no-undef */
 class Quantity {
     constructor (quantity) {
         this.quantity = Number(quantity)
@@ -11,13 +9,13 @@ class Quantity {
 async function addToCart (e) {
     const form = e.target.closest('form')
     const qty = form.elements.quantity.value
-    winstonLogger.debug(`Quantity: ${qty}`)
+    console.log(qty)
     const quantity = new Quantity(qty)
 
     const pid = form.elements.productId.value
-    winstonLogger.debug(`ID of Product in cart ${pid}`)
+    console.log(pid)
     const cid = form.elements.btnAddToCart.value
-    winstonLogger.debug(`ID of cart ${cid}`)
+    console.log(cid)
 
     const url = `/api/carts/:${cid}/products/:${pid}`
 
@@ -29,7 +27,7 @@ async function addToCart (e) {
         }
     }).then(result => {
         if (result.status === 200) {
-            winstonLogger.debug('Added Product to cart sucessfully')
+            console.log(result)
             Swal.fire({
                 icon: 'success',
                 title: 'Product successfully added to cart!'

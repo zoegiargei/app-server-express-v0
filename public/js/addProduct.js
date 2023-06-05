@@ -17,17 +17,24 @@ const formAddProduct = document.getElementById('formAddProduct')
 formAddProduct.addEventListener('submit', (e) => {
     e.preventDefault()
 
-    const dataForm = new FormData(e.target)
-
-    const status = document.getElementById('status').value
-    const newProduct = new Product(dataForm.get('title'), dataForm.get('description'), dataForm.get('code'), dataForm.get('price'), status, dataForm.get('stock'), dataForm.get('category'))
+    const dataForm = new FormData()
+    const newProduct = new Product(
+        document.getElementById('title').value,
+        document.getElementById('description').value,
+        document.getElementById('code').value,
+        document.getElementById('price').value,
+        document.getElementById('status').value,
+        document.getElementById('stock').value,
+        document.getElementById('category').value
+    )
+    const fileInput = document.getElementById('attach')
+    dataForm.append('attach', fileInput.files[0])
+    dataForm.append('data', JSON.stringify(newProduct))
 
     fetch('/api/products/addProduct', {
         method: 'POST',
-        body: JSON.stringify(newProduct),
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        body: dataForm,
+        headers: {}
 
     }).then(result => {
         if (result.status === 201) {

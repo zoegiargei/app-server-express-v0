@@ -1,11 +1,5 @@
 import { winstonLogger } from '../middlewares/loggers/logger.js'
 
-export const errors = {
-    ERROR_NOT_FOUND: '>>> The requested resource was not found <<<',
-    ERROR_INVALID_ARGUMENT: '>>> The argument sent does not comply with the expected format <<<',
-    ERR_HTTP_HEADERS_SENT: '>>> You are trying to send the response of a controller more than once <<<'
-}
-
 export class Errors {
     constructor () {
         this.ERROR_NOT_FOUND = {
@@ -29,6 +23,13 @@ export class Errors {
 }
 
 export const classErrors = new Errors()
+
+//
+/* export const errors = {
+    ERROR_NOT_FOUND: '>>> The requested resource was not found <<<',
+    ERROR_INVALID_ARGUMENT: '>>> The argument sent does not comply with the expected format <<<',
+    ERR_HTTP_HEADERS_SENT: '>>> You are trying to send the response of a controller more than once <<<'
+} */
 
 //
 /* export class HandlerErrors {

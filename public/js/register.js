@@ -16,7 +16,6 @@ registerForm.addEventListener('submit', e => {
     e.preventDefault()
 
     const dataForm = new FormData(e.target)
-
     const newRegister = new Register(dataForm.get('firstName'), dataForm.get('lastName'), dataForm.get('regEmail'), dataForm.get('age'), dataForm.get('regPassword'))
     console.log(String(newRegister))
 

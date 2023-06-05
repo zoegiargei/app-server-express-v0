@@ -1,7 +1,7 @@
 import express from 'express'
 import { PORT } from './configs/server.config.js'
-import { engine } from 'express-handlebars'
 import { MONGO_CNX_STR } from './configs/db.config.js'
+import { engine } from 'express-handlebars'
 import config from '../config.js'
 import { logger, winstonLogger } from './middlewares/loggers/logger.js'
 import cookieParser from 'cookie-parser'
@@ -16,12 +16,13 @@ import { Server } from 'socket.io'
 import { configProductsSocket } from './socket/products.socket.js'
 import { configMessagesSocket } from './socket/chat.socket.js'
 import { errorHandler } from './middlewares/errors/error.handler.js'
-import addIoToReq from './middlewares/req/add.io.req.js'
+// import addIoToReq from './middlewares/req/add.io.req.js'
 import compression from 'express-compression'
 import { customResponses } from './middlewares/responses/custom.responses.js'
 import cluster from 'cluster'
 import { cpus } from 'node:os'
 import routerTest from './routers/test/router.test.js'
+import { createServer } from 'http'
 cluster.schedulingPolicy = cluster.SCHED_RR
 
 const app = express()
@@ -30,19 +31,23 @@ app.use(logger)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('./public'))
-app.use(cookieParser(SECRET_WORD))
-app.use(showCookies)
-app.use(timeNow)
-app.use(passportInitialize)
-app.use(errorHandler)
-app.use(addIoToReq)
-app.use(customResponses)
-app.use(cors({ origin: `http://localhost:${PORT}` }))
-app.use(compression({ brotli: { enabled: true, zlib: {} } }))
-
 app.engine('handlebars', engine())
 app.set('views', './views')
 app.set('view engine', 'handlebars')
+app.use(cookieParser(SECRET_WORD))
+app.use(showCookies)
+app.use(timeNow)
+// app.use(addIoToReq)
+app.use(passportInitialize)
+app.use(errorHandler)
+app.use(customResponses)
+const corsOptions = {
+    origin: `http://localhost:${PORT}`,
+    methods: 'GET, POST, PUT, DELETE',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
+}
+app.use(cors(corsOptions))
+app.use(compression({ brotli: { enabled: true, zlib: {} } }))
 
 app.use('/api', routerApi)
 app.use('/web', routerWeb)
@@ -50,15 +55,10 @@ app.use('/test', routerTest)
 
 app.get('*', (req, res) => { if ((/^[/](web)[/][a-z]*$/i).test(req.url)) { res.redirect('/web/') } res.redirect('/web/session/unknownRoute') })
 
-if (config.PERSISTENCE === 'MONGO') {
-    const mongoose = await import('mongoose')
-    await mongoose.connect(MONGO_CNX_STR, { useNewUrlParser: true, useUnifiedTopology: true })
-}
-
 // import { generateMocks } from './mocks/generateMocks.js'
 // await generateMocks()
 
-let HTTPserver
+let io
 if (cluster.isPrimary) {
     winstonLogger.info(`I'm the first, my PID is ${process.pid}`)
     for (let i = 0; i < cpus().length; i++) { cluster.fork() }
@@ -69,11 +69,25 @@ if (cluster.isPrimary) {
     })
 } else if (cluster.isWorker) {
     winstonLogger.info(`I'm worker, my PID is ${process.pid}`)
-    HTTPserver = app.listen(PORT, () => { winstonLogger.fatal(`Server running on port: ${PORT}`) })
+    const server = createServer(app)
+    server.listen(PORT, () => { winstonLogger.fatal(`Server running on port: ${PORT}`) })
+
+    if (config.PERSISTENCE === 'MONGO') {
+        const mongoose = await import('mongoose')
+        await mongoose.connect(MONGO_CNX_STR, { useNewUrlParser: true, useUnifiedTopology: true })
+    }
+
+    io = new Server(server)
+    io.on('connection', async socketSideServer => {
+        winstonLogger.warn('Websocket conectado del lado del Servidor')
+        configProductsSocket(io, socketSideServer)
+        configMessagesSocket(io, socketSideServer)
+
+        app.use((req, res, next) => {
+            req.io = io
+            next()
+        })
+    })
 }
 
-export const io = new Server(HTTPserver)
-io.on('connection', async socketSideServer => {
-    configProductsSocket(io, socketSideServer)
-    configMessagesSocket(io, socketSideServer)
-})
+// export { io }

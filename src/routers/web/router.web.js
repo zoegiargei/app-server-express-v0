@@ -30,4 +30,10 @@ routerWeb.get('/upload', (req, res) => {
     res.render('upload', { title: 'Upload by Multer proof' })
 })
 
+routerWeb.get('/proof/:pid', (req, res) => {
+    console.log(req.url)
+    console.log(req.params.pid)
+    res.render('proof')
+})
+
 export default routerWeb

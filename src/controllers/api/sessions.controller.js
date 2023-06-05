@@ -2,7 +2,8 @@ import encryptedJWT from '../../utils/jwt/encrypted.jwt.js'
 
 export async function contrLogin (req, res) {
     const payload = req.user
-    res.cookie('jwt_authorization', encryptedJWT.encryptData(payload), {
+    const ttl = '2h'
+    res.cookie('jwt_authorization', encryptedJWT.encryptData(payload, ttl), {
         signed: true,
         httpOnly: true
     })

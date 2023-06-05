@@ -5,13 +5,12 @@ import { authenticationJwtWeb } from '../../middlewares/authentication/jwt/auth.
 const routerSessionWeb = Router()
 
 routerSessionWeb.get('/', authenticationJwtWeb, (req, res) => {
-
     const loggedin = req.user
-    res.render('current', { title: 'Current', loggedin: loggedin, user: req.user } )
+    res.render('current', { title: 'Current', loggedin: loggedin, user: req.user })
 })
 
-routerSessionWeb.get('/register', authenticationJwtLoggedIn, (req, res) => { 
-    res.render('register', { title: 'JOIN US' }) 
+routerSessionWeb.get('/register', authenticationJwtLoggedIn, (req, res) => {
+    res.render('register', { title: 'JOIN US' })
 })
 
 routerSessionWeb.get('/login', authenticationJwtLoggedIn, (req, res) => {

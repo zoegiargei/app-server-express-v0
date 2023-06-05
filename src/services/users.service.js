@@ -1,5 +1,6 @@
 import cartsService from './carts.service.js'
 import factory from '../DAO/factory.js'
+// import emailService from './emails.service.js'
 
 class UsersService {
     constructor (userRepository) {
@@ -33,6 +34,15 @@ class UsersService {
 
     async updateUser (id, newUser) {
         return await this.userRepository.updateUser(id, newUser)
+    }
+
+    async updatePassword (id, newPassword) {
+        // obtener usuario de base de datos
+        // obtener contraseña vieja para comparar con la nueva
+        // 1ro encriptar la nueva contraseña para poder compararla
+        // validar que no sea igual que la anterior
+        // actualizar datos con daoUser
+        // devolver usuario actualizado
     }
 
     async deleteUser (id) {

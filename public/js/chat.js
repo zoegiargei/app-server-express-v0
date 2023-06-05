@@ -1,66 +1,69 @@
-const socketSideClient = io()
-
+/* eslint-disable no-undef */
+// eslint-disable-next-line no-undef
+// const socketSideClient = io()
+const socketSideClient = io('http://localhost:8080')
 const inputName = document.getElementById('inputName')
 const inputMess = document.getElementById('inputMessage')
 
+socketSideClient.on('connect', () => {
+    console.log('Conexión establecida con el servidor')
+    socketSideClient.emit('mensaje', 'Hola servidor')
+})
+
 inputName.addEventListener('keyup', (e) => {
-    if(e.key === 'Enter'){
-        if(inputName.value.trim().length > 0) {
-            socketSideClient.emit('newMessage', { name: inputName.value, message: inputMess?.value })
+    if (e.key === 'Enter') {
+        if (inputName.value.trim().length > 0) {
+            socketSideClient.on('connect', () => {
+                socketSideClient.emit('newMessage', { name: inputName.value, message: inputMess?.value })
+            })
             inputName.value = ''
         }
     }
 })
 
-
 Swal.fire({
-
-    title: "Identifícate",
-    input: "text",
+    title: 'Identifícate',
+    input: 'text',
     inputValidator: (value) => {
-        return !value && "¡Necesitas escribir un nombre de usuario para comenzar a chatear!"
+        return !value && '¡Necesitas escribir un nombre de usuario para comenzar a chatear!'
     },
     allowOutsideClick: false
 }).then(result => {
-    
     inputName.value = result.value
-    socketSideClient.emit('newUser', result.value)
+    socketSideClient.on('connect', () => {
+        socketSideClient.emit('newUser', result.value)
+    })
 })
 
-
 document.getElementById('NewMessButton').addEventListener('click', (e) => {
-
-    if(inputName instanceof HTMLInputElement && inputMess instanceof HTMLInputElement && inputName.value && inputMess.value){
-            
+    if (inputName instanceof HTMLInputElement && inputMess instanceof HTMLInputElement && inputName.value && inputMess.value) {
         const newMess = {
             name: inputName.value,
             mess: inputMess.value
         }
-
-        socketSideClient.emit('newMessage', newMess)
+        socketSideClient.on('connect', () => {
+            socketSideClient.emit('newMessage', newMess)
+        })
     }
-    
 })
-
 
 socketSideClient.on('messages', allMessages => {
     const messagesDiv = document.getElementById('messagesDiv')
 
-    messagesDiv.innerHTML = ``
-    allMessages.forEach((elem, index)  => {
-        messagesDiv.innerHTML +=`
+    messagesDiv.innerHTML = ''
+    allMessages.forEach((elem, index) => {
+        messagesDiv.innerHTML += `
             <div class="p-1 mb-2 messList" style="width: 100%">
 
                 <ul class="list-group" id="${index}">
 
-                    <li class="list-group-item list-group-item-action" aria-current="true" ><h5>Product: ${ elem.name }</h5></li>
-                    <li class="list-group-item list-group-item-action" >Description: ${ elem.mess }</li>
+                    <li class="list-group-item list-group-item-action" aria-current="true" ><h5>Product: ${elem.name}</h5></li>
+                    <li class="list-group-item list-group-item-action" >Description: ${elem.mess} </li>
                 </ul>
             </div>
         `
     })
 })
-
 
 socketSideClient.on('newUser', (name) => {
     Swal.fire({
@@ -69,9 +72,10 @@ socketSideClient.on('newUser', (name) => {
         showConfirmButton: false,
         timer: 3000,
         title: `${name} se ha unido al chat`,
-        icon: "success"
+        icon: 'success'
     })
 })
 
-
-socketSideClient.emit('refreshMessages')
+socketSideClient.on('connect', () => {
+    socketSideClient.emit('refreshMessages')
+})

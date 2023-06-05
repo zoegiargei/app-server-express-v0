@@ -22,6 +22,10 @@ const prodSchema = new mongoose.Schema({
             validator: v => Array.isArray(v) && v.length > 0,
             message: 'Array can't be empty'
         } */
+    },
+    owner: {
+        type: String,
+        required: true
     }
 }, { versionKey: false })
 

@@ -1,4 +1,5 @@
 import productModel from '../DAO/DBmodels/Product.model.js'
+import { winstonLogger } from '../middlewares/loggers/logger.js'
 import Product from '../models/Product.js'
 
 class ProductsService {
@@ -6,12 +7,14 @@ class ProductsService {
         this.productsDbDAO = productsDbDAO
     }
 
-    async loadProduct (prod) {
-        const codeProd = await this.productsDbDAO.findElementByProjection({ code: Number(prod.code) }, { code: 1 })
+    async loadProduct (data, attach) {
+        const codeProd = await this.productsDbDAO.findElementByProjection({ code: Number(data.code) }, { code: 1 })
 
         if (codeProd.length > 0) {
             throw new Error('This CODE already exists')
         }
+        const prod = { ...data, thumbnail: attach }
+        winstonLogger.warn(prod)
 
         const newProd = new Product(prod)
         await this.productsDbDAO.creaeteElement(newProd)

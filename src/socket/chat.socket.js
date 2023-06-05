@@ -1,8 +1,9 @@
 import messageServices from '../services/messages.service.js'
 
 export async function configMessagesSocket (io, socket) {
-    socket.on('newUser', name => {
+    socket.on('newUser', async name => {
         socket.broadcast.emit('newUser', name)
+        console.log('Websocket conectado del lado del Servidor')
     })
 
     socket.on('newMessage', async data => {

@@ -12,8 +12,8 @@ export function errorHandler (error, req, res, next) {
             req.messageError = error.type
             error.status = 500
     }
+
     req.logger.fatal(error.message)
     const status = error.status || 400
-    res.header('Content-Type', 'application/json')
     res.status(status).json({ errorMsg: error.message })
 }

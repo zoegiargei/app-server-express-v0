@@ -1,7 +1,8 @@
 /* eslint-disable no-useless-escape */
 import { classErrors } from '../../errors/errors.js'
+import { winstonLogger } from '../../middlewares/loggers/logger.js'
 
-class Regex {
+export class Regex {
     constructor () {
         this.num_letters_notCharacters = /^[a-zA-Z0-9]+$/
         this.numbersBlanksAndText = /^[a-zA-Z0-9\s]+$/
@@ -14,14 +15,15 @@ class Regex {
     }
 
     validation (regex, value) {
-        if ((regex).test(value)) {
+        const newValue = String(value)
+        winstonLogger.fatal(newValue)
+        if ((regex).test(newValue)) {
             return value
         } else {
-            throw new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'The validation regex return failed'))
+            return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'The validation regex return failed'))
         }
     }
 }
-
 // strong password, example: 'wMH432595@'
 const regex = new Regex()
 export default regex
