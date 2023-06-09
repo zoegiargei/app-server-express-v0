@@ -1,15 +1,9 @@
 /* eslint-disable camelcase */
-import { classErrors } from '../errors/errors.js'
 import encryptedPass from '../utils/password/encrypted.pass.js'
 
 class User {
     constructor ({ username = null, first_name, last_name, email, age, password, cart = {}, role = 'User' }) {
         // Faltan validaciones con regex y hacer clases con propiedades privadas
-        if (!first_name) return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'Sent an invalidate first name'))
-        if (!last_name) return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'Sent an invalidate last name'))
-        if (!email) return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'Sent an invalidate email'))
-        if (!age || age <= 0) return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'Sent an invalidate age'))
-        if (!password || password === '') return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'Sent an invalidate password'))
 
         this.username = username || (`${first_name}${last_name}`).toLowerCase()
         this.first_name = first_name

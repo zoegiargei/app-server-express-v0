@@ -1,5 +1,8 @@
 import cartsService from './carts.service.js'
 import factory from '../DAO/factory.js'
+import encryptedPass from '../utils/password/encrypted.pass.js'
+import { errorsModel } from '../models/Errors.js'
+import { winstonLogger } from '../middlewares/loggers/logger.js'
 // import emailService from './emails.service.js'
 
 class UsersService {
@@ -36,13 +39,18 @@ class UsersService {
         return await this.userRepository.updateUser(id, newUser)
     }
 
-    async updatePassword (id, newPassword) {
-        // obtener usuario de base de datos
-        // obtener contraseña vieja para comparar con la nueva
-        // 1ro encriptar la nueva contraseña para poder compararla
-        // validar que no sea igual que la anterior
-        // actualizar datos con daoUser
-        // devolver usuario actualizado
+    async updatePassword (id, currentPass, newPass) {
+        const user = await this.getUserById(id)
+        const isValidCurrentPassword = encryptedPass.isValidPassword(user.password, currentPass)
+        winstonLogger.warn(isValidCurrentPassword)
+        if (isValidCurrentPassword === false) return errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'The current password is wrong')
+        const isValidNewPassword = encryptedPass.isValidPassword(user.password, newPass)
+        if (isValidNewPassword) return errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, 'The new password cannot be equal to the current password')
+
+        const newPassEncrypted = encryptedPass.createHash(newPass)
+        const response = await this.userRepository.updateUser(id, { ...user, password: newPassEncrypted })
+        winstonLogger.warn(response)
+        return response
     }
 
     async deleteUser (id) {

@@ -8,11 +8,9 @@ import { contrLoggedIn } from '../../controllers/web/sess.web.controller.js'
 const routerSession = Router()
 
 routerSession.post('/login', loginAuthentication, contrLogin)
-routerSession.get('/github', authenticationByGithub)
+routerSession.get('/github', authenticationByGithub, contrLogin)
 routerSession.get('/githubcallback', authenticationByGithub_CB, contrLoggedIn)
-
 routerSession.get('/current', authenticationJwtApi, contrGetCurrent)
-
 routerSession.post('/logout', authenticationJwtApi, contrLogout)
 
 export default routerSession

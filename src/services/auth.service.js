@@ -1,4 +1,4 @@
-import { AuthenticationFailed } from '../errors/Authentication.failed.js'
+import { errorsModel } from '../models/Errors.js'
 import { winstonLogger } from '../utils/loggers/logger.js'
 import encryptedPass from '../utils/password/encrypted.pass.js'
 import usersService from './users.service.js'
@@ -27,5 +27,5 @@ class AuthenticationService {
     }
 }
 
-const authenticationService = new AuthenticationService(usersService, encryptedPass, new AuthenticationFailed())
+const authenticationService = new AuthenticationService(usersService, encryptedPass, errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'Authentication failed'))
 export default authenticationService

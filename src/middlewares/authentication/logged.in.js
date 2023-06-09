@@ -1,8 +1,8 @@
-import { PermissionsFailed } from '../../errors/Permissions.failed.js'
+import { errorsModel } from '../../models/Errors.js'
 
 export function loggedIn (req, res, next) {
     if (!req.user) {
-        return (new PermissionsFailed())
+        next(errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'You are not logged in'))
     }
     next()
 }

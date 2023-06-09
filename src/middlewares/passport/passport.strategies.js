@@ -6,21 +6,21 @@ import ghUserService from '../../services/gh.users.service.js'
 import GithubUser from '../../entities/Github.User.entity.js'
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt'
 import { githubCallbackUrl, githubClienteId, githubClientSecret, JWT_PRIVATE_KEY } from '../../configs/auth.config.js'
-import { AuthenticationFailed } from '../../errors/Authentication.failed.js'
 import { Strategy as LocalStrategy } from 'passport-local'
 import encryptedPass from '../../utils/password/encrypted.pass.js'
 import { Strategy as GithubStrategy } from 'passport-github2'
 import config from '../../../config.js'
 import cartsService from '../../services/carts.service.js'
 import { winstonLogger } from '../loggers/logger.js'
+import { errorsModel } from '../../models/Errors.js'
 
 passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, _u, _p, done) => {
     const { first_name, last_name, email, age, password } = req.body
 
     const exist = await usersService.getUserByQuery({ email: email })
-    console.log('>>>exist user?')
-    console.log(exist)
-    if (exist.length > 0) return done(new Error('User already exists'), null)
+
+    winstonLogger.warn(`exist user?: (in register) ${exist}`)
+    if (exist.length > 0) return done(errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, 'User already exist'), null)
     const user = await usersService.saveUser({ first_name, last_name, email, age, password })
 
     done(null, user)
@@ -49,15 +49,14 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (usern
     const user = await usersService.getUserByQuery({ email: username })
 
     if (!user || user.length === 0) {
-        return done(new AuthenticationFailed(), null)
+        return done(errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'One of the credentials is wrong'), null)
     }
     const isValidatePassword = encryptedPass.isValidPassword(user[0].password, password)
+    winstonLogger.warn(`Esto es en la estrategia de passport: ${isValidatePassword}`)
     if (isValidatePassword === false) {
-        return done(new AuthenticationFailed(), null)
+        return done(errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'One of the credentials is wrong'), null)
     }
-
     const userToSend = user[0]
-
     done(null, userToSend)
 }))
 

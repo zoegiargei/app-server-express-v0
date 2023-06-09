@@ -1,11 +1,23 @@
 import CartDbDAO from '../DAO/DB_DAOs/Carts.DAO.db.js'
 import factory from '../DAO/factory.js'
-import { classErrors } from '../errors/errors.js'
 import Cart from '../models/Cart.js'
+import { errorsModel } from '../models/Errors.js'
 
 class CartsService {
     constructor (cartDbDAO) {
         this.cartDbDAO = cartDbDAO
+    }
+
+    async validateCartId (cid) {
+        const cartInDb = await this.cartDbDAO.findElementById(cid)
+        if (!cartInDb) return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'Invalid cart id')
+        return cartInDb
+    }
+
+    async validateProductId (pid) {
+        const productById = await factory.productsService.getProductById(pid)
+        if (!productById) return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'Invalid product id')
+        return productById
     }
 
     async createCart (email) {
@@ -24,12 +36,8 @@ class CartsService {
     }
 
     async addToCart (cid, pid, quantity = 1) {
-        const productById = await factory.productsService.getProductById(pid)
-        if (!productById) {
-            return new Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND, `${pid} is not in the Cart`))
-        }
-        const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if (!cartInDb) { return new Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND.message, `${cid} not existing`)) }
+        const cartInDb = this.validateCartId(cid)
+        const productById = this.validateProductId(pid)
         if (cartInDb.productsCart.find(prod => String(prod.product._id) === pid)) {
             cartInDb.productsCart.forEach(obj => {
                 if (String(obj.product._id) === pid) {
@@ -45,21 +53,15 @@ class CartsService {
     }
 
     async updateProductsCart (cid, data) {
-        const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if (!cartInDb) { return new Error('Cart not existing') }
-        if (!data || data === []) { return new Error('Sent an invalidate value') }
+        const cartInDb = this.validateCartId(cid)
+        if (!data || data === []) errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'You sent an invalid data for update the cart')
         cartInDb.productsCart = data
         return await this.cartDbDAO.replaceElement(cid, cartInDb)
     }
 
     async updateProdInCart (cid, pid, newQuantity) {
-        const productById = await factory.productsService.getProductById(pid)
-        if (!productById) {
-            return new Error('Product not existing')
-        }
-
-        const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if (!cartInDb) { return new Error('Cart not existing') }
+        const cartInDb = this.validateCartId(cid)
+        const productById = this.validateProductId(pid)
 
         if (cartInDb.productsCart.find(prod => String(prod.product._id) === pid)) {
             cartInDb.productsCart.forEach(obj => {
@@ -73,14 +75,12 @@ class CartsService {
             await factory.productsService.updateProduct(pid, productById)
             await this.cartDbDAO.replaceElement(cid, cartInDb)
         } else {
-            return new Error('Product not existing in the cart')
+            return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'Product not existing in the cart')
         }
     }
 
     async delProdInCart (cid, pid) {
-        const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if (!cartInDb) { return new Error('Cart not existing') }
-
+        const cartInDb = this.validateCartId(cid)
         const product = cartInDb.productsCart.find(prod => String(prod.product._id) === pid)
         const quantity = product.quantity
 
@@ -92,13 +92,12 @@ class CartsService {
             await factory.productsService.updateProduct(pid, productInDb)
             await this.cartDbDAO.replaceElement(cid, newCartInDb)
         } else {
-            return new Error('Product in cart not found')
+            return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'Product not existing in the cart')
         }
     }
 
     async deleteAllProducts (cid) {
-        const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if (!cartInDb) { return new Error('Cart not existing') }
+        const cartInDb = this.validateCartId(cid)
 
         cartInDb.productsCart.forEach(async (prod) => {
             const pid = String(prod.product._id)
@@ -109,7 +108,7 @@ class CartsService {
             const quantity = prod.quantity
             console.log(quantity)
 
-            const product = await factory.productsService.getProductById(pid)
+            const product = this.validateProductId(pid)
             console.log('>>>>> Product by id in "deleteAllProducts" / proof ')
             console.log(product)
 
@@ -122,8 +121,7 @@ class CartsService {
     }
 
     async deleteCart (cid) {
-        const cartInDb = await this.cartDbDAO.findElementById(cid)
-        if (!cartInDb) { return new Error('Cart not existing') }
+        const cartInDb = this.validateCartId(cid)
 
         console.log('>>>>> productsCart in deleteCart / proof ')
         console.log(cartInDb.productsCart)

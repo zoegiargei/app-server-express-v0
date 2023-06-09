@@ -1,5 +1,6 @@
 import twilio from 'twilio'
 import config from '../../config.js'
+import { errorsModel } from '../models/Errors.js'
 
 class SmsService {
     constructor (accountSid, authToken) {
@@ -18,8 +19,7 @@ class SmsService {
             console.log(message)
             return message
         } catch (error) {
-            console.log(error)
-            return new Error(error)
+            return errorsModel.throwOneError(errorsModel.INTERNAL_ERROR, 'Something was wrong in messages service')
         }
     }
 }

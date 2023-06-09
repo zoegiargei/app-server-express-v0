@@ -23,6 +23,7 @@ import cluster from 'cluster'
 import { cpus } from 'node:os'
 import routerTest from './routers/test/router.test.js'
 import { createServer } from 'http'
+import { errorLogger } from './middlewares/errors/error.logger.js'
 cluster.schedulingPolicy = cluster.SCHED_RR
 
 const app = express()
@@ -37,10 +38,9 @@ app.set('view engine', 'handlebars')
 app.use(cookieParser(SECRET_WORD))
 app.use(showCookies)
 app.use(timeNow)
+app.use(customResponses)
 // app.use(addIoToReq)
 app.use(passportInitialize)
-app.use(errorHandler)
-app.use(customResponses)
 const corsOptions = {
     origin: `http://localhost:${PORT}`,
     methods: 'GET, POST, PUT, DELETE',
@@ -48,12 +48,18 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 app.use(compression({ brotli: { enabled: true, zlib: {} } }))
-
 app.use('/api', routerApi)
 app.use('/web', routerWeb)
 app.use('/test', routerTest)
+app.use(errorLogger)
+app.use(errorHandler)
 
-app.get('*', (req, res) => { if ((/^[/](web)[/][a-z]*$/i).test(req.url)) { res.redirect('/web/') } res.redirect('/web/session/unknownRoute') })
+app.get('*', (req, res) => {
+    if ((/^[/](web)[/][a-z]*$/i).test(req.url)) {
+        res.redirect('/web/')
+    }
+    res.redirect('/web/session/unknownRoute')
+})
 
 // import { generateMocks } from './mocks/generateMocks.js'
 // await generateMocks()

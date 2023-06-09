@@ -1,8 +1,8 @@
 import factory from '../../DAO/factory.js'
-import { classErrors } from '../../errors/errors.js'
+import { errorsModel } from '../../models/Errors.js'
 import regex from '../../utils/regex/Regex.js'
 
-export const contrGetProd = async (req, res) => {
+export const contrGetProd = async (req, res, next) => {
     const categorys = [
         'title',
         'description',
@@ -14,29 +14,31 @@ export const contrGetProd = async (req, res) => {
     ]
 
     try {
-        const pid = String(req.params.pid)
-        const newPid = pid.slice(1)
-
-        if (req.params.pid) {
-            const product = await factory.productsService.getProductById(newPid)
-            if (!product) {
-                return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(req.params.pid)))
-            }
-            res.sendOk({ message: 'Product lookup by id was found successfully', object: product })
-        } else if (req.query) {
-            const query = req.query
-
-            if (categorys.includes(Object.keys(query))) {
-                const products = await factory.productsService.getProductsByQuery(req.query)
-                res.sendOk({ message: 'Products lookup by Query were found successfully', object: products })
+        let response
+        if (req.params.id) {
+            const pid = String(req.params.pid)
+            response = await factory.productsService.getProductById(pid)
+            if (!response) {
+                errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, `You sent an invalid product id: ${pid}`)
             }
         }
+
+        if (req.query) {
+            const query = req.query // sanitizar y validar
+            if (categorys.includes(Object.keys(query))) {
+                response = await factory.productsService.getProductsByQuery(req.query)
+                if (!response) {
+                    errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, `You sent an invalid query: ${query}`)
+                }
+            }
+        }
+        res.sendOk({ message: 'Product lookup by id was found successfully', object: response })
     } catch (error) {
-        res.sendClientError(error)
+        next(error)
     }
 }
 
-export const contrGetProducts = async (req, res) => {
+export const contrGetProducts = async (req, res, next) => {
     try {
         const limit = req.query.limit || 10
         const page = req.query.page || 1
@@ -45,63 +47,44 @@ export const contrGetProducts = async (req, res) => {
         const queryCli = req.query.queryCli
         const cat = req.query.category
 
-        const allProducts = (await factory.productsService.getProducts()).slice(0, limit)
-
+        let response
         if (cat) {
-            try {
-                regex.validation(regex.numbersBlanksAndText, String(cat))
-                const categorySent = regex.validation(regex.numbersBlanksAndText, String(cat))
-                const productsByCat = await factory.productsService.getProductsByQuery({ category: categorySent })
-                return res.sendOk({ message: 'Products lookup by Category were found successfully', object: productsByCat })
-            } catch (error) {
-                res.sendClientError(error)
-            }
+            const categorySent = regex.validation(regex.onlyNumbers, cat)
+            response = await factory.productsService.getProductsByQuery({ category: categorySent })
         } else if (valueStock) {
-            try {
-                const stock = regex.validation(regex.onlyNumbers(Number(valueStock)))
-                const prodsByStock = await factory.productsService.getProductsByQuery({ stock: { $eq: stock } })
-                return res.sendOk({ message: 'Products lookup by stock were found successfully', object: prodsByStock })
-            } catch (error) {
-                res.sendClientError(error)
-            }
+            const stock = regex.validation(regex.onlyNumbers, Number(valueStock))
+            response = await factory.productsService.getProductsByQuery({ stock: { $eq: stock } })
         } else if (page) {
-            try {
-                const numPage = regex.validation(regex.onlyNumbers(Number(page)))
-                const productsByPage = await factory.productsService.productsByPaginate(limit, numPage)
+            const numPage = regex.validation(regex.onlyNumbers, Number(page))
+            response = await factory.productsService.productsByPaginate(limit, numPage)
 
-                const prevLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page) - 1}` : null
-                const nextLink = productsByPage.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page) + 1}` : null
+            const prevLink = response.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page) - 1}` : null
+            const nextLink = response.hasPrevPage ? `api/products/limit=${limit}&?page=${Number(page) + 1}` : null
 
-                return res.sendOk({ message: 'Products lookup by page were found successfully', object: [productsByPage, prevLink, nextLink] })
-            } catch (error) {
-                res.sendClientError(error)
-            }
+            return res.sendOk({ message: 'Products lookup by page were found successfully', object: [response, prevLink, nextLink] })
         } else if (sort) {
-            const sortedProducts = await factory.productsService.sortAndShowElements(sort)
-            return res.sendOk({ message: 'Products were sorted successfully', object: sortedProducts })
+            response = await factory.productsService.sortAndShowElements(sort)
         } else if (queryCli) {
-            if (typeof (queryCli) !== 'object') { return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(queryCli))) }
-
-            try {
-                const prodByQuery = await factory.productsService.getProductsByQuery(queryCli)
-                return res.sendOk({ message: 'Products lookup by query were found successfully', object: prodByQuery })
-            } catch (error) {
-                res.sendClientError(error)
-            }
+            // eslint-disable-next-line object-shorthand
+            const query = { queryCli: queryCli }
+            response = await factory.productsService.getProductsByQuery(query)
         }
 
-        return res.sendOk({ message: 'All products', object: allProducts })
+        if (!response) errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, 'INVALID REQUEST')
+        const allProducts = response.slice(0, limit)
+        res.sendOk({ message: 'All products', object: allProducts })
     } catch (error) {
-        res.sendClientError(error)
+        next(error)
     }
 }
 
-export const contrPostProd = async (req, res) => {
+export const contrPostProd = async (req, res, next) => {
     try {
         const attach = req.file
         const data = JSON.parse(req.body.data)
         req.logger.warn(data)
         req.logger.warn(`>>>req.file ${attach}`)
+        req.logger.debug(`>>> attach.url ${attach.url}`)
 
         const savedProduct = await factory.productsService.loadProduct(data, attach)
 
@@ -110,11 +93,11 @@ export const contrPostProd = async (req, res) => {
 
         res.sendCreated({ message: 'Product updated successfully', object: savedProduct })
     } catch (error) {
-        res.sendClientError(error)
+        next(error)
     }
 }
 
-export const contrPutProd = async (req, res) => {
+export const contrPutProd = async (req, res, next) => {
     try {
         const pid = req.params.pid
         const data = req.body
@@ -126,7 +109,7 @@ export const contrPutProd = async (req, res) => {
             if (productOwner === req.user.email) {
                 productUpdated = await factory.productsService.updateProduct(pid, data)
             } else {
-                return new Error('You cannot modify this product')
+                errorsModel.throwOneError(errorsModel.PERMISSIONS_FAILED, 'You are not allowed to updated that product')
             }
         } else {
             productUpdated = await factory.productsService.updateProduct(pid, data)
@@ -134,11 +117,11 @@ export const contrPutProd = async (req, res) => {
 
         res.sendOk({ message: 'Product updated successfully', object: productUpdated })
     } catch (error) {
-        res.sendClientError(error)
+        next(error)
     }
 }
 
-export const contrDelProd = async (req, res) => {
+export const contrDelProd = async (req, res, next) => {
     try {
         const pid = req.params.pid
 
@@ -149,13 +132,13 @@ export const contrDelProd = async (req, res) => {
             if (productOwner === req.user.email) {
                 productDeleted = await factory.productsService.deleteProduct(pid)
             } else {
-                return new Error('You cannot delete this product')
+                errorsModel.throwOneError(errorsModel.PERMISSIONS_FAILED, 'You are not allowed to delete that product')
             }
         }
 
         productDeleted = await factory.productsService.deleteProduct(pid)
         return res.sendOk({ message: 'Product deleted', object: productDeleted })
     } catch (error) {
-        res.sendClientError(error)
+        next(error)
     }
 }

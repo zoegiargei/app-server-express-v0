@@ -1,6 +1,6 @@
-class UserLogin{
-    constructor(email, password){
-        this.email = email,
+class UserLogin {
+    constructor (email, password) {
+        this.email = email
         this.password = password
     }
 }

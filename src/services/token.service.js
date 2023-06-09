@@ -16,7 +16,12 @@ class TokenServices {
     }
 
     async getTokenByUserId (uid) {
-        const tokenInDb = await tokenDbDAO.findElementsByQuery({ userId: uid })
+        const tokenInDb = await this.tokenDAO.findElementsByQuery({ userId: uid })
+        return tokenInDb
+    }
+
+    async validateEqualsTokens (tk) {
+        const tokenInDb = await this.tokenDAO.findElementsByQuery({ token: tk })
         return tokenInDb
     }
 

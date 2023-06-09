@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import { classErrors } from '../../errors/errors.js'
+import { errorsModel } from '../../models/Errors.js'
 import { winstonLogger } from '../../middlewares/loggers/logger.js'
 
 export class Regex {
@@ -20,7 +20,7 @@ export class Regex {
         if ((regex).test(newValue)) {
             return value
         } else {
-            return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, 'The validation regex return failed'))
+            return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'The validation regex return failed')
         }
     }
 }

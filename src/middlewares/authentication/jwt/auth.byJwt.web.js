@@ -5,7 +5,6 @@ export function authenticationJwtWeb (req, res, next) {
         if (error || !user) return res.redirect('/web/session/login')
         const securityUser = { ...JSON.parse(user.payload), password: '' }
         req.user = securityUser
-        // req.user = JSON.parse(user.payload)
         next()
     })(req, res, next)
 }

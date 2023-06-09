@@ -1,7 +1,6 @@
-//función para mostrar error en DOM
-function error(div, mensaje){
-
-    let divError = document.getElementById(div)
+// función para mostrar error en DOM
+export function error (div, mensaje) {
+    const divError = document.getElementById(div)
     divError.innerHTML = `<p class='error'>${mensaje}</p>`
-    setTimeout(() => {divError.innerHTML = ``}, 3000)
+    setTimeout(() => { divError.innerHTML = '' }, 3000)
 }

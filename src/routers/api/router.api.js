@@ -9,8 +9,8 @@ import { authenticationByRole } from '../../middlewares/authentication/authentic
 const routerApi = Router()
 
 routerApi.use('/session', routerSession)
-routerApi.use('/user', routerUser)
+routerApi.use('/users', routerUser)
 routerApi.use('/products', authenticationJwtApi, routerProducts)
-routerApi.use('/carts', authenticationJwtApi, authenticationByRole(['Admin', 'User']), routerCarts)
+routerApi.use('/carts', authenticationJwtApi, authenticationByRole(['Admin', 'Premium', 'User']), routerCarts)
 
 export default routerApi

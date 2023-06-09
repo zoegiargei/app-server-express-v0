@@ -1,5 +1,6 @@
 import productModel from '../DAO/DBmodels/Product.model.js'
 import { winstonLogger } from '../middlewares/loggers/logger.js'
+import { errorsModel } from '../models/Errors.js'
 import Product from '../models/Product.js'
 
 class ProductsService {
@@ -10,9 +11,7 @@ class ProductsService {
     async loadProduct (data, attach) {
         const codeProd = await this.productsDbDAO.findElementByProjection({ code: Number(data.code) }, { code: 1 })
 
-        if (codeProd.length > 0) {
-            throw new Error('This CODE already exists')
-        }
+        if (codeProd.length > 0) return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'CODE NOT EXISTING')
         const prod = { ...data, thumbnail: attach }
         winstonLogger.warn(prod)
 
@@ -30,11 +29,9 @@ class ProductsService {
     }
 
     async getProductById (pid) {
-        try {
-            return await this.productsDbDAO.findElementById(pid)
-        } catch (error) {
-            return new Error('Product not existing')
-        }
+        const product = await this.productsDbDAO.findElementById(pid)
+        if (!product) return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'Sent an invalid product id')
+        return product
     }
 
     async updateProduct (pid, data) {
@@ -43,12 +40,8 @@ class ProductsService {
 
     async sortAndShowElements (value) {
         const sort = value
-
-        if ((!sort || sort !== 1) && (sort !== -1)) {
-            return new Error('The sort value only can be 1 or -1')
-        } else {
-            return await this.productsDbDAO.sortElements({ price: sort })
-        }
+        if ((!sort || sort !== 1) && (sort !== -1)) return errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'The sort value only can be 1 or -1')
+        return await this.productsDbDAO.sortElements({ price: sort })
     }
 
     async deleteProduct (pid) {

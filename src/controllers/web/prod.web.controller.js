@@ -3,7 +3,7 @@
 import factory from '../../DAO/factory.js'
 import { PORT } from '../../configs/server.config.js'
 
-export const contrShowProducts = async (req, res) => {
+export const contrShowProducts = async (req, res, next) => {
     try {
         const page = req.query.page || 1
         const allProducts = await factory.productsService.productsByPaginate(3, page)
@@ -12,8 +12,9 @@ export const contrShowProducts = async (req, res) => {
         const nextLink = allProducts.hasNextPage ? `http://localhost:${PORT}/web/products//products?page=${allProducts.nextPage}` : null
         const numPage = allProducts.page
         const loggedin = req.user
+        if (!loggedin) return new Error()
         res.render('products', { title: 'Products By Paginate', loggedin: loggedin, thIsProducts: thIsProducts, products: allProducts['docs'], prevLink: prevLink || false, nextLink: nextLink || false, numberPage: numPage })
     } catch (error) {
-        res.status(400).send({ message: error.message })
+        res.sendServerError()
     }
 }

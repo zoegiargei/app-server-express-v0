@@ -22,8 +22,9 @@ const colors = {
 
 winston.addColors(colors)
 
-const myFormat = format.printf(({ level, message, label, timestamp }) => {
-    return `${timestamp} ${level}: ${message}`
+const myFormat = format.printf(({ level, message, timestamp }) => {
+    const newMessage = JSON.stringify(message)
+    return `${timestamp} ${level}: ${newMessage}`
 })
 
 if (config.NODE_ENV === 'dev') {

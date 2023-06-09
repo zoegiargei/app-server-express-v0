@@ -1,5 +1,5 @@
 import { writeFile, readFile, unlink } from 'fs/promises'
-import { classErrors } from '../../errors/errors.js'
+import { errorsModel } from '../../models/Errors.js'
 import Product from '../../models/Product.js'
 
 class DAO_FS {
@@ -24,7 +24,7 @@ class DAO_FS {
         this.elements = await this.read()
 
         if (this.elements.some(prod => prod.code === newElement.code)) {
-            return new Error(classErrors.throwOneError(classErrors.ERROR_INVALID_ARGUMENT, String(newElement.code)))
+            errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, 'REPETED CODE')
         } else {
             this.elements.push(newElement)
             await this.write()
@@ -50,16 +50,16 @@ class DAO_FS {
         return asJson.find(prod => prod.id === id)
     }
 
-    async updateElement (pid, data) {
-        const allProducts = await this.read()
-        const index = allProducts.findIndex(prod => prod.id === pid)
-        allProducts[index] = {
-            ...allProducts[index],
+    async updateElement (id, data) {
+        const allElements = await this.read()
+        const index = allElements.findIndex(prod => prod.id === id)
+        allElements[index] = {
+            ...allElements[index],
             ...data,
-            id: pid
+            id
         }
 
-        this.elements = allProducts
+        this.elements = allElements
         await this.write()
     }
 
@@ -67,19 +67,19 @@ class DAO_FS {
         this.elements = await this.read()
         const index = this.elements.findIndex(elem => elem.id === id)
 
-        if (index === -1) return Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND, `${id} not existing`))
+        if (index === -1) errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, `Invalid argument to replace an element:${id}`)
 
         this.elements[index] = newElement
         await this.write()
     }
 
-    async deleteElement (pid) {
-        const allProducts = await this.read()
-        const currentLength = allProducts.length
-        const newArray = allProducts.filter(prod => prod.id !== pid)
+    async deleteElement (id) {
+        const allElements = await this.read()
+        const currentLength = allElements.length
+        const newArray = allElements.filter(prod => prod.id !== id)
 
         if (newArray.length === currentLength) {
-            return new Error(classErrors.throwOneError(classErrors.ERROR_NOT_FOUND, pid))
+            errorsModel.throwOneError(errorsModel.ERROR_INVALID_ARGUMENT, `Invalid product id: ${id}`)
         }
 
         this.elements = newArray
