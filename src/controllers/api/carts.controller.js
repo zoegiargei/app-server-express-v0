@@ -5,6 +5,7 @@ import cartsService from '../../services/carts.service.js'
 import emailService from '../../services/emails.service.js'
 import smsService from '../../services/sms.service.js'
 import ticketsService from '../../services/tickets.service.js'
+import templatesForEmails from '../../utils/templates/templates.send.email.js'
 
 export const handlerNewCart = async (req, res, next) => {
     try {
@@ -172,15 +173,7 @@ export const handlerPurchase = async (req, res, next) => {
             req.logger.debug(user)
             req.logger.debug(user.orders)
             req.logger.debug(user._id)
-                const emailMessage = `
-                <h1>Hello ${user.username}!!</h1>
-                <h4>Your Ticket</h4>
-                <ul>
-                    <li>CODE: ${ticket.code}</li>
-                    <li>DATE: ${ticket.purchase_datetime}</li>
-                    <li>Total purchase: ${ticket.amount}</li>
-                </ul>
-            `
+            const emailMessage = templatesForEmails.templateSendTicket(ticket)
             const smsMessage = `
                 Hello!!!!
                 Your ticket was sent to your email.
