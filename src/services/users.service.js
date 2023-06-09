@@ -56,9 +56,6 @@ class UsersService {
     async deleteUser (id) {
         const user = this.userRepository.getOneById(id)
         const cid = user.cart._id
-        console.log('>>>>> ID de cart a eliminar. A modo de prueba: ')
-        console.log(cid)
-
         await cartsService.deleteCart(cid)
         return await this.userRepository.deleteUser(id)
     }

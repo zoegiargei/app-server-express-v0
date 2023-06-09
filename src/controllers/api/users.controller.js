@@ -1,3 +1,5 @@
+import { errorsModel } from '../../models/Errors.js'
+import tokenService from '../../services/token.service.js'
 import usersService from '../../services/users.service.js'
 import encryptedJWT from '../../utils/jwt/encrypted.jwt.js'
 
@@ -27,12 +29,12 @@ export async function contrConfirmSentEmail (req, res, next) {
 
 export async function contrChangePassword (req, res, next) {
     try {
-        req.logger.warn('Llego hasta controller change password')
-
         const { currentPassword, newPassword } = req.body
         const userId = req.user._id
         const response = await usersService.updatePassword(userId, currentPassword, newPassword)
-        res.sendOk({ message: 'changed your password', object: response })
+        if (!response.acknowledged) errorsModel.throwOneError(errorsModel.INTERNAL_ERROR, 'Update password was wrong')
+        const delTokenResponse = await tokenService.deleteToken(req.query.token)
+        res.sendOk({ message: 'changed your password', object: [response, delTokenResponse] })
     } catch (error) {
         next(error)
     }

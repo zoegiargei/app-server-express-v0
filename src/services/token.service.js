@@ -2,6 +2,7 @@ import tokenDbDAO from '../DAO/DB_DAOs/Tokens.DAO.db.js'
 import Token from '../models/Token.js'
 import encryptedJWT from '../utils/jwt/encrypted.jwt.js'
 import { v4 as uuidv4 } from 'uuid'
+import { winstonLogger } from '../middlewares/loggers/logger.js'
 
 class TokenServices {
     constructor (tokenDAO) {
@@ -28,10 +29,17 @@ class TokenServices {
     async saveTockenUpdatePass (uid, token) {
         const tokenInDb = await this.getTokenByUserId(uid)
         if (tokenInDb.length > 0) {
-            await tokenDbDAO.deleteElement(tokenInDb._id)
+            await this.tokenDAO.deleteElement(tokenInDb._id)
         }
-        const resultSave = await tokenDbDAO.creaeteElement(token)
+        const resultSave = await this.tokenDAO.creaeteElement(token)
         return resultSave
+    }
+
+    async deleteToken (tk) {
+        const tokenInDb = await this.tokenDAO.findElementsByQuery({ token: tk })
+        const tkId = tokenInDb[0]._id
+        winstonLogger.debug(`Token ID for delete token: ${tkId}`)
+        return await this.tokenDAO.deleteElement(tkId)
     }
 }
 const tokenService = new TokenServices(tokenDbDAO)
