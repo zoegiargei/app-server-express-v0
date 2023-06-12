@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
-import User from '../entities/User.entity.js'
-import Product from '../models/Product.js'
-import ProductsDbDAO from '../DAO/DB_DAOs/Products.DAO.db.js'
-import UsersDAODb from '../DAO/DB_DAOs/Users.DAO.db.js'
+import User from '../../src/entities/User.entity.js'
+import Product from '../../src/models/Product.js'
+import ProductsDbDAO from '../../src/DAO/DB_DAOs/Products.DAO.db.js'
+import UsersDAODb from '../../src/DAO/DB_DAOs/Users.DAO.db.js'
 
 class GeneratorMocks {
     async createUserMock () {
