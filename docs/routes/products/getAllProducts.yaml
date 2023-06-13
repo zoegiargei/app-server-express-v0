@@ -1,5 +1,5 @@
 paths:
-  /products:
+  /products/:
     get:
       summary: Get all products
       tags:
@@ -7,13 +7,13 @@ paths:
       parameters:
         - name: limit
           in: query
-          description: Number of products to retrieve (default: 10)
+          description: 'Number of products to retrieve (default: 10)'
           required: false
           schema:
             type: integer
         - name: page
           in: query
-          description: Page number for pagination (default: 1)
+          description: 'Page number for pagination (default: 1)'
           required: false
           schema:
             type: integer
@@ -47,7 +47,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
         "400":
           description: Bad request
         "401":
