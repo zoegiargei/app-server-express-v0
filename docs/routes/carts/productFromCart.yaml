@@ -1,36 +1,19 @@
 paths:
-  /carts/{cid}:
-    get:
-      summary: Get a cart with the given ID
-      tags:
-        - Carts
-      parameters:
-        - name: cid
-          in: path
-          description: ID of the cart to retrieve
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Cart found successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cart'
-        "404":
-          description: Cart not found
-        "500":
-          description: Internal Server Error
-
+  /cart/{cid}/product/{pid}:
     put:
-      summary: Update cart
+      summary: Update product from cart
       tags:
         - Carts
       parameters:
         - name: cid
           in: path
           description: Cart ID
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          description: Product ID
           required: true
           schema:
             type: string
@@ -39,21 +22,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cart'
+              type: object
+              properties:
+                quantity:
+                  type: integer
+              required:
+                - quantity
       responses:
         "201":
-          description: Cart updated successfully
+          description: Product in Cart updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cart'
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Bad request - Invalid quantity
         "401":
           description: Unauthorized Error
         "500":
           description: Internal server error
-
     delete:
-      summary: Delete cart
+      summary: Delete product from cart
       tags:
         - Carts
       parameters:
@@ -63,13 +52,19 @@ paths:
           required: true
           schema:
             type: string
+        - name: pid
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: Cart deleted successfully
+          description: Product deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cart'
+                $ref: '#/components/schemas/Product'
         "401":
           description: Unauthorized Error
         "500":

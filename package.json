@@ -6,7 +6,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "node .",
-    "test": "nodemon .",
+    "test": "nodemon -e 'js,yaml,handlebars,css' .",
     "build": "snowpack build"
   },
   "author": "",
