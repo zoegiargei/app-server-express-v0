@@ -3,7 +3,7 @@ import { errorsModel } from '../../models/Errors.js'
 import regex from '../../utils/regex/Regex.js'
 
 export const contrGetProd = async (req, res, next) => {
-    const categorys = [
+    /*     const categorys = [
         'title',
         'description',
         'code',
@@ -11,7 +11,7 @@ export const contrGetProd = async (req, res, next) => {
         'status',
         'stock',
         'category'
-    ]
+    ] */
 
     try {
         let response
@@ -19,11 +19,11 @@ export const contrGetProd = async (req, res, next) => {
             const pid = String(req.params.pid)
             response = await factory.productsService.getProductById(pid)
             if (!response) {
-                errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, `You sent an invalid product id: ${pid}`)
+                errorsModel.throwOneError(errorsModel.ERROR_NOT_FOUND, `Product not found: ${pid}`)
             }
         }
 
-        if (req.query) {
+        /*         if (req.query) {
             const query = req.query // sanitizar y validar
             if (categorys.includes(Object.keys(query))) {
                 response = await factory.productsService.getProductsByQuery(req.query)
@@ -31,7 +31,8 @@ export const contrGetProd = async (req, res, next) => {
                     errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, `You sent an invalid query: ${query}`)
                 }
             }
-        }
+        } */
+
         res.sendOk({ message: 'Product lookup by id was found successfully', object: response })
     } catch (error) {
         next(error)
@@ -85,6 +86,7 @@ export const contrPostProd = async (req, res, next) => {
         req.logger.warn(data)
         req.logger.warn(`>>>req.file ${attach}`)
         req.logger.debug(`>>> attach.url ${attach.url}`)
+        if (!attach || !data) errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, 'Bad request')
 
         const savedProduct = await factory.productsService.loadProduct(data, attach)
 
@@ -105,15 +107,15 @@ export const contrPutProd = async (req, res, next) => {
         let productUpdated
         if (req.user.role === 'Premium') {
             const product = await factory.productsService.getProductById(pid)
+            if (!product) errorsModel.throwOneError(errorsModel.ERROR_NOT_FOUND, `Product not found: ${pid}`)
             const productOwner = product.owner
             if (productOwner === req.user.email) {
                 productUpdated = await factory.productsService.updateProduct(pid, data)
             } else {
                 errorsModel.throwOneError(errorsModel.PERMISSIONS_FAILED, 'You are not allowed to updated that product')
             }
-        } else {
-            productUpdated = await factory.productsService.updateProduct(pid, data)
         }
+        productUpdated = await factory.productsService.updateProduct(pid, data)
 
         res.sendOk({ message: 'Product updated successfully', object: productUpdated })
     } catch (error) {
@@ -128,6 +130,8 @@ export const contrDelProd = async (req, res, next) => {
         let productDeleted
         if (req.user.role === 'Premium') {
             const product = await factory.productsService.getProductById(pid)
+            if (!product) errorsModel.throwOneError(errorsModel.ERROR_NOT_FOUND, `Product not found: ${pid}`)
+
             const productOwner = product.owner
             if (productOwner === req.user.email) {
                 productDeleted = await factory.productsService.deleteProduct(pid)
@@ -137,7 +141,7 @@ export const contrDelProd = async (req, res, next) => {
         }
 
         productDeleted = await factory.productsService.deleteProduct(pid)
-        return res.sendOk({ message: 'Product deleted', object: productDeleted })
+        res.sendNoContent({ message: 'Product deleted', object: productDeleted })
     } catch (error) {
         next(error)
     }

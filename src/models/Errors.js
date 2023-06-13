@@ -20,6 +20,10 @@ export class Errors {
             message: 'UNAUTHORIZED',
             status: 401
         }
+        this.FORBIDDEN = {
+            message: 'NOT ALLOWED',
+            status: 403
+        }
         this.INTERNAL_ERROR = {
             message: 'INTERNAL SERVER ERROR',
             status: 500

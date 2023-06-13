@@ -24,6 +24,8 @@ import { cpus } from 'node:os'
 import routerTest from './routers/test/router.test.js'
 import { createServer } from 'http'
 import { errorLogger } from './middlewares/errors/error.logger.js'
+import swaggerJSDoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 cluster.schedulingPolicy = cluster.SCHED_RR
 
 const app = express()
@@ -53,6 +55,21 @@ app.use('/web', routerWeb)
 app.use('/test', routerTest)
 app.use(errorLogger)
 app.use(errorHandler)
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Server Express API Documentation with Swagger',
+            description: 'API documentation for an Express server'
+        }
+    },
+    apis: ['./docs/**/*.yaml']
+}
+// http://localhost:8080/api/#/Products/get_products_product__id_
+
+const specs = swaggerJSDoc(swaggerOptions)
+app.use('/api', swaggerUi.serve, swaggerUi.setup(specs))
 
 app.get('*', (req, res) => {
     if ((/^[/](web)[/][a-z]*$/i).test(req.url)) {
