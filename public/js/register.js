@@ -19,7 +19,7 @@ registerForm.addEventListener('submit', e => {
     const newRegister = new Register(dataForm.get('firstName'), dataForm.get('lastName'), dataForm.get('regEmail'), dataForm.get('age'), dataForm.get('regPassword'))
     console.log(String(newRegister))
 
-    fetch('/api/user/register', {
+    fetch('/api/users/register', {
         method: 'POST',
         body: JSON.stringify(newRegister),
         headers: {

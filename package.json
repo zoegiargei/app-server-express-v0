@@ -6,8 +6,8 @@
   "main": "src/main.js",
   "scripts": {
     "start": "node .",
-    "test": "nodemon -e 'js,yaml,handlebars,css' .",
-    "build": "snowpack build"
+    "dev": "nodemon -e 'js,yaml,handlebars,css' .",
+    "test": "mocha test/**/*.js"
   },
   "author": "",
   "license": "ISC",
@@ -51,12 +51,14 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.1",
+    "chai": "^4.3.7",
     "eslint": "^8.41.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.2.0",
-    "snowpack": "^3.8.8"
+    "snowpack": "^3.8.8",
+    "supertest": "^6.3.3"
   }
 }

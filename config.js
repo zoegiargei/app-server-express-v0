@@ -5,15 +5,14 @@ const program = new Command()
 
 // NODE_ENV es convencion para definir en que entorno estamos
 // NODE_ENV CAN BE:
-// dev
-// test
 // prod
+// test
 
 program
     .option('PERSISTENCE <persistence>', 'metodo de persistencia de datos', 'MONGO')
-    .option('NODE_ENV <environment>', 'entorno en el que queremos correr el programa', 'dev')
+    .option('NODE_ENV <environment>', 'entorno en el que queremos correr el programa', 'prod')
     .option('PORT <port>', 'puerto del servidor', 8080)
-    .option('MONGO_CNX_STR <url>', 'URL de conexion a la base de datos', '')
+    .option('MONGO_CNX_STR <url>', 'URL de conexion a la base de datos')
     .option('JWT_PRIVATE_KEY <key>', 'Private key para autenticacion con JWT')
     .option('SECRET_WORD <secret>', 'Secret word for signing cookie')
     .option('USER_NODEMAILER <user>')
@@ -28,7 +27,7 @@ dotenv.config({
     path:
         process.env.NODE_ENV === 'prod'
         ? '.env'
-        : '.env'
+        : '.env.test'
 })
 
 export default {

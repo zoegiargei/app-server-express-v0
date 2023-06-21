@@ -28,7 +28,7 @@ import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 cluster.schedulingPolicy = cluster.SCHED_RR
 
-const app = express()
+export const app = express()
 
 app.use(logger)
 app.use(express.json())
@@ -50,12 +50,6 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 app.use(compression({ brotli: { enabled: true, zlib: {} } }))
-app.use('/api', routerApi)
-app.use('/web', routerWeb)
-app.use('/test', routerTest)
-app.use(errorLogger)
-app.use(errorHandler)
-
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
@@ -66,10 +60,14 @@ const swaggerOptions = {
     },
     apis: ['./docs/**/*.yaml']
 }
-// http://localhost:8080/api/#/Products/get_products_product__id_
-
+// http://localhost:8080/docs/#/Products/get_products_product__id_
 const specs = swaggerJSDoc(swaggerOptions)
-app.use('/api', swaggerUi.serve, swaggerUi.setup(specs))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs))
+app.use('/api', routerApi)
+app.use('/web', routerWeb)
+app.use('/test', routerTest)
+app.use(errorLogger)
+app.use(errorHandler)
 
 app.get('*', (req, res) => {
     if ((/^[/](web)[/][a-z]*$/i).test(req.url)) {

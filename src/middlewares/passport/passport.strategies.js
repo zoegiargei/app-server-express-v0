@@ -27,37 +27,43 @@ passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameFi
 }))
 
 passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
-    const adminEmail = config.ADMIN_EMAIL
-    const adminPassword = config.ADMIN_PASSWORD
-    if (username === adminEmail && password === adminPassword) {
-        winstonLogger.debug('Is amdmin user')
-        await cartsService.createCart(username)
-        const cid = await cartsService.getLastOne()
+    try {
+        const adminEmail = config.ADMIN_EMAIL
+        const adminPassword = config.ADMIN_PASSWORD
+        if (username === adminEmail && password === adminPassword) {
+            winstonLogger.debug('Is amdmin user')
+            await cartsService.createCart(username)
+            const cid = await cartsService.getLastOne()
 
-        const userAdmin = {
-            username: 'User Admin',
-            email: 'adminCoder@coder.com',
-            cart: cid,
-            role: 'Admin',
-            admin: true,
-            orders: []
+            const userAdmin = {
+                username: 'User Admin',
+                email: 'adminCoder@coder.com',
+                cart: cid,
+                role: 'Admin',
+                admin: true,
+                orders: []
+            }
+
+            return done(null, userAdmin)
         }
 
-        return done(null, userAdmin)
+        console.log(username)
+        const user = await usersService.getUserByQuery({ email: username })
+        console.log(user.length)
+        console.log(password)
+        if (!user || user.length === 0) {
+            errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'One of the credentials is wrong')
+        }
+        const isValidatePassword = encryptedPass.isValidPassword(user[0].password, password)
+        winstonLogger.warn(`Esto es en la estrategia de passport: ${isValidatePassword}`)
+        if (isValidatePassword === false) {
+            errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'One of the credentials is wrong')
+        }
+        const userToSend = user[0]
+        done(null, userToSend)
+    } catch (error) {
+        done(error, null)
     }
-
-    const user = await usersService.getUserByQuery({ email: username })
-
-    if (!user || user.length === 0) {
-        return done(errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'One of the credentials is wrong'), null)
-    }
-    const isValidatePassword = encryptedPass.isValidPassword(user[0].password, password)
-    winstonLogger.warn(`Esto es en la estrategia de passport: ${isValidatePassword}`)
-    if (isValidatePassword === false) {
-        return done(errorsModel.throwOneError(errorsModel.AUTH_FAILED, 'One of the credentials is wrong'), null)
-    }
-    const userToSend = user[0]
-    done(null, userToSend)
 }))
 
 // GH

@@ -3,14 +3,18 @@ import tokenService from '../../services/token.service.js'
 import usersService from '../../services/users.service.js'
 import encryptedJWT from '../../utils/jwt/encrypted.jwt.js'
 
-export async function contrRegister (req, res) {
-    const ttl = '2h'
-    res.cookie('jwt_authorization', encryptedJWT.encryptData(req.user, ttl), {
-        signed: true,
-        httpOnly: true
-    })
-    req.logger.debug(String(req.user))
-    res.sendOk({ message: 'Successfully registration', object: req.user })
+export async function contrRegister (req, res, next) {
+    try {
+        const ttl = '2h'
+        res.cookie('jwt_authorization', encryptedJWT.encryptData(req.user, ttl), {
+            signed: true,
+            httpOnly: true
+        })
+        req.logger.debug(String(req.user))
+        res.sendOk({ message: 'Successfully registration', object: req.user })
+    } catch (error) {
+        next(error)
+    }
 }
 
 export async function contrGetUsers (req, res) {

@@ -11,13 +11,27 @@ class GeneratorUserMock {
         }
 
         const newUserMock = new UserMock({
-            id: faker.string.uuid(),
             username: faker.internet.userName(),
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
             email: faker.internet.email(),
-            first_name: faker.internet.userName(),
+            age: '26',
+            password: 'mypassword123.',
             cart: products
         })
 
+        return newUserMock.toDto()
+    }
+
+    createUserMockWithEmptyCart () {
+        const newUserMock = new UserMock({
+            username: faker.internet.userName(),
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
+            email: 'faker@gmail.com',
+            age: '26',
+            password: 'mypassword123.'
+        })
         return newUserMock.toDto()
     }
 }

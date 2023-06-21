@@ -14,24 +14,13 @@ export const contrGetProd = async (req, res, next) => {
     ] */
 
     try {
-        let response
-        if (req.params.id) {
-            const pid = String(req.params.pid)
-            response = await factory.productsService.getProductById(pid)
-            if (!response) {
-                errorsModel.throwOneError(errorsModel.ERROR_NOT_FOUND, `Product not found: ${pid}`)
-            }
+        // const pid = String(req.params.pid)
+        const pid = req.params.pid
+        req.logger.warn(pid)
+        const response = await factory.productsService.getProductById(pid)
+        if (!response) {
+            errorsModel.throwOneError(errorsModel.ERROR_NOT_FOUND, `Product not found: ${pid}`)
         }
-
-        /*         if (req.query) {
-            const query = req.query // sanitizar y validar
-            if (categorys.includes(Object.keys(query))) {
-                response = await factory.productsService.getProductsByQuery(req.query)
-                if (!response) {
-                    errorsModel.throwOneError(errorsModel.INVALID_REQ_ERROR, `You sent an invalid query: ${query}`)
-                }
-            }
-        } */
 
         res.sendOk({ message: 'Product lookup by id was found successfully', object: response })
     } catch (error) {
@@ -81,8 +70,8 @@ export const contrGetProducts = async (req, res, next) => {
 
 export const contrPostProd = async (req, res, next) => {
     try {
-        const attach = req.file
-        const data = JSON.parse(req.body.data)
+        const attach = req.file ? req.file : []
+        const data = req.body.data || req.body
         req.logger.warn(data)
         req.logger.warn(`>>>req.file ${attach}`)
         req.logger.debug(`>>> attach.url ${attach.url}`)
@@ -105,14 +94,16 @@ export const contrPutProd = async (req, res, next) => {
         const data = req.body
 
         let productUpdated
-        if (req.user.role === 'Premium') {
+        if (req.user.role === 'Premium' || req.user.role === 'Admin') {
             const product = await factory.productsService.getProductById(pid)
             if (!product) errorsModel.throwOneError(errorsModel.ERROR_NOT_FOUND, `Product not found: ${pid}`)
             const productOwner = product.owner
-            if (productOwner === req.user.email) {
-                productUpdated = await factory.productsService.updateProduct(pid, data)
-            } else {
-                errorsModel.throwOneError(errorsModel.PERMISSIONS_FAILED, 'You are not allowed to updated that product')
+            if (req.user.role === 'Premium') {
+                if (productOwner === req.user.email) {
+                    productUpdated = await factory.productsService.updateProduct(pid, data)
+                } else {
+                    errorsModel.throwOneError(errorsModel.PERMISSIONS_FAILED, 'You are not allowed to updated that product')
+                }
             }
         }
         productUpdated = await factory.productsService.updateProduct(pid, data)
