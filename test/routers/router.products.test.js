@@ -1,7 +1,7 @@
 import assert from 'assert'
 import supertest from 'supertest'
 import mongoose from 'mongoose'
-import { after, afterEach, beforeEach, describe, it } from 'mocha'
+import { after, afterEach, before, beforeEach, describe, it } from 'mocha'
 import generatorProductsMock from '../../mocks/utils/mocks/generator.products.mock.js'
 import generatorUserMock from '../../mocks/utils/mocks/generator.user.mock.js'
 import { winstonLogger } from '../../src/middlewares/loggers/logger.js'
@@ -12,22 +12,23 @@ const PORT = 8080
 const serverBaseUrl = `http://localhost:${PORT}`
 const httpClient = supertest.agent(serverBaseUrl)
 const MONGO_CNX_STR_TEST = 'mongodb+srv://zoegiargei00:215133@clusterecommercetest.lkx83vy.mongodb.net/test?retryWrites=true&w=majority'
-await mongoose.connect(MONGO_CNX_STR_TEST)
 
 // eslint-disable-next-line no-unused-vars
 let user
 describe('Testing router products', () => {
+    before(async () => {
+        await mongoose.connect(MONGO_CNX_STR_TEST)
+    })
     beforeEach(async () => {
-        if (mongoose.connection.collection('users')) await mongoose.connection.collection('users').deleteMany({})
         if (mongoose.connection.collection('carts')) await mongoose.connection.collection('carts').deleteMany({})
         if (mongoose.connection.collection('products')) await mongoose.connection.collection('carts').deleteMany({})
     })
     afterEach(async () => {
-        await mongoose.connection.collection('users').deleteMany({})
         await mongoose.connection.collection('carts').deleteMany({})
         await mongoose.connection.collection('products').deleteMany({})
     })
     after(async () => {
+        await mongoose.connection.collection('users').deleteMany({})
         await mongoose.disconnect()
     })
 
@@ -41,6 +42,7 @@ describe('Testing router products', () => {
             .send(userCredentials)
             user = newUser
         })
+
         describe('Should create a new product (without photo) when valid data is sent and a valid token is provided', () => {
             it('Create a product with hardcoded data', async () => {
                 const prodProof = generatorProductsMock.createProductMock()
@@ -93,18 +95,15 @@ describe('Testing router products', () => {
                 .post('/api/session/logout')
             })
             it('Login', async () => {
+                await mongoose.connection.collection('users').deleteMany({})
                 const newUser = generatorUserMock.createUserMockWithEmptyCart()
                 await UsersDAODb.creaeteElement({ ...newUser, role: 'Premium' })
                 const userCredentials = { email: newUser.email, password: 'mypassword123.' }
                 await httpClient
                 .post('/api/session/login')
                 .send(userCredentials)
-                user = newUser
             })
             it('Update product being Premium user but not owning', async () => {
-                const newUser = generatorUserMock.createUserMockWithEmptyCart()
-                await UsersDAODb.creaeteElement({ ...newUser, role: 'Premium' })
-
                 const newProduct = generatorProductsMock.createProductMock()
                 const product = await ProductsDbDAO.creaeteElement(newProduct)
                 const updatedProduct = { ...product._doc, owner: 'other@gmail.com' }

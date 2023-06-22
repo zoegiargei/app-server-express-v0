@@ -34,8 +34,8 @@ export const handlerProductInCart = async (req, res, next) => {
         req.logger.warn(`>>> Cart ID: ${cid}`)
         const pid = String(req.params.pid)
         req.logger.warn(`>>> Product ID: ${pid}`)
-        const quantity = req.body
-        const productAdded = await cartsService.addToCart(cid, pid, quantity.quantity)
+        const quantity = req.body || 1
+        const productAdded = await cartsService.addToCart(cid, pid, quantity.quantity || 1)
 
         res.sendOk({ message: 'Product added to cart successfully', object: productAdded })
     } catch (error) {

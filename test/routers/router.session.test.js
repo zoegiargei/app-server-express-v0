@@ -15,14 +15,13 @@ describe('Testing router session', () => {
         await mongoose.connect(MONGO_CNX_STR_TEST)
     })
     beforeEach(async () => {
-        if (mongoose.connection.collection('users')) await mongoose.connection.collection('users').deleteMany({})
         if (mongoose.connection.collection('carts')) await mongoose.connection.collection('carts').deleteMany({})
     })
     afterEach(async () => {
-        await mongoose.connection.collection('users').deleteMany({})
         await mongoose.connection.collection('carts').deleteMany({})
     })
     after(async () => {
+        await mongoose.connection.collection('users').deleteMany({})
         await mongoose.disconnect()
     })
 
