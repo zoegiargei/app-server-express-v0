@@ -7,7 +7,7 @@ import UsersDAODb from '../../src/DAO/DB_DAOs/Users.DAO.db.js'
 
 const PORT = 8080
 const serverBaseUrl = `http://localhost:${PORT}`
-const httpClient = supertest(serverBaseUrl)
+const httpClient = supertest.agent(serverBaseUrl)
 const MONGO_CNX_STR_TEST = 'mongodb+srv://zoegiargei00:215133@clusterecommercetest.lkx83vy.mongodb.net/test?retryWrites=true&w=majority'
 
 describe('Testing router session', () => {
@@ -56,21 +56,11 @@ describe('Testing router session', () => {
             })
         })
 
-        await describe('POST to Endpoint: /api/session/logout', () => {
+        describe('POST to Endpoint: /api/session/logout', () => {
             describe('Should log out the user if the user was successfully authenticated', () => {
                 it('The correct credentials are sent and the user is authenticated and then the user is log out', async () => {
-                    const newUser = generatorUserMock.createUserMockWithEmptyCart()
-                    await UsersDAODb.creaeteElement(newUser)
-                    const userCredentials = { email: newUser.email, password: 'mypassword123.' }
-                    const { headers } = await httpClient
-                    .post('/api/session/login')
-                    .send(userCredentials)
-                    assert.ok(headers['set-cookie'][0], 'There is not a cookie with the authorized token')
-                    const cookie = headers['set-cookie'][0]
-
                     const { statusCode, body } = await httpClient
                     .post('/api/session/logout')
-                    .set('Cookie', [cookie])
                     console.log(body)
                     assert.strictEqual(statusCode, 200)
                 })

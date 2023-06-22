@@ -10,10 +10,12 @@ import ProductsDbDAO from '../../src/DAO/DB_DAOs/Products.DAO.db.js'
 
 const PORT = 8080
 const serverBaseUrl = `http://localhost:${PORT}`
-const httpClient = supertest(serverBaseUrl)
+const httpClient = supertest.agent(serverBaseUrl)
 const MONGO_CNX_STR_TEST = 'mongodb+srv://zoegiargei00:215133@clusterecommercetest.lkx83vy.mongodb.net/test?retryWrites=true&w=majority'
 await mongoose.connect(MONGO_CNX_STR_TEST)
 
+// eslint-disable-next-line no-unused-vars
+let user
 describe('Testing router products', () => {
     beforeEach(async () => {
         if (mongoose.connection.collection('users')) await mongoose.connection.collection('users').deleteMany({})
@@ -28,21 +30,22 @@ describe('Testing router products', () => {
     after(async () => {
         await mongoose.disconnect()
     })
+
     describe('POST to Endpoint: /api/products/addProduct', () => {
+        it('Login', async () => {
+            const newUser = generatorUserMock.createUserMockWithEmptyCart()
+            await UsersDAODb.creaeteElement(newUser)
+            const userCredentials = { email: newUser.email, password: 'mypassword123.' }
+            await httpClient
+            .post('/api/session/login')
+            .send(userCredentials)
+            user = newUser
+        })
         describe('Should create a new product (without photo) when valid data is sent and a valid token is provided', () => {
             it('Create a product with hardcoded data', async () => {
-                const newUser = generatorUserMock.createUserMockWithEmptyCart()
-                await UsersDAODb.creaeteElement(newUser)
-                const userCredentials = { email: newUser.email, password: 'mypassword123.' }
-                const { headers } = await httpClient
-                .post('/api/session/login')
-                .send(userCredentials)
-                const cookie = headers['set-cookie'][0]
-
                 const prodProof = generatorProductsMock.createProductMock()
                 const { statusCode, ok, body } = await httpClient
                 .post('/api/products/addProduct')
-                .set('Cookie', [cookie])
                 .send(prodProof)
                 assert.ok(ok, 'The request was not successfully')
                 assert.deepStrictEqual(statusCode, 201, 'The status code is wrong')
@@ -52,20 +55,11 @@ describe('Testing router products', () => {
 
         describe('Should create a new product (with photo) when valid data is sent and a valid token is provided', () => {
             it('Create a product with hardcoded data', async () => {
-                const newUser = generatorUserMock.createUserMockWithEmptyCart()
-                await UsersDAODb.creaeteElement(newUser)
-                const userCredentials = { email: newUser.email, password: 'mypassword123.' }
-                const { headers } = await httpClient
-                .post('/api/session/login')
-                .send(userCredentials)
-                const cookie = headers['set-cookie'][0]
-
                 const prodProof = generatorProductsMock.createProductMock()
                 const { statusCode, ok, body } = await httpClient
                 .post('/api/products/addProduct')
-                .set('Cookie', [cookie])
                 .send(prodProof)
-                .attach('attach', newUser.thumbnail)
+                .attach('attach', user.thumbnail)
                 assert.ok(ok, 'The request was not successfully')
                 assert.deepStrictEqual(statusCode, 201, 'The status code is wrong')
                 winstonLogger.debug(body.object)
@@ -77,14 +71,6 @@ describe('Testing router products', () => {
     describe('PUT to Endpoint: /api/products/:pid', () => {
         describe('Should update a product when the product ID is provided and valid data is sent to update it', () => {
             it('Update product being admin user', async () => {
-                const newUser = generatorUserMock.createUserMockWithEmptyCart()
-                await UsersDAODb.creaeteElement(newUser)
-                const userCredentials = { email: newUser.email, password: 'mypassword123.' }
-                const { headers } = await httpClient
-                .post('/api/session/login')
-                .send(userCredentials)
-                const cookie = headers['set-cookie'][0]
-
                 const newProduct = generatorProductsMock.createProductMock()
                 const product = await ProductsDbDAO.creaeteElement(newProduct)
                 const updatedProduct = { ...product._doc, title: 'New Title' }
@@ -93,7 +79,6 @@ describe('Testing router products', () => {
 
                 const { statusCode, ok, body } = await httpClient
                 .put(`/api/products/${pid}`)
-                .set('Cookie', [cookie])
                 .send(updatedProduct)
                 assert.ok(ok, 'The request was not successfully')
                 assert.strictEqual(statusCode, 200, 'The status code is wrong')
@@ -103,15 +88,22 @@ describe('Testing router products', () => {
         })
 
         describe('The product should not be updated even providing the id and sending all the correct information', () => {
-            it('Update product being Premium user but not owning', async () => {
+            it('Logout', async () => {
+                await httpClient
+                .post('/api/session/logout')
+            })
+            it('Login', async () => {
                 const newUser = generatorUserMock.createUserMockWithEmptyCart()
-                const user = await UsersDAODb.creaeteElement({ ...newUser, role: 'Premium' })
-                console.log(user)
+                await UsersDAODb.creaeteElement({ ...newUser, role: 'Premium' })
                 const userCredentials = { email: newUser.email, password: 'mypassword123.' }
-                const { headers } = await httpClient
+                await httpClient
                 .post('/api/session/login')
                 .send(userCredentials)
-                const cookie = headers['set-cookie'][0]
+                user = newUser
+            })
+            it('Update product being Premium user but not owning', async () => {
+                const newUser = generatorUserMock.createUserMockWithEmptyCart()
+                await UsersDAODb.creaeteElement({ ...newUser, role: 'Premium' })
 
                 const newProduct = generatorProductsMock.createProductMock()
                 const product = await ProductsDbDAO.creaeteElement(newProduct)
@@ -120,7 +112,6 @@ describe('Testing router products', () => {
 
                 const { statusCode } = await httpClient
                 .put(`/api/products/${pid}`)
-                .set('Cookie', [cookie])
                 .send(updatedProduct)
                 assert.strictEqual(statusCode, 401)
             })
